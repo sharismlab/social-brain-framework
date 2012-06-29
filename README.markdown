@@ -14,3 +14,5 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
 ----------
 
 Social Brain Framework is available under the Sharing Agreement ✳ Sharism Lab
+*http://sharismlab.com
+*http://sharism.org
