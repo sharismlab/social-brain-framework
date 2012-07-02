@@ -28,12 +28,12 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
         etc.
       /vocab
 
-*  '''apps''' contains all what you need to create awesome web-based applications
-*  '''config''' is where you have to change your API keys and DB info
-*  '''Apps''' contains
-*  '''miners''' contains the part where you take some data and turn it into sth meaningful
-*  '''services''' host all connectors to different web applications
-*  '''vocab''' contains semantic OWL syntax of Social Brain Framework
+*  **apps** contains all what you need to create awesome web-based applications
+*  **config** is where you have to change your API keys and DB info
+*  **docs** are the things you need to read to understand what it is all about
+*  **miners** contains the part where you take some data and turn it into sth meaningful
+*  **services** host all connectors to different web applications
+*  **vocab** contains semantic OWL syntax files for Social Brain Framework vocabulary
 
 
 
