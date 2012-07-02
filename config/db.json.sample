@@ -1,0 +1,21 @@
+{ 
+
+"development":
+  { "driver":   "mysql"
+  , "host":     "localhost"
+  , "database": ""
+  , "username": ""
+  , "password" : ""
+  }
+
+, "test":
+  { "driver":   ""
+  }
+
+, "production":
+  { "driver":   ""
+  , "database": ""
+  , "host":     ""
+  
+  }
+}

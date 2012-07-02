@@ -1,0 +1,20 @@
+!!! 5
+html(lang='en')
+  head
+    title MySite 
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/style.css')
+    script(src= '/socket.io/socket.io.js')
+    script(src= '/zappa/jquery.js')
+    script(src='/zappa/zappa.js')
+    script(src= '/index.js')'
+    
+  body
+    div.navbar.navbar-fixed-top
+      div.navbar-inner
+        div.container
+           a.brand(href="/", title="Back to home") Social brain
+            
+
+    div.container
+      !=body

@@ -1,0 +1,13 @@
+{
+  "name": "social-brain"
+  ,"version": "0.0.1"
+  ,"dependencies": {
+      "zappa": "latest"
+    , "redis": "latest"
+    , "coffee-script": "latest"
+    , "jade":  "latest"
+    , "forever":  "latest"
+    , "ntwitter": "latest"
+    , "mongoose" : "latest"
+  }
+}
