@@ -13,7 +13,6 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
 # Application structure
 -----------
 
-
     /  (root)
       /apps 
         /hello_world
@@ -36,6 +35,27 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
 *  **vocab** contains semantic OWL syntax files for Social Brain Framework vocabulary
 
 
+# Test the framework
+----------------------
+
+In the **apps** folder, you can run an example application
+    git clone https://github.com/sharismlab/social-brain-framework.git
+    cd social-brain-framework
+    npm install
+    redis-server
+    coffee socialbrain.coffee
+You can browse the api : http://localhost:3000
+
+In the **apps** folder, you can run test application
+    cd apps/hello_world
+    npm install
+    coffee index.coffee
+
+
+# Thanks
+----------
+* Lance R. Vick <lance@lrvick.net> and guys at Tawlk for their awesome social web crawler Hyve > https://github.com/Tawlk/hyve/
+* 
 
 
 

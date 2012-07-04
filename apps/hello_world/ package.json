@@ -7,7 +7,5 @@
     , "coffee-script": "latest"
     , "jade":  "latest"
     , "forever":  "latest"
-    , "ntwitter": "latest"
-    , "mongoose" : "latest"
   }
 }

@@ -1,0 +1,26 @@
+{ "name": "social-brain-framework"
+, "author": "Clément Renaud <clement.renaud@gmail.com"
+, "author": "Sharism Lab"
+, "node": "0.6.12"
+, "version": "0.0.1"
+, "main": "index.js"
+, "dependencies":
+  { 
+
+    "coffee-script":    "latest"
+  , "jade":         "latest"
+  , "mongoose":         "latest"
+  , "request":          "latest"
+  , "redis" :           ">=0.7.1"
+  , "zappajs":          "latest"
+ 
+  },
+  "devDependencies":
+  { "nodeunit":         "*"
+  , "sinon":            "*"
+  , "semicov":          "*"
+  }
+, "scripts":
+  { "test": "nodeunit test/*/*"
+  }
+}
