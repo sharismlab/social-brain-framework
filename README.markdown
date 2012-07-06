@@ -19,19 +19,16 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
       /config 
       /db
       /docs
-      /miners
-      /connectors
-        /twitter
-        /weibo
-        /rss
-        etc.
+      /lib
+        /crawler
+        /storer
+        /miners
       /vocab
 
 *  **apps** contains all what you need to create awesome web-based applications
 *  **config** is where you have to change your API keys and DB info
 *  **docs** are the things you need to read to understand what it is all about
-*  **miners** contains the part where you take some data and turn it into sth meaningful
-*  **connectors** are services that knows how to connect and query different web applications
+*  **lib** contains the part where you take some data and turn it into sth meaningful
 *  **vocab** contains semantic OWL syntax files for Social Brain Framework vocabulary
 
 
@@ -39,14 +36,17 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
 ----------------------
 
 In the **apps** folder, you can run an example application
+
     git clone https://github.com/sharismlab/social-brain-framework.git
     cd social-brain-framework
     npm install
     redis-server
     coffee socialbrain.coffee
+
 You can browse the api : http://localhost:3000
 
 In the **apps** folder, you can run test application
+
     cd apps/hello_world
     npm install
     coffee index.coffee
