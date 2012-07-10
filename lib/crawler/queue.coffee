@@ -1,9 +1,7 @@
 r = require 'redis'
-c = require  'crypto'
+c = require 'crypto'
 config =  require '../../config/db'
 redis  = null
-
-console.log "loading queue module"
 
 ( () ->
 
@@ -11,24 +9,30 @@ console.log "loading queue module"
 
     init = ->
         redis = r.createClient(config.redis.port, config.redis.host, config.redis.options)
+        redis.debug_mode = true;
 
-    unique = (s, callback) ->
-        md5sum = c.createHash('md5')
-        md5sum.update(s)
-        hash = prefix + md5sum.digest('hex').substring(0, 16)
-        redis.exists hash, (err, flag) ->
-            if !flag
-                redis.set hash, '1'
-                redis.expire hash, 600
-            callback err, !flag
+    unique = (key, callback) ->
+        redis.exists key, (err, flag) ->
+              if !flag
+                redis.set key, '1'
+                redis.expire key, 600
+              callback err, !flag
 
-    enqueue = (o) ->
+    enqueue = (key, o) ->
         if o
             val = JSON.stringify o
-            unique val, (err, flag) ->
-                redis.rpush key, val if flag
+            console.log 'key : ---->' + key
+            console.log redis.offline_queue.length
+            if redis.exists key
+               redis.rpush key val
+               console.log "exists"
+            else
+               console.log "doesn't exists"
+               redis.set key
+               redis.rpush key, val
+               # redis.expire key, 600
 
-    dequeue = (callback) ->
+    dequeue = (key, callback) ->
         redis.lpop key, (err, val) ->
             if err
                 callback err, null
@@ -38,22 +42,23 @@ console.log "loading queue module"
                 else
                     callback null, null
 
-    fetchText = (callback) ->
+    fetchMessage = (key, callback) ->
         redis.lpop key, (err, value) ->
             if not err and value
-                callback err, JSON.parse(value).text
+                # console.log 'raw' + value
+                callback err, JSON.parse(value)
             else
                 callback null, null
 
-    size = (callback) ->
+    size = (key, callback) ->
         redis.llen key, callback
-        
-        
+
+
     # Exports to the outside world
     queue.init = init
     queue.enqueue = enqueue
     queue.dequeue = dequeue
-    queue.fetchText
+    queue.fetchMessage = fetchMessage
     queue.size = size
     
     #export as node

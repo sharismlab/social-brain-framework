@@ -9,9 +9,8 @@ require('./src/hyve.facebook.js')
 hyve.queue_enable = true
 hyve.recall_enable = false
 
-console.log "loading crawler module"
-
 queue.init()
+mydis  = this
 
 gap = 30000 # 30 seconds
 
@@ -24,15 +23,26 @@ gap = 30000 # 30 seconds
                     gap = 100 * len
             setTimeout(check, 10000)
 
-    search = (searchquery) ->
-           key    = 'q:search'
-           prefix = 'k:'+ searchquery +":"
+
+    uniqueId = (length=8) ->
+      id = ""
+      id += Math.random().toString(36).substr(2) while id.length < length
+      id.substr 0, length
+
+    search = (searchquery, sns) ->
+           console.log "search term :  " + searchquery
+           key = uniqueId(10)
+           prefix = 'k:search:'
            hyve.search.stream searchquery, ( (snsdata) ->
                 item = hyve.queue.text[0]       # get first item from hyve queue
-                queue.enqueue item              # enqueue in redis
-                mydom.emit searchresults        # dequeue from hyve
-           ), [ "twitter", "facebook" ]
+                queue.enqueue key,item          # enqueue in redis
+                console.log 'balababababab'
+                queue.size key
+               #mydom.emit searchresults        # dequeue from hyve
+           ), sns
+           key
 
+    # console.log search
     # Exports to the outside world
     crawler.check = check
     crawler.search = search
