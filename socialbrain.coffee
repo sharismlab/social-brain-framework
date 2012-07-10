@@ -72,7 +72,8 @@ zappa 'localhost', 3000, ->
                 if err
                         console.log err
                         @send {}
-                    else
+                else
+
                         @send
                             createdAt:   new Date
                             id:    searchID

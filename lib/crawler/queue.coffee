@@ -11,26 +11,21 @@ redis  = null
         redis = r.createClient(config.redis.port, config.redis.host, config.redis.options)
         redis.debug_mode = true;
 
-    unique = (key, callback) ->
-        redis.exists key, (err, flag) ->
+    unique = (string, callback) ->
+        md5sum = c.createHash('md5')
+        md5sum.update(string)
+        hash = 'k:prefix' + md5sum.digest('hex').substring(0, 16)
+        redis.exists hash, (err, flag) ->
               if !flag
-                redis.set key, '1'
-                redis.expire key, 600
+                redis.set hash, '1'
+                redis.expire hash, 600
               callback err, !flag
 
-    enqueue = (key, o) ->
+    enqueue = (key, o, callback) ->
         if o
             val = JSON.stringify o
-            console.log 'key : ---->' + key
-            console.log redis.offline_queue.length
-            if redis.exists key
-               redis.rpush key val
-               console.log "exists"
-            else
-               console.log "doesn't exists"
-               redis.set key
-               redis.rpush key, val
-               # redis.expire key, 600
+            unique val, (err, flag) ->
+               redis.rpush key, val if flag
 
     dequeue = (key, callback) ->
         redis.lpop key, (err, val) ->
@@ -49,6 +44,7 @@ redis  = null
                 callback err, JSON.parse(value)
             else
                 callback null, null
+
 
     size = (key, callback) ->
         redis.llen key, callback

@@ -30,19 +30,18 @@ gap = 30000 # 30 seconds
       id.substr 0, length
 
     search = (searchquery, sns) ->
-           console.log "search term :  " + searchquery
-           key = uniqueId(10)
-           prefix = 'k:search:'
+           key = 'q:search:'+uniqueId(10)
            hyve.search.stream searchquery, ( (snsdata) ->
-                item = hyve.queue.text[0]       # get first item from hyve queue
-                queue.enqueue key,item          # enqueue in redis
-                console.log 'balababababab'
-                queue.size key
-               #mydom.emit searchresults        # dequeue from hyve
+                item = hyve.queue.text[0]  # get first item from hyve queue
+                queue.enqueue key, item, ( (data) ->
+                        # some callback
+                )          
+                console.log '1 item fetched from ' + item.service
+                console.log hyve.queue.text.length
+                hyve.dequeue(item)
            ), sns
            key
 
-    # console.log search
     # Exports to the outside world
     crawler.check = check
     crawler.search = search
