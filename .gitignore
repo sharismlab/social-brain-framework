@@ -23,4 +23,5 @@ node_modules/
 
 config/apikeys.json
 config/db.json
+config/deploy.rb
 

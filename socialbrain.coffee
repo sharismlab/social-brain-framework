@@ -11,7 +11,7 @@ queue = require './lib/crawler/queue'
 # console.log(crawler)
 
 # let's go!
-zappa 'localhost', 3000, ->
+zappa 'localhost', 3003, ->
 
         @use 'bodyParser', 'methodOverride', @app.router, 'static'
         @enable 'serve zappa'
