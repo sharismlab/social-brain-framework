@@ -1,4 +1,5 @@
 zappa = require 'zappajs'
+
 apikeys = require('./config/apikeys')
 config =  require './config/db'
 r = require 'redis'
@@ -11,7 +12,7 @@ queue = require './lib/crawler/queue'
 # console.log(crawler)
 
 # let's go!
-zappa 'localhost', 3003, ->
+zappa 3003, ->
 
         @use 'bodyParser', 'methodOverride', @app.router, 'static'
         @enable 'serve zappa'
