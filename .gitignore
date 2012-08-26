@@ -18,10 +18,12 @@ pids
 logs
 results
 
+dump.rdb
 npm-debug.log
 node_modules/
 
 config/apikeys.json
 config/db.json
 config/deploy.rb
+config/local/
 

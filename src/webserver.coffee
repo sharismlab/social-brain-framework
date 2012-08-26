@@ -1,13 +1,12 @@
 zappa = require 'zappajs'
+#apikeys = require('./config/apikeys')
 
-apikeys = require('./config/apikeys')
-config =  require './config/db'
-r = require 'redis'
-m = 'exports'
+redis = require 'redis'
+config =  require '../config/db'
 
 #import crawler
-crawler = require './lib/crawler/crawler'
-queue = require './lib/crawler/queue'
+crawler = require '../lib/crawler/crawler'
+queue = require '../lib/crawler/queue'
 
 # console.log(crawler)
 
@@ -15,6 +14,7 @@ queue = require './lib/crawler/queue'
 zappa 3003, ->
 
         @use 'bodyParser', 'methodOverride', @app.router, 'static'
+        @set 'view engine': 'eco', views: "#{__dirname}/examples"
         @enable 'serve zappa'
 
         @configure
@@ -23,8 +23,6 @@ zappa 3003, ->
              production: -> 
                 @use 'errorHandler', 'staticCache'
 
-
-    #routes
         @get '/': ->
             @send 'social brain! try the <a href="/api">API</a>'
 
@@ -40,19 +38,7 @@ zappa 3003, ->
             @response.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
             @send 'search'
 
-
-        @get '/api/search/:query': ->
-            @response.header 'Cache-Control', 'no-cache'
-            @response.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
-            # console.log @params
-            # console.log @query
-
-            if !@query.sns  
-               @send 'ERROR : you should specify web services names in your query'
-
-            #fetch sns names and convert to proper array
-            sns = []
-            fullSnsName = (sn) ->
+        @helper fullSnsName: (sn) ->
               switch sn
                 when "tw" then return "twitter"
                 when "fb" then return "facebook"
@@ -61,35 +47,39 @@ zappa 3003, ->
                 when "wp" then return "wordpress"
                 when "yt" then return "youtube"
                 else return null
+
+        @get '/api/search/:query': ->
+
+            @response.header 'Cache-Control', 'no-cache'
+            @response.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
+
+            if !@query.sns  
+               @send 'ERROR : you should specify web services names in your query'
+
+            #fetch sns names from URL and convert names
+            sns = []
             query = @query.sns.split ","
-            sns.push fullSnsName(sn) for sn in query
+            sns.push @fullSnsName(sn) for sn in query
 
-            # 1. start crawler & queue items in redis
-            searchID = crawler.search(@params.query, sns)
-            # console.log "search id : " + searchID
+            #start crawler & queue items in redis store
+            searchKey = crawler.search(@params.query, sns)
 
-            # 2. return crawler job info in json
-            queue.fetchMessage searchID , (err, data) =>
+            #return crawler job info in json
+            queue.fetchInfo searchKey , (err, data) =>
                 if err
-                        console.log err
+                        #console.log err
                         @send {}
                 else
-
+                        # console.log data
                         @send
                             createdAt:   new Date
-                            id:    searchID
+                            id:         searchKey
                             queryType:  "search"
                             query:      @params.query
                             sns:        sns
-                            # type:       data.type
-
 
 
          #more useless attempts behind there -----------------------------------
-
-         @get '/snsnames/' : ->
+        @get '/snsnames' : ->
            # url using abbreviation ?sns=tw,fb
-
-
-
            @send {sns}

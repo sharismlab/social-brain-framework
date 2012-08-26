@@ -34,11 +34,15 @@ gap = 30000 # 30 seconds
            hyve.search.stream searchquery, ( (snsdata) ->
                 item = hyve.queue.text[0]  # get first item from hyve queue
                 queue.enqueue key, item, ( (data) ->
-                        # some callback
-                )          
-                console.log '1 item fetched from ' + item.service
-                console.log hyve.queue.text.length
-                hyve.dequeue(item)
+                        @emit welcome: {time: new Date()}
+                )
+                #console.log 'raw'
+                # console.log '1 item fetched from ' + item.service
+                # console.log item
+                #console.log hyve.queue.text.length
+                
+
+                hyve.dequeue(item) # dequeue item from hyve
            ), sns
            key
 

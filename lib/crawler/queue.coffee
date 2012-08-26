@@ -37,24 +37,26 @@ redis  = null
                 else
                     callback null, null
 
-    fetchMessage = (key, callback) ->
+    fetchInfo = (key, callback) ->
         redis.lpop key, (err, value) ->
             if not err and value
-                # console.log 'raw' + value
+                #console.log 'raw' + value
                 callback err, JSON.parse(value)
             else
                 callback null, null
 
-
     size = (key, callback) ->
-        redis.llen key, callback
-
+        redis.llen key, (err, len) ->
+          if not err and len
+            console.log "queue length" : len
+          else
+            callback null, null
 
     # Exports to the outside world
     queue.init = init
     queue.enqueue = enqueue
     queue.dequeue = dequeue
-    queue.fetchMessage = fetchMessage
+    queue.fetchInfo = fetchInfo
     queue.size = size
     
     #export as node

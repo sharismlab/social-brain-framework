@@ -1,26 +1,40 @@
-{ "name": "social-brain-framework"
+{ 
+  "name": "social-brain-framework"
 , "author": "Clément Renaud <clement.renaud@gmail.com"
 , "author": "Sharism Lab"
 , "node": "0.6.12"
 , "version": "0.0.1"
-, "main": "index.js"
+, "main": "app.js"
 , "dependencies":
   { 
-
     "coffee-script":    "latest"
+  , "forever": "latest"
   , "jade":         "latest"
   , "mongoose":         "latest"
+  , "now":            "latest"
   , "request":          "latest"
   , "redis" :           ">=0.7.1"
   , "zappajs":          "latest"
- 
+  , "which": "*"
   },
+  
   "devDependencies":
-  { "nodeunit":         "*"
+  
+  { 
+    "nodeunit":         "*"
   , "sinon":            "*"
   , "semicov":          "*"
-  }
-, "scripts":
-  { "test": "nodeunit test/*/*"
+  , "mocha": "*"
+  , "should": "*"
+  , "request": "*"
+  , "supervisor": "*"
+  , "docco": "*"
+  
+  },
+  "scripts": 
+  { 
+    "start": "sudo ./sbf"
+  , "test": "mocha --require should --compilers coffee:coffee-script --colors"
+  
   }
 }

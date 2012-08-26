@@ -1,0 +1,51 @@
+#!/bin/sh
+
+show_help() {
+    cat <<EOF
+Usage: sbf [options]
+Options:
+    --production    Run in production mode (default: development mode)
+
+EOF
+}
+
+sbf_mode=development
+
+# Parse command line options
+while true; do
+    case "$1" in
+      -h|--help|-\?) show_help; exit 0;;
+      --production) sbf_mode=production; shift ;;
+      --development) shift ;;
+      --) shift; break;;
+      -*) echo "invalid option: $1" 1>&2; show_help; exit 1;;
+      *)  break;;
+    esac
+done
+
+# Make sure we have some API keys, otherwise we can't do much
+apikeys=config/apikeys.json
+if [ ! -f "$apikeys" ]; then
+    echo "No API keys found in $apikeys" >&2
+    echo "see https://github.com/sharismlab/" >&2
+    exit 1
+fi
+
+
+# Start SBF using forever
+#   /media/Data/Sites/social-brain-framework/node_modules/forever/bin/forever -a -l logs/w.log -c coffee /media/Data/Sites/social-brain-framework/sbf.coffee
+
+case "$sbf_mode" in
+    production)
+        # Tell node to run in production mode
+        NODE_ENV=production
+        export NODE_ENV
+        coffee sbf.coffee "$@"
+        ;;
+    development|*)
+        # Just run it
+        exec node_modules/forever/bin/forever -a -l logs/w.log -c coffee sbf.coffee "$@"
+        ;;
+esac
+
+exit 1
