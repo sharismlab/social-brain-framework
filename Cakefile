@@ -1,84 +1,186 @@
-fs            = require 'fs'
-{print}       = require 'util'
-which         = require('which')
-{spawn, exec} = require 'child_process'
+###
+Cakefile for developping
 
-# ANSI Terminal Colors
-bold  = '\x1B[0;1m'
-red   = '\x1B[0;31m'
-green = '\x1B[0;32m'
-reset = '\x1B[0m'
+License: MIT License
 
-pkg = JSON.parse fs.readFileSync('./package.json')
-testCmd = pkg.scripts.test
-startCmd = pkg.scripts.start
+Features:
+  - Compile CoffeeScript files to JavaScript files
+  - Compile LESS files to CSS files
+  - Join CoffeeScript files to a single JavaScript file
+  - Join CSS files to a single CSS file
+  - Minify a single compiled JavaScript file via YUI compressor
+  - Minify a single compiled CSS file via YUI compressor
+  - Test CoffeeScript files via mocha
 
-log = (message, color, explanation) ->
-  console.log color + message + reset + ' ' + (explanation or '')
+Copyright(c) 2012, hashnote.net Alisue allright reserved.
+###
 
-# Compiles app.coffee and src directory to the app directory
-build = (callback) ->
-  options = ['-c','-b', '-o', 'app', 'src']
-  cmd = which.sync 'coffee'
-  coffee = spawn cmd, options
-  coffee.stdout.pipe process.stdout
-  coffee.stderr.pipe process.stderr
-  coffee.on 'exit', (status) -> callback?() if status is 0
+# --- CONFIGURE ---------------------------------------------------
+NAME              = "YOUR APPLICATION NAME"
+VERSION           = "0.1.0"
+CS_PATH           = "./src"
+JS_PATH           = "./app"
+LESS_PATH         = "./src/less"
+CSS_PATH          = "./public/css"
+TEST_PATH         = './tests'
+CS_FILES          = ['webserver']
+LESS_FILES        = ['reset','style']
+TEST_FILES        = ['test']
+YUI_COMPRESSOR    = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
+# -----------------------------------------------------------------
+fs              = require 'fs'
+path            = require 'path'
+util            = require 'util'
+{exec, spawn}   = require 'child_process'
 
-# mocha test
-test = (callback) ->
-  options = [
-    '--compilers'
-    'coffee:coffee-script'
-    '--colors'
-    '--require'
-    'should'
-    '--require'
-    './server'
-  ]
-  try
-    cmd = which.sync 'mocha' 
-    spec = spawn cmd, options
-    spec.stdout.pipe process.stdout 
-    spec.stderr.pipe process.stderr
-    spec.on 'exit', (status) -> callback?() if status is 0
-  catch err
-    log err.message, red
-    log 'Mocha is not installed - try npm install mocha -g', red
+execAsync = (command, args) ->
+  proc = spawn command, args
+  proc.stdout.on 'data', (data) ->
+    process.stdout.write data
+  proc.stderr.on 'data', (data) ->
+    process.stderr.write data
 
-task 'docs', 'Generate annotated source code with Docco', ->
-  fs.readdir 'src', (err, contents) ->
-    files = ("src/#{file}" for file in contents when /\.coffee$/.test file)
-    try
-      cmd = which.sync 'docco' 
-      docco = spawn cmd, files
-      docco.stdout.pipe process.stdout
-      docco.stderr.pipe process.stderr
-      docco.on 'exit', (status) -> callback?() if status is 0
-    catch err
-      log err.message, red
-      log 'Docco is not installed - try npm install docco -g', red
+# default values
+options =
+  watch: no
 
+option '-v', '--verbose', 'Display full informations'
+option '-w', '--watch', 'Continuously execute action'
 
-task 'build', ->
-  build -> log ":)", green
+Coffee =
+  compile: (src, dst, join=false) ->
+    if join
+      # compile multiple coffeescripts to a javascript
+      args = ['-cj', dst]
+      args = args.concat(src)
+      console.log "Join #{src.length} coffee files => #{dst}"
+    else
+      # compile a single coffeescript to a javascript
+      args = ['-bco', dst, src]
+      console.log "Compile #{src} => #{dst}"
+    execAsync 'coffee', args
+  join: (src, dst) ->
+    Coffee.compile(src, dst, true)
 
-task 'spec', 'Run Mocha tests', ->
-  build -> test -> log ":)", green
+Less =
+  compile: (src, dst) ->
+    args = [src, dst]
+    console.log "Compile #{src} => #{dst}"
+    execAsync 'lessc', args
+  join: (src, dst) ->
+    console.log "Join #{src.length} css files => #{dst}"
+    less = require('less')
+    buffer = []
+    for file in src
+      less.render(fs.readFileSync(file, encoding='utf8'), (e, css) ->
+        buffer.push(css)
+      )
+    buffer = buffer.join("\n")
+    fs.writeFileSync(dst, buffer)
 
-task 'test', 'Run Mocha tests', ->
-  build -> test -> log ":)", green
+Minify =
+  minify: (src, dst) ->
+    console.log "Minify #{src} => #{dst}"
+    args = ['-jar', YUI_COMPRESSOR, src, '-o', dst]
+    exec "java -jar #{YUI_COMPRESSOR} #{src} -o #{dst}", (err, stdout, stderr) ->
+      process.stdout.write stdout
+      process.stderr.write stderr
 
-task 'dev', 'start dev env', ->
-  # watch_coffee
-  options = ['-c', '-b', '-w', '-o', 'app', 'src']
-  cmd = which.sync 'coffee'  
-  coffee = spawn cmd, options
-  coffee.stdout.pipe process.stdout
-  coffee.stderr.pipe process.stderr
-  log 'Watching coffee files', green
-  # watch_js
-  supervisor = spawn 'node', ['./node_modules/supervisor/lib/cli-wrapper.js','-w','app,views', '-e', 'js|jade', 'server']
-  supervisor.stdout.pipe process.stdout
-  supervisor.stderr.pipe process.stderr
-  log 'Watching js files and running server', green
+Mocha =
+  test: (src) ->
+    console.log "Test #{src}"
+    args = ['--compilers', 'coffee:coffee-script', '-R', 'spec', '--colors']
+    args = args.concat(src)
+    execAsync 'mocha', args
+
+task 'compile', 'Compile coffeescript/less files to javascript/css files', (opts) ->
+  invoke 'compile:coffee'
+  invoke 'compile:less'
+
+task 'compile:coffee', 'Compile coffeescript files to javascript files', (opts) ->
+  options = opts
+  for filename in CS_FILES
+    do (filename) ->
+      src = "#{CS_PATH}/#{filename}.coffee"
+      compile = ->
+        Coffee.compile(src, "#{JS_PATH}")
+      compile()
+      if options.watch?
+        fs.watchFile src, (c, p) -> compile()
+
+task 'compile:less', 'Compile less files to css files', (opts) ->
+  options = opts
+  for filename in LESS_FILES
+    do (filename) ->
+      src = "#{LESS_PATH}/#{filename}.less"
+      dst = "#{CSS_PATH}/#{filename}.css"
+      compile = ->
+        Less.compile(src, dst)
+      compile()
+      if options.watch?
+        fs.watchFile src, (c, p) -> compile()
+
+task 'join', 'Join coffeescript/less files to a single javascript/css file', (opts) ->
+  invoke 'join:coffee'
+  invoke 'join:less'
+
+task 'join:coffee', 'Join coffeescript files to a single javascript file', (opts) ->
+  options = opts
+  src = ("#{CS_PATH}/#{filename}.coffee" for filename in CS_FILES)
+  dst = "#{JS_PATH}/#{NAME}.#{VERSION}.js"
+  compile = ->
+    Coffee.join(src, dst)
+  compile()
+  if options.watch
+    for filename in CS_FILES
+      src = "#{CS_PATH}/#{filename}.coffee"
+      fs.watchFile src, (c, p) -> compile()
+
+task 'join:less', 'Join less files to a single css file', (opts) ->
+  options = opts
+  src = ("#{LESS_PATH}/#{filename}.less" for filename in LESS_FILES)
+  dst = "#{CSS_PATH}/#{NAME}.#{VERSION}.css"
+  compile = ->
+    Less.join(src, dst)
+  compile()
+  if options.watch
+    for filename in LESS_FILES
+      src = "#{LESS_PATH}/#{filename}.less"
+      fs.watchFile src, (c, p) -> compile()
+
+task 'minify', 'Minify javascript/css file', (opts) ->
+  invoke 'minify:javascript'
+  invoke 'minify:css'
+
+task 'minify:javascript', 'Minify javascript file', (opts) ->
+  invoke 'join:coffee'
+  src = "#{JS_PATH}/#{NAME}.#{VERSION}.js"
+  dst = "#{JS_PATH}/#{NAME}.#{VERSION}.min.js"
+  Minify.minify(src, dst)
+
+task 'minify:css', 'Minify css file', (opts) ->
+  invoke 'join:less'
+  src = "#{CSS_PATH}/#{NAME}.#{VERSION}.css"
+  dst = "#{CSS_PATH}/#{NAME}.#{VERSION}.min.css"
+  Minify.minify(src, dst)
+
+task 'test', 'Test coffeescript files', (opts) ->
+  src = ("#{TEST_PATH}/#{filename}.coffee" for filename in TEST_FILES)
+  compile = -> 
+    Mocha.test(src)
+  compile()
+  if options.watch
+    for filename in src
+      fs.watchFile filename, (c, p) -> compile()
+
+task 'develop', 'Continuously compile/test coffee/less files.', (opts) ->
+  opts.watch = on
+  invoke 'test'
+  invoke 'compile:coffee'
+  invoke 'compile:less'
+
+task 'release', 'Execute test and create minified javascript/css file', (opts) ->
+  opts.watch = off
+  invoke 'test'
+  invoke 'minify:javascript'
+  invoke 'minify:css'

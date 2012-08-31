@@ -10,6 +10,11 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
 * Docs : https://docs.google.com/folder/d/0B7NEXxu0b66PVExpOFZWSldlMWs/edit
 * Questions : https://groups.google.com/forum/#!forum/social-brain-framework
 
+## Lauch the tests
+
+    cake test
+
+
 # Application structure
 -----------
 
@@ -21,7 +26,7 @@ Social Brain Framework (SBF) is a set of concepts and tools to analyze online so
       /docs
       /examples
       /tests
-      /lib
+      /src
         /crawler
         /storer
         /miners

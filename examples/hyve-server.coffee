@@ -3,9 +3,9 @@ zappa = require 'zappajs'
 
 
 # import hyve crawler 
-hyve = require('../lib/crawler/src/hyve.core.js')
-require('../lib/crawler/src/hyve.twitter.js')
-require('../lib/crawler/src/hyve.facebook.js')
+hyve = require('../src/lib/crawler/src/hyve.core.js')
+require('../src/lib/crawler/src/hyve.twitter.js')
+require('../src/lib/crawler/src/hyve.facebook.js')
 
 
 # hyve setup

@@ -10,11 +10,11 @@ hyve.queue_enable = true
 hyve.recall_enable = false
 
 queue.init()
-mydis  = this
 
 gap = 30000 # 30 seconds
 
 ( () ->
+
     crawler = (if typeof exports isnt "undefined" then exports else root.crawler = {})
 
     check = ->
@@ -32,16 +32,8 @@ gap = 30000 # 30 seconds
     search = (searchquery, sns) ->
            key = 'q:search:'+uniqueId(10)
            hyve.search.stream searchquery, ( (snsdata) ->
+                console.log 'item queued'
                 item = hyve.queue.text[0]  # get first item from hyve queue
-                queue.enqueue key, item, ( (data) ->
-                        @emit welcome: {time: new Date()}
-                )
-                #console.log 'raw'
-                # console.log '1 item fetched from ' + item.service
-                # console.log item
-                #console.log hyve.queue.text.length
-                
-
                 hyve.dequeue(item) # dequeue item from hyve
            ), sns
            key
@@ -49,8 +41,8 @@ gap = 30000 # 30 seconds
     # Exports to the outside world
     crawler.check = check
     crawler.search = search
-    
-    #export as node
+
+    #Export as node
     if typeof module isnt "undefined" and module.exports
           module.exports = crawler
     else

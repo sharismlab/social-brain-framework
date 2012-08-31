@@ -1,6 +1,6 @@
 r = require 'redis'
 c = require 'crypto'
-config =  require '../../config/db'
+config =  require '../../../config/db'
 redis  = null
 
 ( () ->
