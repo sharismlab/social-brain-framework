@@ -1,4 +1,4 @@
-queue = require './queue'
+queue = require '../storer/redis_queue'
 
 # import hyve crawler 
 hyve = require('./src/hyve.core.js')

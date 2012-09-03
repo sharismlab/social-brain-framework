@@ -4,14 +4,12 @@ http = require 'http'
 
 #redis clients
 # redis = require 'redis'
-# apikeys =  require '../config/db'
-apikeys =  require '../config/apikeys'
 
 app = express()
 
 #import crawler
 crawler = require './lib/crawler/crawler'
-queue = require './lib/crawler/queue'
+queue = require './lib/storer/redis_queue'
 # auth = require './lib/crawler/auth'
 
 #create web socket
@@ -19,21 +17,10 @@ server = http.createServer(app)
 io = require('socket.io').listen(server)
 
 #add my helpers
-app.locals  helpers.locals
-
-## OAUTh
-# app.everyauth.helpExpress(app);
-app.everyauth = require('everyauth')
-app.mongoose = require('mongoose')
-
-#configure everyauth
+app.locals helpers.locals
 
 # all config for app
 config = require('./config')( app, express)
-
-# models 
-models = {}
-models.examples = require('./models/example')(app.mongoose).model
 
 # Define Port
 port = process.env.PORT or process.env.VMC_APP_PORT or 3000
@@ -48,7 +35,7 @@ io.sockets.on 'connection', (socket) ->
 ##    ROUTES
 #########################
 
-require('./routes') app, models
+require('./routes') app
 
 app.get '/api/search/:query', (req, resp) ->
     resp.header 'Cache-Control', 'no-cache'

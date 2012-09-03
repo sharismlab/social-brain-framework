@@ -1,0 +1,18 @@
+!!! 5
+html
+    block head
+        link(rel='stylesheet', href='/css/reset.css')
+        link(rel='stylesheet', href='/css/style.css')
+    body
+    block menu
+        ul
+            - if ( !everyauth.loggedIn )
+                li 
+                    a(href= "/auth/twitter") Login with Twitter
+            - else
+                - if ( everyauth.twitter )
+                    h3 Twitter User Data
+                    p= JSON.stringify( everyauth.twitter.user )
+                li
+                    a(href="/logout") Logout        	
+    block content

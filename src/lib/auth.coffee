@@ -1,8 +1,11 @@
 request = require 'request'
-keys = require '../../../config/apikeys'
+keys = require '../../config/apikeys'
+
+# console.log(keys)
 
 # Twitter OAuth
 qs = require("querystring")
+
 oauth =
   callback: "http://localhost:3000/callback/"
   consumer_key: keys.twitter.consumerKey
@@ -10,6 +13,9 @@ oauth =
 
 url = "https://api.twitter.com/oauth/request_token"
 
+oauth
+
+###
 request.post
   url: url
   oauth: oauth
@@ -36,13 +42,13 @@ request.post
       token: perm_token.oauth_token
       token_secret: perm_token.oauth_token_secret
 
-    #url = "https://api.twitter.com/1/users/show.json?"
-    url = "https://api.twitter.com/1/account/rate_limit_status.json"
+    url = "https://api.twitter.com/1/users/show.json?"
+    # url = "https://api.twitter.com/1/account/rate_limit_status.json"
     params =
       screen_name: perm_token.screen_name
       user_id: perm_token.user_id
 
-    #url += qs.stringify(params)
+    url += qs.stringify(params)
     request.get
       url: url
       oauth: oauth
