@@ -10,7 +10,20 @@ app = express()
 #import crawler
 crawler = require './lib/crawler/crawler'
 queue = require './lib/storer/redis_queue'
-# auth = require './lib/crawler/auth'
+
+
+twitter = require 'ntwitter'
+apikeys = require '../config/apikeys'
+
+# console.log apikeys 
+
+
+app.twit = new twitter({
+  consumer_key: apikeys.twitter.consumerKey,
+  consumer_secret: apikeys.twitter.consumerSecret,
+  access_token_key: apikeys.twitter.tokenKey,
+  access_token_secret: apikeys.twitter.tokenSecret
+});
 
 #create web socket
 server = http.createServer(app)
@@ -26,16 +39,35 @@ config = require('./config')( app, express)
 port = process.env.PORT or process.env.VMC_APP_PORT or 3000
 
 # Start Server
-app.listen port, -> console.log "#{app.locals.appName} v.#{app.locals.version} running on #{port}\nPress CTRL-C to stop server."
+server.listen port, -> console.log "#{app.locals.appName} v.#{app.locals.version} running on #{port}\nPress CTRL-C to stop server."
 
 #socket
 io.sockets.on 'connection', (socket) ->
     console.log 'A socket connected!'
 
+    app.twit.rateLimitStatus (err, data) ->
+        socket.emit 'limitRate', { data: data }
+
+
+# seuron = io.of('/seuron')
+
+io.sockets.on "connection", (socket) ->
+  # socket.emit 'connected on seuron page'
+    socket.on "getTimeline", (userdata, fn) ->
+        #fn 'gimme user timeline'
+        console.log userdata
+        console.log 'user data required !'
+        app.twit.getUserTimeline {"user_id": userdata.userID, "include_entities" : true }, (err,data) ->
+            socket.emit 'userlookup', { tweets : data }
+
+
+
 ##    ROUTES
 #########################
 
 require('./routes') app
+
+
 
 app.get '/api/search/:query', (req, resp) ->
     resp.header 'Cache-Control', 'no-cache'

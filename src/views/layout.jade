@@ -1,18 +1,78 @@
 !!! 5
 html
+    | <meta charset="utf-8"/>
+    | <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    | <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
     block head
-        link(rel='stylesheet', href='/css/reset.css')
+        
         link(rel='stylesheet', href='/css/style.css')
-    body
+        link(rel='stylesheet', href='/css/bootstrap.css')
+        link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css')
+        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+        script(type='text/javascript', src='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js')
+
+
+
+        script(type='text/javascript', src='/js/bootstrap.js')
+
+        | <!--[if lt IE 9]>
+        |    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        | <![endif]-->
+    
+    body(onload="prettyPrint()")
     block menu
-        ul
-            - if ( !everyauth.loggedIn )
-                li 
-                    a(href= "/auth/twitter") Login with Twitter
-            - else
-                - if ( everyauth.twitter )
-                    h3 Twitter User Data
-                    p= JSON.stringify( everyauth.twitter.user )
-                li
-                    a(href="/logout") Logout        	
-    block content
+        .navbar.navbar-fixed-top
+           .navbar-inner
+                .container
+                  a.btn.btn-navbar(data-toggle="collapse", data-target="nav-collapse")
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+
+                  a.brand(href="/", title="Back to home") Social Brain
+                  div.nav-collapse
+                          ul.nav 
+                            li 
+                               a(href='/', title='Back home') Home
+                            li 
+                               a(href='/about', title='Learn more') About
+                            li
+                              a(href='/seuron', title='Visualize your seuron') Seuron
+                            li 
+                               a(href='/aquariums', title='Explore social networks') Aquariums
+
+                          ul.nav.pull-right
+                            li
+                              a(href="#", class="counter") x
+                            li
+                              a(href='http://sharismlab.com', title='Sharism Lab') Sharism Lab
+                            li.divider-vertical
+                            li.dropdown
+                              a.dropdown-toggle(href="#", data-toggle='dropdown') 
+                                - if (everyauth.twitter)
+                                  b Hi #{everyauth.twitter.user.name}
+                                - else
+                                  b Login
+                                b.caret
+                              ul.dropdown-menu
+                                - if (!everyauth.loggedIn)
+                                  li 
+                                    a(href="/auth/twitter") Sign in with Twitter
+                                  li 
+                                    a(href="/auth/weibo") Sign in with Weibo
+                                  li 
+                                    a(href="/auth/google") Sign in with Google
+                                - else
+                                  li
+                                    a(href='/logout') Logout
+    div.container
+        block content
+
+        block footer
+        
+    - if ( everyauth.twitter )
+        h3 Twitter User Data
+        pre.prettyprint.linenums
+          code.languague-js= JSON.stringify( everyauth.twitter.user )

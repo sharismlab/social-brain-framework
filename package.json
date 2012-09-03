@@ -19,6 +19,8 @@
   , "mongoose":         "latest"
   , "mongoose-auth":    "git://github.com/cbou/mongoose-auth.git#everymodule-fix"
   , "nib":              "0.4.1"
+  , "node-jquery":      "latest"
+  , "ntwitter":         "latest"
   , "querystring":      "latest"
   , "request":          "latest"
   , "redis" :           ">=0.7.1"
@@ -35,6 +37,7 @@
   , "sinon":            "*"
   , "semicov":          "*"
   , "mocha":            "*"
+  , "chai":             "*"
   , "should":           "*"
   , "request":          "*"
   , "supervisor":       "*"
@@ -45,7 +48,7 @@
   "scripts": 
   { 
     "start": "sudo ./sbf"
-  , "test": "mocha --compilers coffee:coffee-script --colors"
+  , "test": "sudo cake test"
   
   }
 }

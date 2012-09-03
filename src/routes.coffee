@@ -10,6 +10,12 @@ module.exports = (app, models) ->
       req.logout
       res.redirect '/'
 
+    app.get '/about', (req, res) ->
+      res.render "about"
+
+    app.get '/seuron', (req, res) ->
+      res.render "seuron", { userdata: app.everyauth }
+
     app.get '/api', (req, res) ->
         res.header 'Cache-Control', 'no-cache'
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'

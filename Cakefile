@@ -23,8 +23,8 @@ JS_PATH           = "./app"
 LESS_PATH         = "./src/less"
 CSS_PATH          = "./public/css"
 TEST_PATH         = './tests'
-CS_FILES          = ['webserver']
-LESS_FILES        = ['reset','style']
+CS_FILES          = ['app', "config", "locals", "routes"]
+LESS_FILES        = ['reset','style', 'layout']
 TEST_FILES        = ['test']
 YUI_COMPRESSOR    = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
 # -----------------------------------------------------------------

@@ -2,8 +2,8 @@
     "twitter":{
           "appKey":"PASTE_HERE",
         , "appSecret":"PASTE_HERE"
-        , "token_key": ""
-        , "token_secret" : ""
+        , "tokenKey": ""
+        , "tokenSecret" : ""
     },
     "weibo" : {
         "appKey" : "PASTE_HERE",

@@ -1,4 +1,8 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 body {
+  padding-top: 60px;
+  padding-bottom: 40px;
   background-color: black;
-  color: #5b83ad;
+  color: white;
+  font-family: "Open Sans", Arial, sans;
 }

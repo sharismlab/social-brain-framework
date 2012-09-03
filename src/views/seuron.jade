@@ -1,0 +1,13 @@
+extends layout
+
+block append content
+	canvas#seuron(data-processing-sources="/viz/addseuron.pde /viz/seuron-twitter.pde /viz/proc/Seuron.pde /viz/proc/Dendrit.pde /viz/proc/Message.pde /viz/proc/Transmitter.pde",tabindex="0",style="image-rendering: -webkit-optimize-contrast !important; margin: auto; position: absolute; top:0; left:0; width:100%;height100%; outline: 0;") 
+
+block append footer
+	- if ( everyauth.twitter )
+		script( type='text/javascript' )
+			userdata = !{ JSON.stringify( everyauth.twitter.user ) }
+
+	script( type="text/javascript", src="/socket.io/socket.io.js")
+	script( type="text/javascript", src="/js/processing.js")
+	script(type="text/javascript", src="/viz/script.js")
