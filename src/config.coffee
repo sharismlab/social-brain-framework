@@ -1,77 +1,16 @@
-apikeys =  require '../config/apikeys'
+dbs =  require '../config/db'
 less = require "less"
 helpers = require "./locals"
-
-# Fix for broken expressHelpers; https://github.com/bnoguchi/everyauth/issues/303
-preEveryAuthMiddlewareHack: ->
-  (req, res, next) ->
-    sess = req.session
-    auth = sess.auth
-    ea =
-      loggedIn: auth?.loggedIn
-
-    ea[k] = val for own k, val of auth
-
-    if everyauth.enabled.password
-      ea.password = ea.password || {}
-      ea.password.loginFormFieldName = everyauth.password.loginFormFieldName()
-      ea.password.passwordFormFieldName = everyauth.password.passwordFormFieldName()
-
-    res.locals.everyauth = ea
-
-    do next
-
-postEveryAuthMiddlewareHack: ->
-  userAlias = everyauth.expressHelperUserAlias || "user"
-  (req, res, next) ->
-    res.locals.everyauth.user = req.user
-    res.locals[userAlias] = req.user
-    do next
 
 module.exports = (app, express, mongoose) ->
 
   config = this
+  mongoose = require('mongoose')
 
-  ## OAUTh
-  app.everyauth = require('everyauth')
-  Promise = app.everyauth.Promise;
-
-  app.everyauth.debug = true;
-
-  # User model
-  app.mongoose = require('mongoose')
-  mongoose = app.mongoose
-
-  # models.user = require('./models/user')(app.mongoose).model
-  Schema = mongoose.Schema
-  ObjectId = mongoose.SchemaTypes.ObjectId
-
-  UserSchema = new Schema({})
-  User
-
-  mongooseAuth = require('mongoose-auth');
-
-  #configure everyauth
-  UserSchema.plugin mongooseAuth,
-    everymodule:
-      everyauth:
-        User: ->
-          User
-
-    twitter:
-      everyauth:
-        myHostname: "http://local.host:3000"
-        consumerKey: apikeys.twitter.consumerKey
-        consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: "/"
-
-  mongoose.model('User', UserSchema)
-  mongoose.connect('mongodb://localhost/example');
-
-  User = mongoose.model('User');
-
-  
-  # mongooseAuth.helpExpress(app);
+  # every auth + mongoose
+  everyauth = require('everyauth')
+  mongooseAuth = require('mongoose-auth')
+  require("./auth") app, mongoose, everyauth, mongooseAuth
 
   #generic config
   app.configure ->
@@ -87,9 +26,7 @@ module.exports = (app, express, mongoose) ->
 
     app.use express.methodOverride()
 
-    # app.use helpers.preEveryauthMiddlewareHack 
     app.use mongooseAuth.middleware(app)
-    # app.use helpers.postEveryauthMiddlewareHack
 
     app.use express.static(process.cwd() + '/public')
     # app.use app.router
@@ -100,11 +37,11 @@ module.exports = (app, express, mongoose) ->
       dumpExceptions: true
       showStack: true
     )
-    app.everyauth.debug = true;
-    #app.mongoose.connect "mongodb://localhost/socialbrain"
+    mongoose.connect dbs.dev.database
 
   app.configure "production", ->
     app.use express.errorHandler()
-    app.mongoose.connect "mongodb://flame.mongohq.com:27087/nodemvr"
+    mongoose.connect "mongodb://flame.mongohq.com:27087/nodemvr"
 
+  
   config

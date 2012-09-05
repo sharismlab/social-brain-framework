@@ -3,12 +3,12 @@
 
 module.exports = (app, models) ->
 
+
+    require('./routes/users') app
+
+
     app.get '/', (req, res) -> 
       res.render "index"
-
-    app.get '/logout', (req, res) ->
-      req.logout
-      res.redirect '/'
 
     app.get '/about', (req, res) ->
       res.render "about"
@@ -25,3 +25,4 @@ module.exports = (app, models) ->
         res.header 'Cache-Control', 'no-cache'
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
         res.send 'search'
+
