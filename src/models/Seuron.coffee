@@ -1,4 +1,4 @@
-module.exports = (mongoose) ->
+module.exports = (mongoose, ntwi) ->
   collection = "Seurons"
   
   Schema = mongoose.Schema
@@ -16,5 +16,12 @@ module.exports = (mongoose) ->
     created_at: Date
     id: ObjectId
   )
+
+  seuronSchema.methods.fetchTwitterTimeline = ->
+    #Add a method to fetch timeline from Twitter using twitterID
+    console.log "fetch timelien"
+
+
+
 
   seuronSchema

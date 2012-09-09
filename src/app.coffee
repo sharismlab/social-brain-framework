@@ -11,20 +11,6 @@ app = express()
 crawler = require './lib/crawler/crawler'
 queue = require './lib/storer/redis_queue'
 
-
-twitter = require 'ntwitter'
-apikeys = require '../config/apikeys'
-
-# console.log apikeys 
-
-
-app.twit = new twitter({
-  consumer_key: apikeys.twitter.consumerKey,
-  consumer_secret: apikeys.twitter.consumerSecret,
-  access_token_key: apikeys.twitter.tokenKey,
-  access_token_secret: apikeys.twitter.tokenSecret
-});
-
 #create web socket
 server = http.createServer(app)
 io = require('socket.io').listen(server)
@@ -50,7 +36,7 @@ io.sockets.on 'connection', (socket) ->
 
 
 # seuron = io.of('/seuron')
-
+###
 io.sockets.on "connection", (socket) ->
   # socket.emit 'connected on seuron page'
     socket.on "getTimeline", (userdata, fn) ->
@@ -59,7 +45,7 @@ io.sockets.on "connection", (socket) ->
         console.log 'user data required !'
         app.twit.getUserTimeline {"user_id": userdata.userID, "include_entities" : true }, (err,data) ->
             socket.emit 'userlookup', { tweets : data }
-
+###
 
 
 ##    ROUTES

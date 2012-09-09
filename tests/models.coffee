@@ -21,7 +21,7 @@ UserSchema = require("../src/models/User") mongoose
 
 #hook up model on active Mongoose connection
 Seuron = db.model('Seuron', seuronSchema)
-User = db.model('Seuron', UserSchema)
+User = db.model('User', UserSchema)
 
 twitterUser = require('./support/twitterUser')
 
@@ -39,22 +39,12 @@ describe "Users", ->
 	describe "with a Twitter Account", ->
 		
 		beforeEach (done) ->
-			# console.log ('create a user with Twitter')
-			data =
-			  accessToken: "myToken"
-			  accessTokenSecret: "mytokenSecret"
-			  twitterUser: twitterUser
-			
-			user = new User({ "twit" : twitterUser })
-
-			everyauth.loggedIn = true
-			everyauth.user = user
-			# user.save()
+			user = User.createWithTwitter( twitterUser, 'accessTok', 'accessTokSecret')
 			done()
 		
 		afterEach (done)->
+      		db.db.dropDatabase();
       		done()
-
 		
 		it 'should be able to logged in with Twitter', (done) ->
 			request( app )
@@ -82,14 +72,12 @@ describe "Seurons", ->
 		done()
 		#console.log( s1 )
 
-	beforeEach (done) ->
-
-
-
+	#afterEach (done) ->
+	
 	describe "Seuron model", (done) ->
 		
 		it "should have a username", (done) ->
-			# s1.username.should.exist()
+			user.should.be.an.instanceof(User)
 			s1.username.should.equal 'clemsos'
 			done()
 

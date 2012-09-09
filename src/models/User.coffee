@@ -4,6 +4,11 @@ module.exports = (mongoose) ->
   Schema = mongoose.Schema
   ObjectId = mongoose.SchemaTypes.ObjectId
 
+  #Import seuron model
+  SeuronSchema = require('./Seuron') mongoose
+  mongoose.model('Seuron', SeuronSchema)
+  Seuron = mongoose.model('Seuron');
+
   UserSchema = new Schema (
     author: ObjectId
     name: String
@@ -49,6 +54,11 @@ module.exports = (mongoose) ->
         lang: twitUserMeta.lang
         contributorsEnabled: twitUserMeta.contributors_enabled
 
+    s = new Seuron( { username: this.name, user_id : this._id } )  # attach a new Seuron to our user
+    s.save()
+
+    this.seuron_id = s._id
     this.create(params, callback)
+    this
 
   UserSchema

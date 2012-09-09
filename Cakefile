@@ -25,7 +25,7 @@ CSS_PATH          = "./public/css"
 TEST_PATH         = './tests'
 CS_FILES          = ['app', "config", "locals", "routes"]
 LESS_FILES        = ['reset','style', 'layout']
-TEST_FILES        = ['models'] #, 'config', 'routes']
+TEST_FILES        = ['models', 'config', 'routes']
 YUI_COMPRESSOR    = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
 # -----------------------------------------------------------------
 fs              = require 'fs'
