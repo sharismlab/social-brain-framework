@@ -5,10 +5,19 @@ helpers = require "./locals"
 module.exports = (app, express, mongoose) ->
 
   config = this
-  mongoose = require('mongoose')
+
+  # User model
+  # UserSchema = require('./models/User') mongoose
+  # mongoose.model('User', UserSchema)
+  # User = mongoose.model('User');
+  
+  # u = User.findOne( { "twit.name" : "clemsos" } , (err, data) -> 
+  #   console.log data
+  # )
 
   # every auth + mongoose
   everyauth = require('everyauth')
+
   mongooseAuth = require('mongoose-auth')
   require("./auth") app, mongoose, everyauth, mongooseAuth
 
@@ -43,5 +52,6 @@ module.exports = (app, express, mongoose) ->
     app.use express.errorHandler()
     mongoose.connect "mongodb://flame.mongohq.com:27087/nodemvr"
 
+  # //mongooseAuth.helpExpress(app);
   
   config

@@ -1,7 +1,8 @@
 apikeys =  require '../config/apikeys'
 
 module.exports = (app, mongoose, everyauth, mongooseAuth) ->
-
+  
+  # console.log everyauth
   auth = this 
   everyauth.debug = true;
   
@@ -42,9 +43,33 @@ module.exports = (app, mongoose, everyauth, mongooseAuth) ->
             return promise.fulfill(foundUser) if foundUser # user has been founded into db !
             # console.log self.User()()
 
+            # create our new user inside DB
             self.User()().createWithTwitter twitterUser, accessTok, accessTokSecret, (err, createdUser) ->
-              return promise.fail(err)  if err
-              promise.fulfill createdUser # create our new user inside DB
+              console.log(err) if err
+              console.log( Seuron )
+
+              # create 
+
+              #Import seuron model
+              SeuronSchema = require('./models/Seuron') mongoose
+              mongoose.model('Seuron', SeuronSchema)
+              Seuron = mongoose.model('Seuron');
+
+              s = new Seuron()  # attach a new Seuron to our user
+              s.sns.twitter.profile = createdUser.twit
+              s.user_id = createdUser._id
+
+              s.save () ->
+                console.log "new seuron created"
+                # console.log data
+                createdUser.seuron_id = s._id
+                createdUser.save (data) ->
+                  console.log "user updated with seuron id"
+
+
+              #create user session
+              return promise.fail(err) if err
+              promise.fulfill createdUser 
 
           promise
 

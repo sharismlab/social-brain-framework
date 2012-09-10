@@ -1,6 +1,7 @@
 express = require 'express'
 helpers = require "./locals"
 http = require 'http'
+mongoose = require 'mongoose'
 
 #redis clients
 # redis = require 'redis'
@@ -19,7 +20,7 @@ io = require('socket.io').listen(server)
 app.locals helpers.locals
 
 # all config for app
-config = require('./config')( app, express)
+config = require('./config') app, express, mongoose
 
 # Define Port
 port = process.env.PORT or process.env.VMC_APP_PORT or 3000
@@ -28,11 +29,11 @@ port = process.env.PORT or process.env.VMC_APP_PORT or 3000
 server.listen port, -> console.log "#{app.locals.appName} v.#{app.locals.version} running on #{port}\nPress CTRL-C to stop server."
 
 #socket
-io.sockets.on 'connection', (socket) ->
-    console.log 'A socket connected!'
+# io.sockets.on 'connection', (socket) ->
+    # console.log 'A socket connected!'
 
-    app.twit.rateLimitStatus (err, data) ->
-        socket.emit 'limitRate', { data: data }
+    # app.twit.rateLimitStatus (err, data) ->
+    #     socket.emit 'limitRate', { data: data }
 
 
 # seuron = io.of('/seuron')
@@ -51,9 +52,7 @@ io.sockets.on "connection", (socket) ->
 ##    ROUTES
 #########################
 
-require('./routes') app
-
-
+require('./routes') app, io, mongoose
 
 app.get '/api/search/:query', (req, resp) ->
     resp.header 'Cache-Control', 'no-cache'

@@ -89,4 +89,7 @@ describe "Seurons", ->
 			s1.user_id.should.equal user._id
 			done()
 
+		it "should has a property hasTimeline", (done) ->
+			s1.hasTimeline().should.be.true
+
 db.close()
