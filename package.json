@@ -11,7 +11,7 @@
   , "connect-assets":   "2.2.1"
   , "express":          "latest"
   , "everyauth":        "git://github.com/bnoguchi/everyauth.git#express3"
-  , "forever":          "latest"
+  , "forever":          "0.6.6"
   , "jade":             "latest"
   , "less":             "latest"
   , "markdown":         "0.3.1"
