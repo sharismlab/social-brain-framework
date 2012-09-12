@@ -61,26 +61,62 @@ void draw() {
 	externals.context.fillStyle = gradient; 
 	externals.context.fillRect( 0, 0, width, height ); 
 
-	// DRAW TIMELINE
-	drawTimeline();
-
-	// DISPLAY
-	if( disp == true) display();
-}
-
-
-void display(){
-
 	/*
 	// add a loader to screen
-	if(loading) {
+	if( loading ) {
 		console.log(loading)
 		textAlign(CENTER);
 		text(isLoading, width/2, height/2);		
 
 	}*/
 
+	// DRAW TIMELINE
+	drawTimeline();
+
+	// draw caption
+	 color(65);
+	 text("PRESS MOUSE BUTTON TO SHOW MESSAGES", screenWidth-300,40);
+	 text("Caption", screenWidth-100,60);
+	 for (int i = 0; colors[i]; i++){
+	 	fill( colors[i] ) ;
+	 	text( captions[i], screenWidth-100, i*15+90 ) ;
+	 }
+
+	// draw daddy
+	daddy.cy =50;
+	daddy.cx =screenWidth/2;
+	daddy.display();
+
+	// DISPLAY OUR GUYS
+	if( disp == true) display();
+}
+
+
+
+void display(){
+
 	// drawSeurons
+	friends = daddy.getFriends();
+	followers = daddy.getFollowers();
+	close  =daddy.getCloseFriends();
+
+	// draw friends
+	for (int i = 0; friends[i]; i++){
+
+		float r = 50;
+
+		float angle = i * TWO_PI / friends.length;
+
+  		float x = cx + cos(angle) * r;
+  		float y = cy + sin(angle) * r;
+		
+		s.cy = y;
+		s.cx = x;
+
+		s.display();
+	 	
+	} 
+
 	for (int i = 0; seurons[i]; i++){
 
 		// console.log(daddy);
@@ -104,36 +140,23 @@ void display(){
 		
 	}
 
-	daddy.cy =50;
-	daddy.cx =screenWidth/2;
-	daddy.display();
+
 
 	//draw synapses
 	for (int i = 0; daddy.synapses[i]; i++){
-
 		if(daddy.synapses[i].seuronB.data != null)
 			daddy.synapses[i].display();
 	}
 
 
-
 	//draw messages
-	if(showMessage) {
+	if( showMessage ) {
 		for (int i = 0; messages[i]; i++){
 			 	
 			messages[i].display();
 	
 		 }
 	}
-
-	 // draw caption
-	 color(65);
-	 text("PRESS MOUSE BUTTON TO SHOW MESSAGES", screenWidth-300,40);
-	 text("Caption", screenWidth-100,60);
-	 for (int i = 0; colors[i]; i++){
-	 	fill( colors[i] ) ;
-	 	text( captions[i], screenWidth-100, i*15+90 ) ;
-	 }
 
 	 if(mousePressed) {
 	 	showMessage = true;

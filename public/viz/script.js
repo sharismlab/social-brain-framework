@@ -69,8 +69,15 @@ $(window).ready( function() {
     	console.log('got some users !');
     	
     	var users = JSON.parse( decodeURIComponent( escape ( data.profiles ) ) );
-    	// console.log(data.profiles);
-    	viz.parseLookup(users );
+    	
+        // console.log(data.profiles);
+        $.each( users, function(key, item) {
+            //populate seurons with twitter data
+            viz.parseUser( item );
+        });
+    
+
+        // viz.parseLookup(users );
 
     	// viz.display();
     	disp = true;
