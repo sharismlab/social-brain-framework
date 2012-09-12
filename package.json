@@ -19,7 +19,7 @@
   , "mongoose":         "latest"
   , "mongoose-auth":    "git://github.com/cbou/mongoose-auth.git#everymodule-fix"
   , "nib":              "0.4.1"
-  , "node-jquery":      "git://github.com/coolaj86/node-jquery.git"
+  , "jquery":           "latest"
   , "ntwitter":         "latest"
   , "querystring":      "latest"
   , "request":          "latest"

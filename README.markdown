@@ -22,8 +22,10 @@ To run SBF, you will need MongoDB & Redis installed
     git clone https://github.com/sharismlab/social-brain-framework.git
     cd social-brain-framework
     npm install
-    redis-server
+    redis-server conf/locals/redis.conf
     ./sbf
+
+You will need Python2.7 to be installed (to compile some node dependencies)
 
 ## Run the tests
 
