@@ -5,7 +5,6 @@ show_help() {
 Usage: sbf [options]
 Options:
     --production    Run in production mode (default: development mode)
-
 EOF
 }
 

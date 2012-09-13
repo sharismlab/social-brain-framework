@@ -22,16 +22,12 @@ module.exports = () ->
     # tok = req.session.auth.twitter.token
     # tokSec = req.session.auth.twitter.tokenSecret
 
-    tok ="136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi"
-    tokSec = "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
-
-
     #use logged in user credentials to process requests
     ntwit = new ntwitter (    
         consumer_key: apikeys.twitter.consumerKey
         consumer_secret: apikeys.twitter.consumerSecret
-        access_token_key: tok
-        access_token_secret: tokSec
+        access_token_key: apikeys.twitter.tokenKey
+        access_token_secret: apikeys.twitter.tokenSecret
     )
 
     verifyCredentials = () ->        
