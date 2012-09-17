@@ -9,8 +9,8 @@ mongoose = require 'mongoose'
 app = express()
 
 #import crawler
-crawler = require './lib/crawler/crawler'
-queue = require './lib/storer/redis_queue'
+# crawler = require './lib/crawler/crawler'
+# queue = require './lib/storer/redis_queue'
 
 #create web socket
 server = http.createServer(app)
