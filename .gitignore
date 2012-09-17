@@ -22,7 +22,7 @@ results
 dump.rdb
 npm-debug.log
 node_modules/
-public/viz/seuron
+public/viz/seuron_viz
 
 config/apikeys.json
 config/db.json
