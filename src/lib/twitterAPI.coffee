@@ -19,15 +19,15 @@ module.exports = () ->
     twitterAPI = this
 
     # twidata = req.session.auth.twitter.user.id
-    # tok = req.session.auth.twitter.token
-    # tokSec = req.session.auth.twitter.tokenSecret
+    tok = req.session.auth.twitter.token
+    tokSec = req.session.auth.twitter.tokenSecret
 
     #use logged in user credentials to process requests
     ntwit = new ntwitter (    
         consumer_key: apikeys.twitter.consumerKey
         consumer_secret: apikeys.twitter.consumerSecret
-        access_token_key: apikeys.twitter.tokenKey
-        access_token_secret: apikeys.twitter.tokenSecret
+        access_token_key: tok
+        access_token_secret: tokSec
     )
 
     verifyCredentials = () ->        
