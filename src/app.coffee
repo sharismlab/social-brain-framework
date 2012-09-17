@@ -2,6 +2,7 @@ express = require 'express'
 helpers = require "./locals"
 http = require 'http'
 mongoose = require 'mongoose'
+httpProxy = require('http-proxy')
 
 #redis clients
 # redis = require 'redis'
@@ -12,9 +13,9 @@ app = express()
 # crawler = require './lib/crawler/crawler'
 # queue = require './lib/storer/redis_queue'
 
+
 #create web socket
 server = http.createServer(app)
-io = require('socket.io').listen(server)
 
 #add my helpers
 app.locals helpers.locals
@@ -28,7 +29,13 @@ port = process.env.PORT or process.env.VMC_APP_PORT or 3000
 # Start Server
 server.listen port, -> console.log "#{app.locals.appName} v.#{app.locals.version} running on #{port}\nPress CTRL-C to stop server."
 
+# Create proxy server to use port 80
+proxyServer = httpProxy.createServer(3000, '127.0.0.1');
+proxyServer.listen(80);
+
 #socket
+io = require('socket.io').listen(server)
+
 # io.sockets.on 'connection', (socket) ->
     # console.log 'A socket connected!'
 

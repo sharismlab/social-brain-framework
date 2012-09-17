@@ -27,6 +27,7 @@ module.exports = (app, express, mongoose) ->
     app.set "view engine", "jade"
     app.use express.bodyParser()
     app.use express.cookieParser()
+    
 
     app.use express.session( {
     secret: "topsecret",
