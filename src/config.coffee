@@ -1,6 +1,7 @@
 dbs =  require '../config/db'
 less = require "less"
 helpers = require "./locals"
+httpProxy = require('http-proxy')
 
 module.exports = (app, express, mongoose) ->
 
@@ -27,7 +28,7 @@ module.exports = (app, express, mongoose) ->
     app.set "view engine", "jade"
     app.use express.bodyParser()
     app.use express.cookieParser()
-    
+
 
     app.use express.session( {
     secret: "topsecret",
@@ -48,10 +49,15 @@ module.exports = (app, express, mongoose) ->
       showStack: true
     )
     mongoose.connect dbs.dev.database
+    # Create proxy server to use port 80
+    proxyServer = httpProxy.createServer(3000, '127.0.0.1');
+    proxyServer.listen(80);
 
   app.configure "production", ->
     app.use express.errorHandler()
     mongoose.connect dbs.prod.database
+    proxyServer = httpProxy.createServer(3000, '106.187.52.150');
+    proxyServer.listen(80);
 
 
   # //mongooseAuth.helpExpress(app);

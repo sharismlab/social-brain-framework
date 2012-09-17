@@ -2,7 +2,6 @@ express = require 'express'
 helpers = require "./locals"
 http = require 'http'
 mongoose = require 'mongoose'
-httpProxy = require('http-proxy')
 
 #redis clients
 # redis = require 'redis'
@@ -28,10 +27,6 @@ port = process.env.PORT or process.env.VMC_APP_PORT or 3000
 
 # Start Server
 server.listen port, -> console.log "#{app.locals.appName} v.#{app.locals.version} running on #{port}\nPress CTRL-C to stop server."
-
-# Create proxy server to use port 80
-proxyServer = httpProxy.createServer(3000, '127.0.0.1');
-proxyServer.listen(80);
 
 #socket
 io = require('socket.io').listen(server)
