@@ -4,7 +4,7 @@
 , "author": "Sharism Lab"
 , "node": "0.6.12"
 , "version": "0.0.1"
-, "main": "app.js"
+, "main": "sbf.coffee"
 , "dependencies":
   { 
     "coffee-script":    "latest"
