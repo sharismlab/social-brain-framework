@@ -26,7 +26,7 @@ module.exports = (app, mongoose, everyauth, mongooseAuth) ->
 
     twitter:
       everyauth:
-        myHostname: "http://local.host:3000"
+        myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
         redirectPath: '/seuron'

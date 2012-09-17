@@ -28,6 +28,7 @@ PFont font = loadFont("Comic Sans");
 
 	// to dispaly messages
 	boolean showMessage = false;
+	// boolean displaySeuron = false; // just turn this on to show seuron
 
 // ------------------------------- INIT
 void setup(){
@@ -45,10 +46,31 @@ void setup(){
 		"is Friend of", 
 		"is Followed by",
 		"No existing relationship"
-		];
+		];	
+}
+
+// create daddy when we got the right data
+void goDaddy( Object daddyData ) {
+	daddy = new Seuron( daddyData.id, daddyData, true );
+	daddy.cx = screenWidth/2;
+	daddy.cy = screenHeight/2;
+	seurons.push(daddy);
+	seuronIds.push(daddy.id);
+	daddyDisplay =true;
+}
+
+
+// FRIENDS & FOLLOWERS 
+void createFriends( Object data ) {
+	console.log("followers : "+data.length);
+	daddy.friends = data;
 	
 }
 
+void createFollowers( Object data ) {
+	console.log("friends : "+data.length);
+	daddy.followers = data;
+}
 
 // ------------------------------- MAIN DRAWING FUNCTION
 void draw() {
@@ -60,15 +82,6 @@ void draw() {
 	gradient.addColorStop(1,'rgba(10, 10, 10, 1)'); 
 	externals.context.fillStyle = gradient; 
 	externals.context.fillRect( 0, 0, width, height ); 
-
-	/*
-	// add a loader to screen
-	if( loading ) {
-		console.log(loading)
-		textAlign(CENTER);
-		text(isLoading, width/2, height/2);		
-
-	}*/
 
 	// DRAW TIMELINE
 	drawTimeline();
@@ -83,15 +96,140 @@ void draw() {
 	 }
 
 	// draw daddy
-	daddy.cy =50;
-	daddy.cx =screenWidth/2;
-	daddy.display();
+	// daddy.cy =50;
+	// daddy.cx =screenWidth/2;
+	// daddy.display();
 
 	// DISPLAY OUR GUYS
-	if( disp == true) display();
+	if( daddyDisplay == true) daddy.display();
+	if( displaySeuron == true) displayAllSeurons();
 }
 
+void displayAllSeurons(){
 
+	
+	var close = [];
+	var myfriends = [];
+	var myfollowers = [];
+	var unknown = [];
+
+
+	// drawSeurons
+	myfriends = daddy.getFriends();
+	myfollowers = daddy.getFollowers();
+	close  = daddy.getCloseFriends();
+	unknown = daddy.getUnrelated();
+
+
+	float cx = screenWidth/2;
+	float cy = screenHeight/2;
+	
+	// hack to fix a strange thing about the other daddy (???) 
+	// myDad = getDaddy();
+
+	// draw close friends
+	for (int i = 0; close[i]; i++){
+
+		// console.log(friends[i]);
+
+		float r = 100;
+
+		float angle = i * TWO_PI / close.length;
+
+  		float x = cx + cos(angle) * r;
+  		float y = cy + sin(angle) * r;
+			
+		close[i].cy = y;
+		close[i].cx = x;
+
+		close[i].couleur= color(255,200,200);
+
+		close[i].display();
+	} 
+
+	// draw friends
+	for (int i = 0; myfriends[i]; i++){
+
+		// console.log(friends[i]);
+
+		float r = 200;
+
+		float angle = i * TWO_PI / myfriends.length;
+
+  		float x = cx + cos(angle) * r;
+  		float y = cy + sin(angle) * r;
+			
+		myfriends[i].cy = y;
+		myfriends[i].cx = x;
+		
+		myfriends[i].couleur = color(127,0,0);
+
+		myfriends[i].display();
+	} 
+	
+	// draw followers
+	for (int i = 0; myfollowers[i]; i++){
+
+		// console.log(friends[i]);
+
+		float r = 250;
+
+		float angle = i * TWO_PI / myfollowers.length;
+
+  		float x = cx + cos(angle) * r*1.5;
+  		float y = cy + sin(angle) * r;
+			
+		myfollowers[i].cy = y;
+		myfollowers[i].cx = x;
+		myfollowers[i].couleur = color(127,130,0);
+
+		myfollowers[i].display();
+	} 
+
+	// draw unknown
+	for (int i = 0; unknown[i]; i++){
+
+		float r = 250;
+
+		float angle = i * TWO_PI / unknown.length;
+
+  		float x = cx + cos(angle) * r*3;
+  		float y = cy + sin(angle) * r;
+			
+		unknown[i].cy = y;
+		unknown[i].cx = x;
+
+		unknown[i].display();
+	}
+
+
+	// // here comes the dad
+	// myDad.cx =screenHeight/2;
+	// myDad.cy =screenWidth/2;
+	// myDad.display;
+
+	//draw synapses
+	/*
+	for (int i = 0; daddy.synapses[i]; i++){
+		if(daddy.synapses[i].seuronB.data != null)
+			daddy.synapses[i].display();
+	}
+	*/
+
+
+	//draw messages
+	if( showMessage ) {
+		for (int i = 0; messages[i]; i++){
+			messages[i].display();
+		 }
+	}
+
+	if(mousePressed) {
+		showMessage = true;
+	} else {
+		showMessage = false;
+	}
+}
 
 void display(){
 
@@ -164,8 +302,6 @@ void display(){
 	 	showMessage = false;
 	 }
 }
-
-
 int dateMin = (new Date()).getTime(); // Return the number of milliseconds since 1970/01/01:
 int dateMax = 0;
 int seconds;
