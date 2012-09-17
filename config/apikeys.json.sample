@@ -4,6 +4,7 @@
         , "appSecret":"PASTE_HERE"
         , "tokenKey": ""
         , "tokenSecret" : ""
+        , "url" : ""
     },
     "weibo" : {
         "appKey" : "PASTE_HERE",

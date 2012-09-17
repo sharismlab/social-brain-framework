@@ -1,21 +1,20 @@
 { 
-
-"development":
-  { "driver":   "mysql"
-  , "host":     "localhost"
+"dev":
+  { "driver":   "mongoose"
   , "database": ""
-  , "username": ""
-  , "password" : ""
   }
 
 , "test":
-  { "driver":   ""
+  { "driver":   "memory"
   }
 
-, "production":
-  { "driver":   ""
+, "redis":
+  { "driver":   "redis"
+    ,"port" :   ""
+    ,"host" :   ""
+  }
+, "prod":
+  { "driver":   "mongoose"
   , "database": ""
-  , "host":     ""
-  
   }
 }

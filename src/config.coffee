@@ -50,7 +50,8 @@ module.exports = (app, express, mongoose) ->
 
   app.configure "production", ->
     app.use express.errorHandler()
-    mongoose.connect "mongodb://flame.mongohq.com:27087/nodemvr"
+    mongoose.connect dbs.prod.database
+
 
   # //mongooseAuth.helpExpress(app);
   
