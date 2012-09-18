@@ -33,43 +33,55 @@ module.exports = (app, mongoose, everyauth, mongooseAuth) ->
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
           promise = @Promise()
-          #console.log  promise
+          # console.log  twitterUser
           self = this 
+
           
+          # lookup our user using twitter ID
           @User()().findOne 
-            "twit.id": twitterUser.id # lookup our user using twitter ID
-          , (err, foundUser) ->
-            return promise.fail(err) if err # error !
-            return promise.fulfill(foundUser) if foundUser # user has been founded into db !
-            # console.log self.User()()
+            "twit.id": twitterUser.id , (err, foundUser) ->
+              console.log "user found", foundUser
 
-            # create our new user inside DB
-            self.User()().createWithTwitter twitterUser, accessTok, accessTokSecret, (err, createdUser) ->
-              console.log(err) if err
-              console.log( Seuron )
+              # handle error !
+              return promise.fail(err) if err 
 
-              # create 
+              # user has been founded into db !
+              if foundUser != null
+                console.log "exsiting user", foundUser
+                return promise.fulfill( foundUser )
 
-              #Import seuron model
-              SeuronSchema = require('./models/Seuron') mongoose
-              mongoose.model('Seuron', SeuronSchema)
-              Seuron = mongoose.model('Seuron');
+              else
+                #Import seuron model
+                SeuronSchema = require('./models/Seuron') mongoose
+                mongoose.model('Seuron', SeuronSchema)
+                Seuron = mongoose.model('Seuron') 
 
-              s = new Seuron()  # attach a new Seuron to our user
-              s.sns.twitter.profile = createdUser.twit
-              s.user_id = createdUser._id
+                # if not founded, create our new user inside DB
+                self.User()().createWithTwitter twitterUser, accessTok, accessTokSecret, (err, createdUser) ->
+                  console.log(err) if err
+                  # console.log( Seuron )
 
-              s.save () ->
-                console.log "new seuron created"
-                # console.log data
-                createdUser.seuron_id = s._id
-                createdUser.save (data) ->
-                  console.log "user updated with seuron id"
+                  #lookup if the seuron already exists in db
+                  Seuron.findOne 
+                    "s.user_id" : createdUser._id, (err, foundSeuron) ->
+                      console.log "seuron found", foundSeuron 
 
+                      if( foundSeuron == null)
+                        #create new Seuron
+                        s = new Seuron()  # attach a new Seuron to our user
+                        s.sns.twitter.profile = createdUser.twit
+                        s.user_id = createdUser._id
 
-              #create user session
-              return promise.fail(err) if err
-              promise.fulfill createdUser 
+                        s.save ( d ) ->
+                          console.log "new seuron created"
+                          console.log d
+                          createdUser.seuron_id = s._id
+                          createdUser.save (data) ->
+                            console.log "user updated with seuron id"
+
+                  #create user session
+                  return promise.fail(err) if err
+                  promise.fulfill createdUser 
 
           promise
 

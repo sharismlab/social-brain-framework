@@ -22,6 +22,7 @@ module.exports = () ->
     tok = req.session.auth.twitter.token
     tokSec = req.session.auth.twitter.tokenSecret
 
+    console.log tok, tokSec
     #use logged in user credentials to process requests
     ntwit = new ntwitter (    
         consumer_key: apikeys.twitter.consumerKey

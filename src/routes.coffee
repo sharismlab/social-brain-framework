@@ -19,19 +19,18 @@ module.exports = (app, io, mongoose) ->
       res.render "about"
 
     app.get '/seuron', (req, res) ->
-        # console.log req.user if (req.user)
-        # io.sockets.on 'connection', (socket) ->
-        # socket.emit 'bla', {data:"blabla from server"};        
-        # s = Seuron.findOne({ 'user_id': user_id })
+        
         if (req.user)
 
             # create a ntwitter element
             ntwitter = require 'ntwitter'
             apikeys = require '../config/apikeys'
 
-            tok ="136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi"
-            tokSec = "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
-
+            #tok ="136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi"
+            #tokSec = "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
+            console.log req.session
+            tok = req.session.auth.twitter.accessToken
+            tokSec =  req.session.auth.twitter.accessTokenSecret
 
             #use logged in user credentials to process requests
             ntwit = new ntwitter (    
