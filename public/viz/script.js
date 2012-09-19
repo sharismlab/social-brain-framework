@@ -1,6 +1,6 @@
 var loading = null;
 var viz, daddy;
-var timeline, followers, friends, mentions;
+var timeline, timelineMentions, followers, friends;
 var userdata = null;
 var loaded = false;
 
@@ -8,7 +8,7 @@ var toLookup = [];
 var lookupNow = false;
 
 var displaySeuron = false;
-var daddyDisplay = false;
+var displayDaddy = false;
 
 // hacky way to check if processing sketch is loaded
 // from http://stackoverflow.com/questions/10281747/how-to-know-when-a-processingjs-sketch-has-been-loaded
@@ -88,16 +88,20 @@ $(window).ready( function() {
     });
 	
 	socket.on('friends', function( data ) {
-        console.log(data);
+        console.log(data.data);
         viz.createFriends( data.data );
 	});
 	
 	socket.on('timeline', function( data) {
+        console.log("timeline ready");
     	viz.analyzeTimeline( data.data );
     });
 
+
 	socket.on('mentions', function( data) {
-		mentions = data;
+		
+        viz.addTimelineMentions(data.data);
+        socket.emit("mentions_ready", {my :'data'})
 		// console.log(mentions);
 		// viz.analyzeTimeline( daddy, friends );
 	});

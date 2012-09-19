@@ -51,7 +51,7 @@ module.exports = (app, io, mongoose) ->
                 , (err, seuron) -> 
                     console.log err if err
                     console.log("seuron loaded")
-                    # console.log data
+                    console.log seuron
                     getSeuronData( seuron )
             )
 
@@ -59,26 +59,17 @@ module.exports = (app, io, mongoose) ->
 
             getSeuronData = ( seuron ) ->
                 
-                console.log seuron.sns.twitter.hasTimeline.check
-                # console.log seuron.sns.twitter.hasTimeline.check
-                console.log seuron.sns.twitter.hasFriends.check
-                console.log seuron.sns.hasFollowers.check
+                console.log "has Timeline : " + seuron.sns.twitter.hasTimeline.check
+                console.log "has Mentions : " +seuron.sns.twitter.hasMentions.check
+                console.log "has Friends : " +seuron.sns.twitter.hasFriends.check
+                console.log "has Followers : " +seuron.sns.twitter.hasFollowers.check
 
                 io.sockets.on 'connection', (socket) ->
                     socket.emit 'loggedIn', { data: req.session.auth.twitter.user };              
                     socket.on "bla", (mess)->
                         console.log mess
 
-                    if( seuron.sns.twitter.hasTimeline.check == false ) 
-                        socket.emit "loading", { text : "Loading Twitter Timeline"}
-                        seuron.getTimelineFromTwitter( ntwit, ( data ) ->
-                            socket.emit "done", { text : "Twitter Timeline loaded !" }
-                            socket.emit "timeline", { data : data }
-                        )
-                    else 
-                        socket.emit "timeline", { data : seuron.sns.twitter.timeline }
-
-                    if( seuron.sns.twitter.hasTimeline.check == false ) 
+                    if( seuron.sns.twitter.hasFriends.check == false ) 
                         socket.emit "loading", { text : "Loading Twitter Friends"}
                         seuron.getFriendsFromTwitter( ntwit, ( data ) ->
                             socket.emit "done", { text : "Twitter Friends loaded !" }
@@ -87,7 +78,8 @@ module.exports = (app, io, mongoose) ->
                     else 
                         socket.emit "friends", { data : seuron.sns.twitter.friends }
 
-                    if( seuron.sns.twitter.hasTimeline.check == false )
+
+                    if( seuron.sns.twitter.hasFollowers.check == false )
                         socket.emit "loading", { text : "Loading Twitter Followers"}
                         seuron.getFollowersFromTwitter( ntwit , (data) ->
                             socket.emit "done", { text : "Twitter Followers loaded !" }
@@ -95,6 +87,29 @@ module.exports = (app, io, mongoose) ->
                         )
                     else 
                         socket.emit "followers", { data : seuron.sns.twitter.followers }
+
+                    if( seuron.sns.twitter.hasMentions.check == false ) 
+                        socket.emit "loading", { text : "Loading Twitter Mentions Timeline"}
+                        seuron.getMentionsFromTwitter( ntwit, ( data ) ->
+                            socket.emit "done", { text : "Twitter Mentions loaded !" }
+                            socket.emit "mentions", { data : data }
+                        )
+                    else 
+                        socket.emit "mentions", { data : seuron.sns.twitter.mentions }
+
+                    socket.on "mentions_ready", (err) ->
+                        console.log "timeline Loading"
+                        # if( seuron.sns.twitter.hasTimeline.check == false ) 
+                        socket.emit "loading", { text : "Loading Twitter Timeline"}
+
+                        seuron.getTimelineFromTwitter( ntwit, ( data ) ->
+                            socket.emit "done", { text : "Twitter Timeline loaded !" }
+                            socket.emit "timeline", { data : data }
+                        )
+                        # else 
+                            # socket.emit "timeline", { data : seuron.sns.twitter.timeline }
+
+
 
 
                     socket.on "lookup", (data) ->
@@ -106,9 +121,6 @@ module.exports = (app, io, mongoose) ->
                             d = unescape( encodeURIComponent( JSON.stringify( users ) ) );
                             socket.emit "users", { profiles : d }
                         )  
-
-
-
 
 
         res.render "seuron", { userdata: app.everyauth }

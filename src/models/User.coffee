@@ -14,7 +14,7 @@ module.exports = (mongoose) ->
         twit: Object
     )
 
-    UserSchema.statics.createWithTwitter = ( twitUserMeta, accessToken, accessTokenSecret, callback ) ->
+    UserSchema.methods.createWithTwitter = ( twitUserMeta, accessToken, accessTokenSecret, callback ) ->
 
         twitterProfile =
             accessToken: accessToken
@@ -48,16 +48,14 @@ module.exports = (mongoose) ->
             contributorsEnabled: twitUserMeta.contributors_enabled
 
         # info to store inside new User
-        params ={}
-        params.twit = twitterProfile
+        # params ={}
+        @twit = twitterProfile
 
         # console.log params
-        this.create params, callback
-        
-        # console.log this
-        console.log "user created with twitter"
+        @save callback
 
         this
+
 
 
     UserSchema

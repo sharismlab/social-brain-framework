@@ -1,8 +1,24 @@
 /*
-SOCIAL NEURON visualization
-processing + twitter + jquery 
-2012
+	   _____ ____  _____________    __       _   __________  ______  ____  _   __
+	  / ___// __ \/ ____/  _/   |  / /      / | / / ____/ / / / __ \/ __ \/ | / /
+	  \__ \/ / / / /    / // /| | / /      /  |/ / __/ / / / / /_/ / / / /  |/ / 
+	 ___/ / /_/ / /____/ // ___ |/ /___   / /|  / /___/ /_/ / _, _/ /_/ / /|  /  
+	/____/\____/\____/___/_/  |_/_____/  /_/ |_/_____/\____/_/ |_|\____/_/ |_/                          
+	        _                  ___             __  _           
+	 _   __(_)______  ______ _/ (_)___  ____ _/ /_(_)___  ____ 
+	| | / / / ___/ / / / __ `/ / /_  / / __ `/ __/ / __ \/ __ \
+	| |/ / (__  ) /_/ / /_/ / / / / /_/ /_/ / /_/ / /_/ / / / /
+	|___/_/____/\__,_/\__,_/_/_/ /___/\__,_/\__/_/\____/_/ /_/ 
+	                                                           
+	   ___   ____ ______ 
+	  |__ \ / __ <  /__ \
+	  __/ // / / / /__/ /
+	 / __// /_/ / // __/ 
+	/____/\____/_//____/ 
+	                     
+	processing + twitter + jquery 
 */
+var cnvs, ctx;
 
 PFont font = loadFont("Comic Sans");
  
@@ -22,344 +38,76 @@ PFont font = loadFont("Comic Sans");
 
 	// all our messages 
 	var messages = [];
+	var messagesLookup = []
+
+	// store all our messages
+	var interactions = [];
+	var interactionIds = [];
+
+	// store all our messages
+	var threads = [];
+	var timelineMentions = [];
 
 	// THE Only boss of all.
 	Seuron daddy;
-
+	
 	// to dispaly messages
-	boolean showMessage = false;
+	boolean showInteraction = false;
+	boolean displaySeuron = false; // just turn this on to show seuron
 	// boolean displaySeuron = false; // just turn this on to show seuron
 
 // ------------------------------- INIT
 void setup(){
+
 	size(screenWidth, screenHeight);
-	background(255);
+	cnvs = externals.canvas;
+	ctx = externals.context;
+
+	// DRAW BACKGROUND
+	var gradient = ctx.createRadialGradient( width/2, height/2, 0, width/2, height/2, width*0.5); 
+	gradient.addColorStop(0,'rgba(80, 80, 80, 1)');
+	gradient.addColorStop(1,'rgba(10, 10, 10, 1)'); 
+	ctx.fillStyle = gradient; 
+	ctx.fillRect( 0, 0, width, height );
+
+	// console.log(PFont.list());
+	font = loadFont("sans-serif");
+	textFont(font,48);
+	textAlign(CENTER);
+	text("LOADING DATA", width/2,height/2);
+
 	textFont(font, 12);
+
+
 	frameRate(10);
 	smooth();
-
-	// for the caption
-	colors = [ color(255, 255, 255), color(255, 0, 0), color(0, 255, 0), color(0, 0, 255), color(102, 85, 100) ];
-	captions = [
-		"Unknown",
-		"Friend & Follow", 
-		"is Friend of", 
-		"is Followed by",
-		"No existing relationship"
-		];	
 }
 
 // create daddy when we got the right data
 void goDaddy( Object daddyData ) {
-	daddy = new Seuron( daddyData.id, daddyData, true );
-	daddy.cx = screenWidth/2;
-	daddy.cy = screenHeight/2;
-	seurons.push(daddy);
-	seuronIds.push(daddy.id);
-	daddyDisplay =true;
+		daddy = new Seuron( daddyData.id, daddyData, true );
+		daddy.cx = width/2;
+		daddy.cy = height/2;
+		daddy.couleur = #ffffcb;
+		seurons.push(daddy);
+		seuronIds.push(daddy.id);
+		displayDaddy =true;
 }
-
 
 // FRIENDS & FOLLOWERS 
 void createFriends( Object data ) {
-	console.log("followers : "+data.length);
+	console.log("friends : "+data.length);
 	daddy.friends = data;
-	
 }
 
 void createFollowers( Object data ) {
-	console.log("friends : "+data.length);
+	console.log("followers : "+data.length);
 	daddy.followers = data;
 }
 
-// ------------------------------- MAIN DRAWING FUNCTION
-void draw() {
-	////////////////////////////////////////////////////////////////
-
-	// DRAW BACKGROUND
-	var gradient = externals.context.createRadialGradient( width/2, height/2, 0, width/2, height/2, width*0.5); 
-	gradient.addColorStop(0,'rgba(80, 80, 80, 1)');
-	gradient.addColorStop(1,'rgba(10, 10, 10, 1)'); 
-	externals.context.fillStyle = gradient; 
-	externals.context.fillRect( 0, 0, width, height ); 
-
-	// DRAW TIMELINE
-	drawTimeline();
-
-	// draw caption
-	 color(65);
-	 text("PRESS MOUSE BUTTON TO SHOW MESSAGES", screenWidth-300,40);
-	 text("Caption", screenWidth-100,60);
-	 for (int i = 0; colors[i]; i++){
-	 	fill( colors[i] ) ;
-	 	text( captions[i], screenWidth-100, i*15+90 ) ;
-	 }
-
-	// draw daddy
-	// daddy.cy =50;
-	// daddy.cx =screenWidth/2;
-	// daddy.display();
-
-	// DISPLAY OUR GUYS
-	if( daddyDisplay == true) daddy.display();
-	if( displaySeuron == true) displayAllSeurons();
-}
-
-void displayAllSeurons(){
-
-	
-	var close = [];
-	var myfriends = [];
-	var myfollowers = [];
-	var unknown = [];
-
-
-	// drawSeurons
-	myfriends = daddy.getFriends();
-	myfollowers = daddy.getFollowers();
-	close  = daddy.getCloseFriends();
-	unknown = daddy.getUnrelated();
-
-
-	float cx = screenWidth/2;
-	float cy = screenHeight/2;
-	
-	// hack to fix a strange thing about the other daddy (???) 
-	// myDad = getDaddy();
-
-	// draw close friends
-	for (int i = 0; close[i]; i++){
-
-		// console.log(friends[i]);
-
-		float r = 100;
-
-		float angle = i * TWO_PI / close.length;
-
-  		float x = cx + cos(angle) * r;
-  		float y = cy + sin(angle) * r;
-			
-		close[i].cy = y;
-		close[i].cx = x;
-
-		close[i].couleur= color(255,200,200);
-
-		close[i].display();
-	} 
-
-	// draw friends
-	for (int i = 0; myfriends[i]; i++){
-
-		// console.log(friends[i]);
-
-		float r = 200;
-
-		float angle = i * TWO_PI / myfriends.length;
-
-  		float x = cx + cos(angle) * r;
-  		float y = cy + sin(angle) * r;
-			
-		myfriends[i].cy = y;
-		myfriends[i].cx = x;
-		
-		myfriends[i].couleur = color(127,0,0);
-
-		myfriends[i].display();
-	} 
-	
-	// draw followers
-	for (int i = 0; myfollowers[i]; i++){
-
-		// console.log(friends[i]);
-
-		float r = 250;
-
-		float angle = i * TWO_PI / myfollowers.length;
-
-  		float x = cx + cos(angle) * r*1.5;
-  		float y = cy + sin(angle) * r;
-			
-		myfollowers[i].cy = y;
-		myfollowers[i].cx = x;
-		myfollowers[i].couleur = color(127,130,0);
-
-		myfollowers[i].display();
-	} 
-
-	// draw unknown
-	for (int i = 0; unknown[i]; i++){
-
-		float r = 250;
-
-		float angle = i * TWO_PI / unknown.length;
-
-  		float x = cx + cos(angle) * r*3;
-  		float y = cy + sin(angle) * r;
-			
-		unknown[i].cy = y;
-		unknown[i].cx = x;
-
-		unknown[i].display();
+void addTimelineMentions( Array data ) {
+	for (int i = 0; data[i]; i++){
+		timelineMentions.push(data[i]);
 	}
 
-
-	// // here comes the dad
-	// myDad.cx =screenHeight/2;
-	// myDad.cy =screenWidth/2;
-	// myDad.display;
-
-	//draw synapses
-	/*
-	for (int i = 0; daddy.synapses[i]; i++){
-		if(daddy.synapses[i].seuronB.data != null)
-			daddy.synapses[i].display();
-	}
-	*/
-
-
-	//draw messages
-	if( showMessage ) {
-		for (int i = 0; messages[i]; i++){
-			messages[i].display();
-		 }
-	}
-
-	if(mousePressed) {
-		showMessage = true;
-	} else {
-		showMessage = false;
-	}
-}
-
-void display(){
-
-	// drawSeurons
-	friends = daddy.getFriends();
-	followers = daddy.getFollowers();
-	close  =daddy.getCloseFriends();
-
-	// draw friends
-	for (int i = 0; friends[i]; i++){
-
-		float r = 50;
-
-		float angle = i * TWO_PI / friends.length;
-
-  		float x = cx + cos(angle) * r;
-  		float y = cy + sin(angle) * r;
-		
-		s.cy = y;
-		s.cx = x;
-
-		s.display();
-	 	
-	} 
-
-	for (int i = 0; seurons[i]; i++){
-
-		// console.log(daddy);
-		s =  seurons[i];
-
-		if( s.data != null ) {
-			
-			int level =  daddy.getSynapse(s.id).level;
-
-			// console.log(level);
-
-			float y = (level+1)*( (screenHeight-230 ) /4 );
-			float x = i*(screenWidth/seurons.length);
-			
-			s.cy = y;
-			s.cx = x;
-
-			s.display();
-
-		}
-		
-	}
-
-
-
-	//draw synapses
-	for (int i = 0; daddy.synapses[i]; i++){
-		if(daddy.synapses[i].seuronB.data != null)
-			daddy.synapses[i].display();
-	}
-
-
-	//draw messages
-	if( showMessage ) {
-		for (int i = 0; messages[i]; i++){
-			 	
-			messages[i].display();
-	
-		 }
-	}
-
-	 if(mousePressed) {
-	 	showMessage = true;
-	 } else {
-	 	showMessage = false;
-	 }
-}
-int dateMin = (new Date()).getTime(); // Return the number of milliseconds since 1970/01/01:
-int dateMax = 0;
-int seconds;
-float descHeight;
-float TimelinePosX=0, TimelinePosY=0;
-void drawTimeline(){
-	externals.context.save();
-	rectMode(CORNER);
-	fill(100);
-	noStroke();
-	externals.context.shadowOffsetX = 0;
-	externals.context.shadowOffsetY = 0;
-	externals.context.shadowBlur = 10;
-	externals.context.shadowColor = "black";
-	rect(15,height-75,width-30,60);
-
-	fill(0,80);
-	rect(15,height-75,20,60);
-	externals.context.restore();
-	pushMatrix();
-	translate(29,height-45);
-	rotate(-Math.PI/2);
-	fill(255);
-	text("Timeline",0,0);
-	popMatrix();
-
-	for (int i= 1; seurons[i]; i++){
-
-		Seuron s = seurons[i];
-		seconds = Date.parse(s.date);
-		if(seconds<dateMin){
-			dateMin = seconds;
-			// println("dateMin: " + dateMin);
-		}
-		else if(seconds>dateMax){ 
-			dateMax = seconds;
-			// println("dateMax: " + dateMax);
-		}
-
-		TimelinePosX = map(seconds,dateMin,dateMax,45,width-25);
-		TimelinePosY = height-75 + map(s.cy,100,screenHeight-150,5,55);
-		stroke(s.couleur);
-		strokeWeight(2);
-		strokeCap(SQUARE);
-		line(TimelinePosX, height-75, TimelinePosX, height-16);
-		fill(s.couleur);
-		ellipse(TimelinePosX,TimelinePosY,8,8);
-
-		if(dist(mouseX, mouseY, TimelinePosX, TimelinePosY)<8 || dist(mouseX, mouseY, s.cx, s.cy)<s.radius/2) {
-			line(TimelinePosX, TimelinePosY, s.cx, s.cy);
-			if(textWidth(s.description)>10) descHeight=1+floor(textWidth("Description: "+s.description)/400);
-			else descHeight=0;
-			fill(255,255,0,150);
-			noStroke();
-			rect(15,15,460,33+descHeight*14);
-			fill(255);
-			textAlign(LEFT);
-			text("User: "+s.name+"\nDate: "+s.date+"\nDescription: "+s.description,20,20,400,30+descHeight*14);
-		}
-	}
 }

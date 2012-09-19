@@ -17,10 +17,19 @@ module.exports = (mongoose, ntwi) ->
           twitter: 
             profile : Object
             timeline: Array
+            mentions: Array
             followers: Array
             friends: Array
 
             hasTimeline : 
+              check :
+                type: Boolean
+                default: false
+              last_updated: 
+                type : Date
+                default: Date.now
+            
+            hasMentions : 
               check :
                 type: Boolean
                 default: false
@@ -62,6 +71,14 @@ module.exports = (mongoose, ntwi) ->
           ret = true
         ret
 
+    seuronSchema.methods.hasMentions = ->
+        ret = false
+        console.log(this.sns.twitter.mentions.length)
+        if( this.sns.twitter.mentions.length > 1 )
+          console.log "has already mentions"
+          ret = true
+        ret
+
     seuronSchema.methods.hasFriends = ->
         ret = false
         # console.log(this.sns.twitter.friends)
@@ -80,7 +97,6 @@ module.exports = (mongoose, ntwi) ->
     #get user timeline
     seuronSchema.methods.getTimelineFromTwitter = (ntwit, callback) ->
         seuron = this
-
         ntwit.getUserTimeline {"include_rts": true,"include_entities" : true, "count":200 }, 
           (err,data) ->
               console.log err if err
@@ -91,7 +107,20 @@ module.exports = (mongoose, ntwi) ->
               seuron.save()
               callback( data )
         return 
-        
+
+    #get user timeline
+    seuronSchema.methods.getMentionsFromTwitter = (ntwit, callback) ->
+        seuron = this
+        ntwit.getMentions {"include_rts": true,"include_entities" : true, "count":200 }, 
+          (err,data) ->
+              console.log err if err
+              # add data to seuron 
+              seuron.sns.twitter.mentions = data
+              seuron.sns.twitter.hasMentions.check = true
+              seuron.sns.twitter.hasMentions.date = Date.now
+              seuron.save()
+              callback( data )
+        return 
 
     #getUserFriends
     seuronSchema.methods.getFriendsFromTwitter = (ntwit, callback) ->
