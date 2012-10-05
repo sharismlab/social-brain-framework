@@ -8,12 +8,11 @@ html
         
         link(rel='stylesheet', href='/css/style.css')
         link(rel='stylesheet', href='/css/bootstrap.css')
+        link(rel='stylesheet', href='/css/font-awesome.css')
         link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css')
         script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+        script(type='text/javascript', src='js/bootstrap.js')
         script(type='text/javascript', src='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js')
-
-
 
         script(type='text/javascript', src='/js/bootstrap.js')
 
@@ -36,12 +35,18 @@ html
                           ul.nav 
                             li 
                                a(href='/', title='Back home') Home
+                            
                             li 
                                a(href='/about', title='Learn more') About
+                            
                             li
-                              a(href='/seuron', title='Visualize your seuron') Seuron
-                            li 
-                               a(href='/aquariums', title='Explore social networks') Aquariums
+                              a(href='/demo', title='Visualize seurons and social brain') Demo
+                            
+                            li
+                              a(href='/socialbrain', title='Join our team') Research
+
+                            li
+                              a(href='/join', title='Join our team') Contribute
 
                           ul.nav.pull-right
                             li
@@ -66,6 +71,22 @@ html
     div.container
         block content
 
+        footer
+            div.contacts
+              a(href="http://twitter.com/sharismlab")
+                img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="35", height="35")
+                
+              a(href="http://github.com/sharismlab")
+                img(src="/img/icons/color/github.png", alt="Github", target="_blank", width="35", height="35")
+                
+              a(href="http://weibo.com/sharismlab")
+                img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="35", height="35")
+              
+              a(href="http://facebook.com/sharismlab")
+                img(src="/img/icons/color/facebook.png", alt="Facebook", target="_blank", width="35", height="35")
+              
+              a(href="http://sharismlab.com")
+                img(src="/img/icons/color/rss.png", alt="Blog", target="_blank", width="35", height="35")
         block footer
         
     - if ( everyauth.twitter )

@@ -1,9 +1,75 @@
 extends layout
 
+block append footer
+	script
+		$(document).ready(function() {
+			$('#slideshow').carousel();
+		})
+
 block append content
-	div.hero-unit
-		h1 Social Brain Framework
-		p Next-gen social network analysis. build semantic apps
+	div.hero-unit.row
+		div.span6
+			h1 Social Brain Framework
+			h3 Organic social network analysis. 
+			p New tools and methods to explore social networks and discover the processes of a  forthcoming collective intelligence.
+
+			div.inner
+				p.download-info
+					a.btn.btn-large.btn-primary(href="#marketing") Read more
+					a.btn.btn-large(href="/viz/seuron_viz/examples/petridish/") See the demo
+					a.btn.btn-large(href="/join") Contribute
+			div.contacts
+				a(href="http://twitter.com/sharismlab")
+					img(src="/img/icons/gray/twitter.png", alt="Twitter", target="_blank", width="35", height="35")
+					
+				a(href="http://github.com/sharismlab")
+					img(src="/img/icons/gray/github.png", alt="Github", target="_blank", width="35", height="35")
+					
+				a(href="http://weibo.com/sharismlab")
+					img(src="/img/icons/gray/weibo.png", alt="Weibo", target="_blank", width="35", height="35")
+
+		div#slideshow.span4
+			div.carousel.slide
+				div.carousel-inner
+					div.active.item
+						img.img-polaroid( src="http://www.placehold.it/350x250")
+					div.item
+						img.img-polaroid( src="http://www.placehold.it/350x250")
+					div.item
+						img.img-polaroid( src="http://www.placehold.it/350x250")
+
+				a.carousel-control.left(href=".carousel", data-slide="prev")&lsaquo;
+				a.carousel-control.right(href=".carousel", data-slide="next")&rsaquo;
 		
-		a.btn.btn-large.btn-alert(href="/auth/twitter") Log in with your Twitter account
+
+	div#marketing.row
 		
+		div.span4
+			h3 Social Brain Framework
+				i.icon-globe.icon-large 
+				
+			p Social Brain Framework (SBF) is a set of concepts and tools to analyze online social interactions. Using the analogy of (human) brain, it provides new methods to lead Social Network Analysis (SNA) in borrowing methodologies from neurology, linguistics, psychoanalysis, sociology and computer science. Indeed, we envision the formation of a Social Brain through the remote and direct connections between individuals through Internet services. Conceived on the analogy of a human brain, social brain is the anatomic body of the sharing process. 
+				a(href="/about") Read more
+		
+		div.span4
+			h3 Social Neurons
+				i.icon-eye-open.icon-large
+			p In SBF, individuals are called social neurons or seurons and are connected to each others through their dendrites and axones. The billions of neurons and trillions of neuron connections forms a whole network brain network where primary entities are called social neuron (aka seuron). They represent all human and non-human (animal, things, machines) forms of beings taking part into the human society (yet through the Internet network).
+		
+		div.span4
+			h3 Collective intelligence
+				i.icon-group.icon-large
+			p The new participatory practices of knowledge let us imagine how a composite form of “collective intelligence” can emerged. Though, the very high complexity of sets and subsets of interactions through different networks let us with nothing but a feeling of dizziness. We need a conceptual image for a better representation and description of ongoing phenomenons. We also need a set of tools to investigate all available data produced during all those generative exchanges. SBF offers a mental images and a real-life toolset to achieve such high-end objectives.
+
+		div.span4
+			h3 Big open data
+				i.icon-hdd.icon-large
+			p SBF has been designed for research purposes but is intended to be used for any types of operations, including commercial and experimental. SBF integrates functions for requesting, formatting and processing all data about social neurons and their interactions on social networks. All those information are stored in SBF database and can be reached through its API.
+			a(href="/api") Browse API 
+
+		div.span4
+			h3 Crowdsource research
+				i.icon-github.icon-large
+			p We need you to join our efforts, to create a team of energy that will study together how we could implement the social brain framework. People who provides time, vision, code, ideas around this wide concept and will eventually make it real.
+
+			a(href="/join") Join us!

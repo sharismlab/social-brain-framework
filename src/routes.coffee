@@ -18,6 +18,17 @@ module.exports = (app, io, mongoose) ->
     app.get '/about', (req, res) ->
       res.render "about"
 
+    app.get '/join', (req, res) ->
+      res.send "join"
+
+    app.get '/demo', (req, res) ->
+      res.render "demo"
+    
+    app.get '/socialbrain', (req, res) ->
+      res.render "socialbrain"
+
+
+
     app.get '/seuron', (req, res) ->
         
         if (req.user)
@@ -130,12 +141,10 @@ module.exports = (app, io, mongoose) ->
         # res.send timeline
         # res.send '<a href="/auth/twitter">login with twitter</a>'
 
-
-
     app.get '/api', (req, res) ->
         res.header 'Cache-Control', 'no-cache'
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
-        res.send 'api'
+        res.send 'The api is currently under development, please stay tuned'
 
     app.get '/api/search', (req, res) ->
         res.header 'Cache-Control', 'no-cache'

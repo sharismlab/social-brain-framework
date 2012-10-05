@@ -1,0 +1,18 @@
+extends layout
+
+block append content
+	h1 Experiment social brain
+	div.row
+		div.well.well-large.span7
+			p We have put together a demo for you to understand social brain concept and methods.
+			p This basically acts as a social dashboard when you can see how people relate one another, how the messages are spreaded around you. We have added some basic tools for timeline analysis.
+			p This demo uses static data that has been extracted from twitter.
+			i.icon-eye-open
+			a(href="/viz/seuron_viz/examples/petridish/")  See the demo
+		div.alert.span3
+			h5 Browse your social neuron
+			p 
+				em Experimental feature
+			p You can now use your own Twitter account to browse your recent posts as a Social Neuron
+			i.icon-twitter 
+			a(href="/auth/twitter")  Log in with Twitter 
