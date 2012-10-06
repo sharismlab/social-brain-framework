@@ -4,14 +4,8 @@
 module.exports = (app, io, mongoose) ->
 
 
-    require('./routes/users') app
 
-    # if(everyauth.loggedIn) 
-    #     console.log "loggedIn"
-    # else
-    #     console.log "not loggedIn"
-
-
+    # some static pages 
     app.get '/', (req, res) -> 
       res.render "index"
 
@@ -20,12 +14,12 @@ module.exports = (app, io, mongoose) ->
 
     app.get '/join', (req, res) ->
       res.send "join"
-
-    app.get '/demo', (req, res) ->
-      res.render "demo"
     
-    app.get '/socialbrain', (req, res) ->
-      res.render "socialbrain"
+
+    # get specific routes
+    require('./routes/users') app
+    require('./routes/api') app
+
 
 
 
@@ -37,9 +31,7 @@ module.exports = (app, io, mongoose) ->
             ntwitter = require 'ntwitter'
             apikeys = require '../config/apikeys'
 
-            #tok ="136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi"
-            #tokSec = "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
-            console.log req.session
+            # console.log req.session
             tok = req.session.auth.twitter.accessToken
             tokSec =  req.session.auth.twitter.accessTokenSecret
 
@@ -56,14 +48,12 @@ module.exports = (app, io, mongoose) ->
             mongoose.model('Seuron', SeuronSchema)
             Seuron = mongoose.model('Seuron');
 
-            # console.log(seuron)
-
             s = Seuron.findOne( { "sns.twitter.profile.id" : req.session.auth.twitter.user.id } 
                 , (err, seuron) -> 
                     console.log err if err
                     console.log("seuron loaded")
                     console.log seuron
-                    getSeuronData( seuron )
+                    getSeuronData( seuron ) # callback to get data 
             )
 
             # console.log(seuron)
@@ -120,9 +110,6 @@ module.exports = (app, io, mongoose) ->
                         # else 
                             # socket.emit "timeline", { data : seuron.sns.twitter.timeline }
 
-
-
-
                     socket.on "lookup", (data) ->
                         console.log data
                         
@@ -133,20 +120,4 @@ module.exports = (app, io, mongoose) ->
                             socket.emit "users", { profiles : d }
                         )  
 
-
         res.render "seuron", { userdata: app.everyauth }
-
-        # res.header 'Cache-Control', 'no-cache'
-        # res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
-        # res.send timeline
-        # res.send '<a href="/auth/twitter">login with twitter</a>'
-
-    app.get '/api', (req, res) ->
-        res.header 'Cache-Control', 'no-cache'
-        res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
-        res.send 'The api is currently under development, please stay tuned'
-
-    app.get '/api/search', (req, res) ->
-        res.header 'Cache-Control', 'no-cache'
-        res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
-        res.send 'search'

@@ -19,6 +19,7 @@ pids
 logs
 results
 
+.appconfig
 .nodester.appconfig
 
 dump.rdb
@@ -30,4 +31,7 @@ config/apikeys.json
 config/db.json
 config/deploy.rb
 config/local/
+
+.oldies/
+
 
