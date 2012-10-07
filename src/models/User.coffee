@@ -81,7 +81,7 @@ UserSchema.plugin mongooseAuth,
         myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: '/seurons/you'
+        redirectPath: '/demo'
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
 
@@ -89,7 +89,6 @@ UserSchema.plugin mongooseAuth,
           User = @User()() # Fetch our User class back
           
           console.log  "------ we are looking for user with twitter id : " + twitterUser.id
-          console.log typeof(twitterUser.id)
 
           # Let's lookup our user using its twitter id
           User.findOne { "twit.id": Number twitterUser.id }, (err, foundUser) ->
@@ -108,11 +107,11 @@ UserSchema.plugin mongooseAuth,
 
                 return promise.fail err if err
                 promise.fulfill foundUser #login our user
-              
               else 
+
                 # Our user hasn't been founded so it is NOT a returning user
                 # Let's create our user from its twitter credentials
-
+                
                 return promise.fail(err) if err # handle error
 
                 console.log "---------------------- create a new user"
@@ -122,8 +121,8 @@ UserSchema.plugin mongooseAuth,
 
                 # Let's create our new user inside DB
                 createdUser = new User
+
                 # console.log createdUser
-                
                 # Call a method to populate data with Twitter
                 createdUser.createWithTwitter twitterUser, accessTok, accessTokSecret, (err) ->
                   
@@ -140,6 +139,7 @@ UserSchema.plugin mongooseAuth,
 
                         s = new Seuron()  
                         # Add Twitter profile to our seuron
+                        s.sns.twitter.id = createdUser.twit.id
                         s.sns.twitter.profile = createdUser.twit
                         # Attach a new Seuron to our user
                         s.user_id = createdUser._id

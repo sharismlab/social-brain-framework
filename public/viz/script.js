@@ -4,6 +4,7 @@ var timeline, timelineMentions, followers, friends;
 var userdata = null;
 var loaded = false;
 
+
 var toLookup = [];
 var lookupNow = false;
 
@@ -46,9 +47,17 @@ var mem = setInterval(function () {
 // get all data from web socket
 $(window).ready( function() {
 
-
-	// connect to the web socket
+    //- Start the connection
     var socket = io.connect();
+
+    //- Simple connect event so we can see that we are connecting
+    socket.on('connect', function () { 
+        console.log('Connected! Oh hai!');
+    }); 
+
+    
+    // socket.connect();
+    // var socket = io.connect();
 	
 	$('body').bind('lookthisup', function(e, arr_ids) { 
 

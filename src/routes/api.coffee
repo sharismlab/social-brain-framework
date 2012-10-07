@@ -47,3 +47,34 @@ module.exports = (app) ->
                 # default
                 else res.send "you need to specify a extension format (.json or .xml)"
 
+
+    # Here goes some sample data for local development
+    friends = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_friends.json"
+
+    followers  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_followers.json"
+
+    app.get '/api/fake/timeline', (req, res) ->
+        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
+        
+        res.json JSON.stringify(data)
+
+    app.get '/api/fake/friends', (req, res) ->
+        # res.header 'Content-Type': 'application/json'
+        console.log friends
+        res.jsonp friends
+
+    app.get '/api/fake/followers', (req, res) ->
+        
+        # res.header 'Content-Type': 'application/json'
+        res.jsonp followers
+
+    app.get '/api/fake/mentions', (req, res) ->
+        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
+        res.header 'Content-Type': 'application/json'
+        res.json JSON.stringify(data)
+
+    app.get '/api/fake/profile', (req, res) ->
+        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_profile.json"
+        res.header 'Content-Type': 'application/json'
+        res.json JSON.stringify(data)
+   

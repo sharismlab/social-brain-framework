@@ -14,5 +14,10 @@ block append content
 			p 
 				em Experimental feature
 			p You can now use your own Twitter account to browse your recent posts as a Social Neuron
-			i.icon-twitter 
-			a(href="/auth/twitter")  Log in with Twitter 
+			- if (everyauth.twitter)
+				a.btn.btn-large( href="/you" ) Browse your social neuron right now  
+					i.icon-twitter 
+
+			- else
+				i.icon-twitter 
+				a(href="/auth/twitter")  Log in with Twitter 

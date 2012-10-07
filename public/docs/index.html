@@ -1,13 +1,12 @@
 <!DOCTYPE html><html><head><title>README</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="./docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="./index.html" class="source"><span class="file_name">README</span></a><a href="./src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="./src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="./src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="./src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="./src/models/Seuron.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="./src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="./src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="./src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="./src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"></th><th class="code"></th></tr></thead><tbody><tr id="section"><td class="docs"><h1>social-brain-framework
 </h1><h3>Version</h3><p>0.0.1</p><h3>Author</h3><p>Sharism Lab</p><h3>Repository</h3><p>git - https://github.com/sharismlab/social-brain-framework.git</p><h3>Dependencies </h3><ul><li><b>coffee-script </b><span>latest</span></li><li><b>connect-assets </b><span>2.2.1</span></li><li><b>express </b><span>latest</span></li><li><b>express-helpers </b><span>latest</span></li><li><b>ejs </b><span>latest</span></li><li><b>everyauth </b><span>git://github.com/bnoguchi/everyauth.git#express3</span></li><li><b>forever </b><span>latest</span></li><li><b>http-proxy </b><span>latest</span></li><li><b>jade </b><span>latest</span></li><li><b>less </b><span>latest</span></li><li><b>markdown </b><span>0.3.1</span></li><li><b>mongodb </b><span>&gt;= 0.9.6-7</span></li><li><b>mongoose </b><span>3.2.0</span></li><li><b>mongoose-auth </b><span>git://github.com/cbou/mongoose-auth.git#everymodule-fix</span></li><li><b>nib </b><span>0.4.1</span></li><li><b>jquery </b><span>latest</span></li><li><b>ntwitter </b><span>0.4.1</span></li><li><b>querystring </b><span>latest</span></li><li><b>request </b><span>latest</span></li><li><b>redis </b><span>&gt;=0.7.1</span></li><li><b>socket.io </b><span>latest</span></li><li><b>stylus </b><span>0.27.0</span></li><li><b>which </b><span>*</span></li></ul><p><h3>Stats</h3><pre class="code_stats">
-http://cloc.sourceforge.net v 1.55  T=0.5 s (46.0 files/s, 3294.0 lines/s)
+http://cloc.sourceforge.net v 1.55  T=0.5 s (18.0 files/s, 1542.0 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-HTML                            14            144              0            732
 CoffeeScript                     9            169            136            466
 -------------------------------------------------------------------------------
-SUM:                            23            313            136           1198
+SUM:                             9            169            136            466
 -------------------------------------------------------------------------------
 </pre></p></td><td id="content" class="code"><h1>Social Brain Framework</h1>
 
@@ -58,8 +57,8 @@ coffee index.coffee
 <h1>Thanks</h1>
 
 <ul>
-<li>Lance R. Vick <a href="&#109;&#x61;&#x69;&#x6C;t&#x6F;:l&#x61;&#110;&#x63;e&#x40;&#108;&#114;&#x76;&#105;c&#107;&#46;n&#101;&#116;">l&#x61;&#110;&#x63;e&#x40;&#108;&#114;&#x76;&#105;c&#107;&#46;n&#101;&#116;</a> and guys at Tawlk for their awesome social web crawler Hyve > https://github.com/Tawlk/hyve/</li>
-<li>Lionel Radisson <a href="&#x6D;&#97;&#x69;&#108;&#x74;&#x6F;:&#108;&#x69;&#x6F;&#110;&#101;&#x6C;&#x2E;&#x72;a&#x64;i&#115;&#x73;&#111;&#110;&#x40;&#103;&#x6D;&#x61;i&#x6C;.&#99;&#x6F;&#x6D;">&#108;&#x69;&#x6F;&#110;&#101;&#x6C;&#x2E;&#x72;a&#x64;i&#115;&#x73;&#111;&#110;&#x40;&#103;&#x6D;&#x61;i&#x6C;.&#99;&#x6F;&#x6D;</a> for the help on ProcessingJS</li>
+<li>Lance R. Vick <a href="&#x6D;&#97;&#105;&#x6C;&#116;&#111;:&#x6C;&#x61;&#110;&#x63;&#101;&#x40;&#108;&#x72;&#x76;&#105;&#x63;&#107;&#x2E;&#x6E;&#101;&#x74;">&#x6C;&#x61;&#110;&#x63;&#101;&#x40;&#108;&#x72;&#x76;&#105;&#x63;&#107;&#x2E;&#x6E;&#101;&#x74;</a> and guys at Tawlk for their awesome social web crawler Hyve > https://github.com/Tawlk/hyve/</li>
+<li>Lionel Radisson <a href="ma&#x69;&#x6C;&#x74;&#x6F;:&#108;&#x69;&#x6F;n&#x65;&#x6C;&#46;&#114;&#x61;&#100;&#x69;s&#115;&#111;&#x6E;&#x40;g&#x6D;a&#x69;&#108;&#x2E;&#99;&#111;&#109;">&#108;&#x69;&#x6F;n&#x65;&#x6C;&#46;&#114;&#x61;&#100;&#x69;s&#115;&#111;&#x6E;&#x40;g&#x6D;a&#x69;&#108;&#x2E;&#99;&#111;&#109;</a> for the help on ProcessingJS</li>
 </ul>
 
 <h1>Licence</h1>
@@ -69,4 +68,4 @@ coffee index.coffee
 <ul>
 <li>http://sharismlab.com</li>
 <li>http://sharism.org</li>
-</ul>  </td></tr></tbody></table><div id="generated">generated Sun Oct 07 2012 16:22:50 GMT+0200 (CEST)  </div><div id="projectname"><a href="./index.html">Social Brain Framework</a></div></div></body></html>
+</ul>  </td></tr></tbody></table><div id="generated">generated Sun Oct 07 2012 16:25:31 GMT+0200 (CEST)  </div><div id="projectname"><a href="./index.html">Social Brain Framework</a></div></div></body></html>
