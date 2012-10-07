@@ -1,3 +1,7 @@
+###
+Helpers for SBF 
+###
+
 exports.locals = 
   appName: "Social Brain Framework"
   version: "0.1"

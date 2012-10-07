@@ -93,6 +93,13 @@ Mocha =
     args = args.concat(src)
     execAsync 'mocha', args
 
+Docco = 
+  docco: (src) ->
+    console.log "Test #{src}"
+    args = []
+    args = args.concat(src)
+    exec 'docco #{src}', args
+
 task 'compile', 'Compile coffeescript/less files to javascript/css files', (opts) ->
   invoke 'compile:coffee'
   invoke 'compile:less'
@@ -184,3 +191,9 @@ task 'release', 'Execute test and create minified javascript/css file', (opts) -
   invoke 'test'
   invoke 'minify:javascript'
   invoke 'minify:css'
+
+task 'docs', 'Create documentation using Docco', -> 
+  docco = exec """
+    docco-husky src
+  """
+  #printOutput(docco)

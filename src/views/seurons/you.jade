@@ -1,0 +1,24 @@
+extend ../layout
+
+block append content
+
+    h1 Welcome to your social neuron page 
+    
+    div#loading
+
+    - if ( everyauth.twitter )
+        p You can browse from here your social neuron and its surroundings
+        p include _viz
+
+    - else
+        p Please 
+            a(href="/auth/twitter/") login with Twitter  
+            to to discover your social neuron
+
+block append footer
+    script( type="text/javascript", src="/socket.io/socket.io.js")
+    script( type="text/javascript", src="/js/processing.js")
+    script(type="text/javascript", src="/viz/script.js")
+    - if ( everyauth.twitter )
+        script( type='text/javascript' )
+            userdata = !{ JSON.stringify( everyauth.twitter.user ) }, { userdata: app.everyauth}

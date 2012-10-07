@@ -1,0 +1,141 @@
+<!DOCTYPE html><html><head><title>User.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/User.coffee.html" class="source selected"><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>User.coffee</h1><div class="filepath">src/models/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div>
+</td><td class="code"><div class="highlight"><pre><span class="nv">mongoose = </span><span class="nx">require</span><span class="p">(</span><span class="s">&quot;mongoose&quot;</span><span class="p">)</span>
+<span class="nv">mongooseAuth = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;mongoose-auth&#39;</span><span class="p">);</span>
+<span class="nv">everyauth = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;everyauth&#39;</span><span class="p">);</span>
+
+<span class="nv">Schema = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span>
+<span class="nv">ObjectId = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">SchemaTypes</span><span class="p">.</span><span class="nx">ObjectId</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><p>Import API keys from config files</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">apikeys = </span> <span class="nx">require</span> <span class="s">&#39;../../config/apikeys&#39;</span>
+
+
+<span class="nv">collection = </span><span class="s">&quot;users&quot;</span>
+
+<span class="nv">UserSchema = </span><span class="k">new</span> <span class="nx">Schema</span> <span class="p">(</span>
+    <span class="nv">seuron_id : </span>
+      <span class="nv">type: </span><span class="nx">ObjectId</span>
+      <span class="nv">index: </span><span class="kc">true</span>
+      <span class="nv">ref: </span><span class="s">&#39;SeuronSchema&#39;</span> 
+    <span class="nv">date: </span><span class="nb">Date</span>
+    <span class="nv">twit: </span><span class="nb">Object</span>
+<span class="p">)</span>
+
+<span class="nv">UserSchema.methods.createWithTwitter = </span><span class="nf">( twitUserMeta, accessToken, accessTokenSecret, callback ) -&gt;</span>
+
+    <span class="nv">twitterProfile =</span>
+        <span class="nv">accessToken: </span><span class="nx">accessToken</span>
+        <span class="nv">accessTokenSecret: </span><span class="nx">accessTokenSecret</span>
+        <span class="nv">id: </span><span class="nb">String</span><span class="p">(</span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+        <span class="nv">name: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">name</span>
+        <span class="nv">screenName: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">screen_name</span>
+        <span class="nv">location: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">location</span>
+        <span class="nv">description: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">description</span>
+        <span class="nv">profileImageUrl: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_image_url</span>
+        <span class="nv">url: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">url</span>
+        <span class="nv">protected: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">protected</span>
+        <span class="nv">followersCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">followers_count</span>
+        <span class="nv">profileBackgroundColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_color</span>
+        <span class="nv">profileTextColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_text_color</span>
+        <span class="nv">profileLinkColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_link_color</span>
+        <span class="nv">profileSidebarFillColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_fill_color</span>
+        <span class="nv">profileSiderbarBorderColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_border_color</span>
+        <span class="nv">friendsCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">friends_count</span>
+        <span class="nv">createdAt: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">created_at</span>
+        <span class="nv">favouritesCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">favourites_count</span>
+        <span class="nv">utcOffset: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">utc_offset</span>
+        <span class="nv">timeZone: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">time_zone</span>
+        <span class="nv">profileBackgroundImageUrl: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_image_url</span>
+        <span class="nv">profileBackgroundTile: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_tile</span>
+        <span class="nv">profileUseBackgroundImage: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_use_background_image</span>
+        <span class="nv">geoEnabled: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">geo_enabled</span>
+        <span class="nv">verified: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">verified</span>
+        <span class="nv">statusesCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">statuses_count</span>
+        <span class="nv">lang: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">lang</span>
+        <span class="nv">contributorsEnabled: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">contributors_enabled</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>info to store inside new User
+params ={}</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="vi">@twit = </span><span class="nx">twitterProfile</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>console.log params</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">@save</span> <span class="nx">callback</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><h1>#</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">This</span> <span class="nx">part</span> <span class="nx">contains</span> <span class="nx">all</span> <span class="nx">logic</span> <span class="nx">related</span> <span class="nx">to</span> <span class="nx">everyauth</span> <span class="nx">module</span><span class="p">.</span>
+<span class="nx">People</span> <span class="nx">can</span> <span class="nx">log</span> <span class="nx">using</span> <span class="nx">twitter</span><span class="p">,</span> <span class="k">then</span> <span class="nx">it</span> <span class="nx">retrieves</span> <span class="nx">the</span> <span class="nx">data</span> 
+<span class="o">and</span> <span class="nx">populate</span> <span class="nx">the</span> <span class="nx">user</span> <span class="nx">profile</span> <span class="o">and</span> <span class="nx">the</span> <span class="nx">attached</span> <span class="nx">seuron</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><h1>#</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nv">Promise = </span><span class="nx">everyauth</span><span class="p">.</span><span class="nx">Promise</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>mongoose.set('debug', true)</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">UserSchema</span><span class="p">.</span><span class="nx">plugin</span> <span class="nx">mongooseAuth</span><span class="p">,</span>
+    <span class="nv">everymodule:</span>
+      <span class="nv">everyauth:</span>
+        <span class="nv">User: </span><span class="o">-&gt;</span>
+          <span class="nx">User</span> <span class="c1">#We specify here the class that should be used by Everyauth</span>
+          
+    <span class="nv">twitter:</span>
+      <span class="nv">everyauth:</span>
+        <span class="nv">myHostname: </span><span class="nx">apikeys</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">url</span>
+        <span class="nv">consumerKey: </span><span class="nx">apikeys</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">consumerKey</span>
+        <span class="nv">consumerSecret: </span><span class="nx">apikeys</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">consumerSecret</span>
+        <span class="nv">redirectPath: </span><span class="s">&#39;/seurons/you&#39;</span>
+
+        <span class="nv">findOrCreateUser: </span><span class="nf">(session, accessTok, accessTokSecret, twitterUser) -&gt;</span>
+
+          <span class="nv">promise = </span><span class="nx">@Promise</span><span class="p">()</span>
+          <span class="nv">User = </span><span class="nx">@User</span><span class="p">()()</span> <span class="c1"># Fetch our User class back</span>
+          
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span>  <span class="s">&quot;------ we are looking for user with twitter id : &quot;</span> <span class="o">+</span> <span class="nx">twitterUser</span><span class="p">.</span><span class="nx">id</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">twitterUser</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><p>Let's lookup our user using its twitter id</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nx">User</span><span class="p">.</span><span class="nx">findOne</span> <span class="p">{</span> <span class="s">&quot;twit.id&quot;</span><span class="o">:</span> <span class="nb">Number</span> <span class="nx">twitterUser</span><span class="p">.</span><span class="nx">id</span> <span class="p">},</span> <span class="nf">(err, foundUser) -&gt;</span>
+              
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span> 
+
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;---------------------- foundUser  = &quot;</span><span class="p">,</span> <span class="nx">foundUser</span>
+              
+              <span class="k">if</span> <span class="nx">foundUser</span> </pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>A user has been founded into our db !
+Let's see if its Twitter profile is up-to-date</p>
+</td><td class="code"><div class="highlight"><pre>                
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;---------------------- existing user&quot;</span><span class="p">,</span> <span class="nx">foundUser</span><span class="p">.</span><span class="nx">id</span>
+                </pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>updateSeuronWithTwitter</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="k">return</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+                <span class="nx">promise</span><span class="p">.</span><span class="nx">fulfill</span> <span class="nx">foundUser</span> <span class="c1">#login our user</span>
+              
+              <span class="k">else</span> </pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><p>Our user hasn't been founded so it is NOT a returning user
+Let's create our user from its twitter credentials</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="k">return</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span> <span class="c1"># handle error</span>
+
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;---------------------- create a new user&quot;</span></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><p>Import Seuron model so we can create a new Seuron with the new User</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="nv">Seuron = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;../models/Seuron&#39;</span><span class="p">).</span><span class="nx">Seuron</span></pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a href="#section-13" class="pilcrow">&#182;</a></div><p>Let's create our new user inside DB</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="nv">createdUser = </span><span class="k">new</span> <span class="nx">User</span></pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a href="#section-14" class="pilcrow">&#182;</a></div><p>console.log createdUser</p>
+</td><td class="code"><div class="highlight"><pre>                </pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a href="#section-15" class="pilcrow">&#182;</a></div><p>Call a method to populate data with Twitter</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="nx">createdUser</span><span class="p">.</span><span class="nx">createWithTwitter</span> <span class="nx">twitterUser</span><span class="p">,</span> <span class="nx">accessTok</span><span class="p">,</span> <span class="nx">accessTokSecret</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+                  
+                  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span></pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a href="#section-16" class="pilcrow">&#182;</a></div><p>Check if a Seuron already exists with the same user id</p>
+</td><td class="code"><div class="highlight"><pre>                  <span class="nx">Seuron</span><span class="p">.</span><span class="nx">findOne</span>
+                    <span class="s">&quot;user_id&quot;</span> <span class="o">:</span> <span class="nx">createdUser</span><span class="p">.</span><span class="nx">_id</span><span class="p">,</span> <span class="nf">(err, foundSeuron) -&gt;</span>
+                      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;seuronExists = &quot;</span><span class="p">,</span> <span class="nx">foundSeuron</span></pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a href="#section-17" class="pilcrow">&#182;</a></div><p>If seuron doesn't already exists, then create it</p>
+</td><td class="code"><div class="highlight"><pre>                      <span class="k">if</span><span class="p">(</span> <span class="nx">foundSeuron</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span></pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a href="#section-18" class="pilcrow">&#182;</a></div><p>Create our new Seuron</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nv">s = </span><span class="k">new</span> <span class="nx">Seuron</span><span class="p">()</span>  </pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a href="#section-19" class="pilcrow">&#182;</a></div><p>Add Twitter profile to our seuron</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nv">s.sns.twitter.profile = </span><span class="nx">createdUser</span><span class="p">.</span><span class="nx">twit</span></pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a href="#section-20" class="pilcrow">&#182;</a></div><p>Attach a new Seuron to our user</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nv">s.user_id = </span><span class="nx">createdUser</span><span class="p">.</span><span class="nx">_id</span>
+
+                        <span class="nx">s</span><span class="p">.</span><span class="nx">save</span> <span class="nf">( d ) -&gt;</span>
+                          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;new seuron created&quot;</span></pre></div></td></tr><tr id="section-21"><td class="docs"><div class="pilwrap"><a href="#section-21" class="pilcrow">&#182;</a></div><p>Add our new seuron ID to user</p>
+</td><td class="code"><div class="highlight"><pre>                          <span class="nv">createdUser.seuron_id = </span><span class="nx">s</span><span class="p">.</span><span class="nx">_id</span></pre></div></td></tr><tr id="section-22"><td class="docs"><div class="pilwrap"><a href="#section-22" class="pilcrow">&#182;</a></div><p>Save our new user into DB</p>
+</td><td class="code"><div class="highlight"><pre>                          <span class="nx">createdUser</span><span class="p">.</span><span class="nx">save</span> <span class="nf">(err) -&gt;</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;user updated with seuron id&quot;</span></pre></div></td></tr><tr id="section-23"><td class="docs"><div class="pilwrap"><a href="#section-23" class="pilcrow">&#182;</a></div><p>We can create our user session</p>
+</td><td class="code"><div class="highlight"><pre>                            <span class="k">return</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
+                            <span class="nx">promise</span><span class="p">.</span><span class="nx">fulfill</span> <span class="nx">createdUser</span> 
+
+                      <span class="k">else</span> </pre></div></td></tr><tr id="section-24"><td class="docs"><div class="pilwrap"><a href="#section-24" class="pilcrow">&#182;</a></div><p>Our seuron already exists in the db</p>
+</td><td class="code"><div class="highlight"><pre>                        </pre></div></td></tr><tr id="section-25"><td class="docs"><div class="pilwrap"><a href="#section-25" class="pilcrow">&#182;</a></div><p>Update our seuron Twitter profile </p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nv">s.sns.twitter.profile = </span><span class="nx">createdUser</span><span class="p">.</span><span class="nx">twit</span></pre></div></td></tr><tr id="section-26"><td class="docs"><div class="pilwrap"><a href="#section-26" class="pilcrow">&#182;</a></div><p>Attach a new Seuron to our user</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nv">s.user_id = </span><span class="nx">createdUser</span><span class="p">.</span><span class="nx">_id</span></pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a href="#section-27" class="pilcrow">&#182;</a></div><p>Save our seuron</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nx">s</span><span class="p">.</span><span class="nx">save</span> <span class="nf">( d ) -&gt;</span></pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a href="#section-28" class="pilcrow">&#182;</a></div><p>Add our new seuron ID to user</p>
+</td><td class="code"><div class="highlight"><pre>                          <span class="nv">createdUser.seuron_id = </span><span class="nx">s</span><span class="p">.</span><span class="nx">_id</span></pre></div></td></tr><tr id="section-29"><td class="docs"><div class="pilwrap"><a href="#section-29" class="pilcrow">&#182;</a></div><p>Save our new user into DB</p>
+</td><td class="code"><div class="highlight"><pre>                          <span class="nx">createdUser</span><span class="p">.</span><span class="nx">save</span> <span class="nf">(err) -&gt;</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;New user updated with seuron id&quot;</span></pre></div></td></tr><tr id="section-30"><td class="docs"><div class="pilwrap"><a href="#section-30" class="pilcrow">&#182;</a></div><p>We can now create our user session</p>
+</td><td class="code"><div class="highlight"><pre>                            <span class="k">return</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
+                            <span class="nx">promise</span><span class="p">.</span><span class="nx">fulfill</span> <span class="nx">createdUser</span> 
+
+<span class="nv">User = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s">&#39;User&#39;</span><span class="p">,</span> <span class="nx">UserSchema</span><span class="p">)</span> 
+
+<span class="nv">module.exports = </span><span class="p">{</span>
+  <span class="nx">User</span><span class="o">:</span><span class="nx">User</span>
+<span class="p">}</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Sun Oct 07 2012 16:22:51 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>

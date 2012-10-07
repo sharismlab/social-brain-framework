@@ -1,7 +1,6 @@
-###
-store all twitter API requests
-for call by socket.io
-###
+# Here is stored all logic related to twitter API requests
+# We use nTwitter module to fetch data from twitter
+
 
 s = null
 tok =null
@@ -14,15 +13,12 @@ apikeys = require '../../config/apikeys'
 # decalre global vars
 # timeline = null
 
-module.exports = () ->
+module.exports = (tok, tokSec) ->
 
     twitterAPI = this
 
-    # twidata = req.session.auth.twitter.user.id
-    tok = req.session.auth.twitter.token
-    tokSec = req.session.auth.twitter.tokenSecret
-
     console.log tok, tokSec
+    
     #use logged in user credentials to process requests
     ntwit = new ntwitter (    
         consumer_key: apikeys.twitter.consumerKey

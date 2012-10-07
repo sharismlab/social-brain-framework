@@ -12,6 +12,8 @@
         "coffee-script": "latest",
         "connect-assets": "2.2.1",
         "express": "latest",
+        "express-helpers": "latest",
+        "ejs": "latest",
         "everyauth": "git://github.com/bnoguchi/everyauth.git#express3",
         "forever": "latest",
         "http-proxy": "latest",
@@ -19,11 +21,11 @@
         "less": "latest",
         "markdown": "0.3.1",
         "mongodb": ">= 0.9.6-7",
-        "mongoose": "latest",
+        "mongoose": "3.2.0",
         "mongoose-auth": "git://github.com/cbou/mongoose-auth.git#everymodule-fix",
         "nib": "0.4.1",
         "jquery": "latest",
-        "ntwitter": "latest",
+        "ntwitter": "0.4.1",
         "querystring": "latest",
         "request": "latest",
         "redis": ">=0.7.1",
@@ -43,6 +45,12 @@
         "supervisor": "*",
         "supertest": "latest",
         "docco": "*"
+    },
+    "docco_husky": {
+        "css": "public/css/docs.css",
+        "output_dir": "public/docs",
+        "project_name": "Social Brain Framework",
+        "show_timestamp": true
     },
     "scripts": {
         "start": "sudo ./sbf",

@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><title>twitterAPI.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source selected"><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/demo.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">demo.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes/users.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">users.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>twitterAPI.coffee</h1><div class="filepath">src/lib/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><p>Here is stored all logic related to twitter API requests
+We use nTwitter module to fetch data from twitter</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">s = </span><span class="kc">null</span>
+<span class="nx">tok</span> <span class="o">=</span><span class="kc">null</span>
+<span class="nx">tokSec</span><span class="o">=</span><span class="kc">null</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><p>create a ntwitter element</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">ntwitter = </span><span class="nx">require</span> <span class="s">&#39;ntwitter&#39;</span>
+<span class="nv">apikeys = </span><span class="nx">require</span> <span class="s">&#39;../../config/apikeys&#39;</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>decalre global vars
+timeline = null</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">module.exports = </span><span class="nf">(tok, tokSec) -&gt;</span>
+
+    <span class="nv">twitterAPI = </span><span class="k">this</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">tok</span><span class="p">,</span> <span class="nx">tokSec</span>
+    </pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>use logged in user credentials to process requests</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">ntwit = </span><span class="k">new</span> <span class="nx">ntwitter</span> <span class="p">(</span>    
+        <span class="nv">consumer_key: </span><span class="nx">apikeys</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">consumerKey</span>
+        <span class="nv">consumer_secret: </span><span class="nx">apikeys</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">consumerSecret</span>
+        <span class="nv">access_token_key: </span><span class="nx">tok</span>
+        <span class="nv">access_token_secret: </span><span class="nx">tokSec</span>
+    <span class="p">)</span>
+
+    <span class="nv">verifyCredentials = </span><span class="nf">() -&gt;</span>        
+        <span class="nv">url = </span><span class="s">&#39;https://api.twitter.com/1.1/account/verify_credentials.json&#39;</span>
+        <span class="nx">ntwit</span><span class="p">.</span><span class="nx">get</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nf">(err,data) -&gt;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+        <span class="k">return</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>basic function to pass data from async to socket
+passToSocket = (name, data ) ->
+    console.log "passed data ---------------------------------------------"
+    console.log data
+    socket.emit name, { data: data }</p>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><p>export methods </p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">twitterAPI.verifyCredentials = </span><span class="nx">verifyCredentials</span>
+    <span class="nv">twitterAPI.ntwit = </span><span class="nx">ntwit</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>Export as node</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">twitterAPI</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Sun Oct 07 2012 16:02:28 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>

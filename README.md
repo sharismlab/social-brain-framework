@@ -1,5 +1,5 @@
 # Social Brain Framework
-======================
+
 
 Social Brain Framework (SBF) is toolset to analyze & visualize online social interactions. Using the analogy of (human) brain, it provides new methods to lead Social Network Analysis (SNA) in borrowing methodologies from neurology, linguistics, psychoanalysis, sociology and computer science.
 
@@ -42,12 +42,13 @@ This framework has been developed for people their own build apps. In the **apps
     coffee index.coffee
 
 # Thanks
-----------
+
 * Lance R. Vick <lance@lrvick.net> and guys at Tawlk for their awesome social web crawler Hyve > https://github.com/Tawlk/hyve/
 * Lionel Radisson <lionel.radisson@gmail.com> for the help on ProcessingJS
 
 # Licence
-----------
+
 Social Brain Framework is available under the Sharing Agreement ✳ Sharism Lab
+
 * http://sharismlab.com
 * http://sharism.org

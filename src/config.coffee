@@ -1,44 +1,80 @@
+###
+config file for SBF app
+###
+
 dbs =  require '../config/db'
 less = require "less"
 helpers = require "./locals"
 httpProxy = require('http-proxy')
 
+# every auth + mongoose
+everyauth = require('everyauth')
+mongooseAuth = require 'mongoose-auth'
+
+#Let's configure everyauth
+everyauth.debug = true
+
+# require './lib/auth'
+# require('./models/User').User
+
+
+# Fix for broken expressHelpers
+# https://github.com/bnoguchi/everyauth/issues/303
+preEveryAuthMiddlewareHack = ->
+  (req, res, next) ->
+    sess = req.session
+    auth = sess.auth
+    ea =
+      loggedIn: auth?.loggedIn
+
+    ea[k] = val for own k, val of auth
+
+    if everyauth.enabled.password
+      ea.password = ea.password || {}
+      ea.password.loginFormFieldName = everyauth.password.loginFormFieldName()
+      ea.password.passwordFormFieldName = everyauth.password.passwordFormFieldName()
+
+    res.locals.everyauth = ea
+
+    do next
+
+postEveryAuthMiddlewareHack = ->
+  userAlias = everyauth.expressHelperUserAlias || "user"
+  (req, res, next) ->
+    res.locals.everyauth.user = req.user
+    res.locals[userAlias] = req.user
+    do next
+
 module.exports = (app, express, mongoose) ->
 
   config = this
 
-  # User model
-  # UserSchema = require('./models/User') mongoose
-  # mongoose.model('User', UserSchema)
-  # User = mongoose.model('User');
-  
-  # u = User.findOne( { "twit.name" : "clemsos" } , (err, data) -> 
-  #   console.log data
-  # )
+  # required for mongoose-auth to work
+  User = require('./models/User').User
 
-  # every auth + mongoose
-  everyauth = require('everyauth')
-
-  mongooseAuth = require('mongoose-auth')
-  require("./auth") app, mongoose, everyauth, mongooseAuth
 
   #generic config
   app.configure ->
     app.set "views", __dirname + "/views"
     app.set "view engine", "jade"
-    app.use express.bodyParser()
     app.use express.cookieParser()
 
+    app.engine 'html', require('ejs').renderFile
+
+    app.use express.favicon()
 
     app.use express.session( {
     secret: "topsecret",
     maxAge: new Date(Date.now() + 3600000)
     })
 
-    app.use express.methodOverride()
 
+    app.use preEveryAuthMiddlewareHack()
     app.use mongooseAuth.middleware(app)
+    app.use postEveryAuthMiddlewareHack()
 
+    app.use express.bodyParser()
+    app.use express.methodOverride()
     app.use express.static(process.cwd() + '/public')
     # app.use app.router
 

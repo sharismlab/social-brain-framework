@@ -1,0 +1,9 @@
+extends ../layout
+
+block append content
+
+    h1 Seurons index
+    ul
+      - for s in seurons
+        li
+            a(href="/seurons/"+s._id, class="seuron") seuron

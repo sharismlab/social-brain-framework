@@ -1,0 +1,15 @@
+extends ../layout
+
+block append content
+    
+    h1= seuron.id
+    p Single view for seuron
+
+    - if ( everyauth.twitter )
+        p You are logged in with twitter!
+        a(href="/yourseuron") See your social neuron !
+        
+    - else 
+        p Log in with twitter and view your social neuron
+    
+
