@@ -14,6 +14,35 @@ module.exports = (app) ->
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
         res.send 'search'
 
+    
+    #MESSAGE API 
+    # Import Message model
+    Message = require('../models/Message').Message
+
+    # Will get all messages in the db
+    app.get '/api/messages.:format', (req, res) ->
+
+        Message.find {}, (err, messages) ->
+            switch req.params.format
+                # When json, generate suitable data
+                when 'json' then res.send messages.map (d) -> return d.toObject();
+                # default
+                else res.send "you need to specify a format"
+
+    # Get Only specific fields from Seurons in DB
+    app.get '/api/messages/:id.:format', (req, res) ->
+
+        Message.findById req.params.id, (err, message) ->
+
+            switch req.params.format
+                # When json, generate suitable data
+                when 'json' then res.send message
+                # default
+                else res.send "you need to specify a extension format (.json or .xml)"
+
+
+
+
     # Seurons API
 
     # Import Seuron model
@@ -25,7 +54,6 @@ module.exports = (app) ->
     app.get '/api/seurons', (req, res) ->
         res.redirect '/api/seurons.'
 
-    # This is juts for test purposes. 
     # Will get all seurons in the db
     app.get '/api/seurons.:format', (req, res) ->
 
