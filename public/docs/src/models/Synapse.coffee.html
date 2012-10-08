@@ -1,0 +1,53 @@
+<!DOCTYPE html><html><head><title>Synapse.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/controllers/messages_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">messages_controller.coffee</span></a><a href="../../src/controllers/seurons_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">seurons_controller.coffee</span></a><a href="../../src/lib/redis_queue.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">redis_queue.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/lib/twitterTimeline.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterTimeline.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Interaction.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Interaction.coffee</span></a><a href="../../src/models/Message.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Message.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/Synapse.coffee.html" class="source selected"><span class="base_path">src / models / </span><span class="file_name">Synapse.coffee</span></a><a href="../../src/models/Thread.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Thread.coffee</span></a><a href="../../src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>Synapse.coffee</h1><div class="filepath">src/models/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><h1>#</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">Synapse</span> <span class="k">class</span> <span class="o">is</span> <span class="nx">intended</span> <span class="nx">to</span> <span class="nx">store</span> <span class="nx">relationships</span> <span class="nx">between</span> <span class="nx">seurons</span><span class="p">.</span>
+
+    <span class="nx">It</span> <span class="nx">contains</span> <span class="nx">an</span> <span class="nx">object</span> <span class="nx">with</span> <span class="mi">3</span> <span class="nv">values : </span><span class="nx">Seuron</span> <span class="nx">A</span><span class="p">,</span> <span class="nx">Seuron</span> <span class="nx">B</span><span class="p">,</span> <span class="nx">int</span> <span class="nx">level</span><span class="p">,</span> <span class="nx">int</span> <span class="nx">weight</span>
+        <span class="nv">ex : </span><span class="nx">Synapse</span><span class="p">(</span> <span class="nx">A</span><span class="p">,</span> <span class="nx">B</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+
+    <span class="nv">Level : </span><span class="o">is</span> <span class="nx">a</span> <span class="nx">int</span> <span class="nx">that</span> <span class="nx">decribes</span> <span class="nx">the</span> <span class="nx">level</span> <span class="k">of</span> <span class="nx">relationship</span> <span class="nx">between</span> <span class="mi">2</span> <span class="nx">seurons</span>
+
+        <span class="nv">Unknown: </span>           <span class="mi">0</span>
+        <span class="nx">Friend</span> <span class="o">&amp;</span> <span class="nv">Follow: </span>   <span class="mi">1</span> 
+        <span class="o">is</span> <span class="nx">Friend</span> <span class="k">of</span><span class="o">:</span>       <span class="mi">2</span> 
+        <span class="o">is</span> <span class="nx">Followed</span> <span class="k">by</span><span class="o">:</span>     <span class="mi">3</span>
+        <span class="nx">No</span> <span class="nv">relationships: </span>  <span class="mi">4</span>
+
+    <span class="nx">Synapses</span> <span class="nx">are</span> <span class="nx">directionals</span>
+        
+        <span class="nx">Synapse</span><span class="p">(</span><span class="nx">A</span><span class="p">,</span> <span class="nx">B</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="nx">means</span> <span class="nx">that</span> <span class="nx">A</span> <span class="o">is</span> <span class="nx">followed</span> <span class="k">by</span> <span class="nx">B</span><span class="p">,</span> <span class="nx">i</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span> <span class="nx">B</span> <span class="nx">follows</span> <span class="nx">A</span>
+        <span class="nx">Synapse</span><span class="p">(</span><span class="nx">B</span><span class="p">,</span> <span class="nx">A</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="nx">means</span> <span class="nx">the</span> <span class="nx">opposite</span><span class="p">,</span> <span class="nx">i</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span> <span class="nx">A</span> <span class="nx">follows</span> <span class="nx">B</span>
+
+    <span class="nv">Weight : </span><span class="nx">represents</span> <span class="nx">the</span> <span class="nx">quantity</span> <span class="k">of</span> <span class="nx">activity</span> <span class="nx">between</span> <span class="mi">2</span> <span class="nx">seurons</span><span class="p">.</span> 
+            <span class="nx">Every</span> <span class="nx">time</span> <span class="nx">there</span> <span class="o">is</span> <span class="nx">an</span> <span class="nx">interactions</span><span class="p">,</span> <span class="nx">it</span> <span class="o">is</span> <span class="nx">increased</span> 
+            <span class="nv">example : </span><span class="nx">RT</span> <span class="o">+</span><span class="mi">1</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><h2> </h2>
+</td><td class="code"><div class="highlight"><pre><span class="nv">mongoose = </span><span class="nx">require</span><span class="p">(</span><span class="s">&quot;mongoose&quot;</span><span class="p">)</span>
+
+<span class="nv">collection = </span><span class="s">&quot;synapses&quot;</span>
+
+<span class="nv">Schema = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span>
+<span class="nv">ObjectId = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">SchemaTypes</span><span class="p">.</span><span class="nx">ObjectId</span>
+
+<span class="nv">SynapseSchema = </span><span class="k">new</span> <span class="nx">Schema</span>
+    <span class="nv">seuronA :</span>
+      <span class="nv">__id :</span>
+        <span class="nv">type: </span><span class="nx">ObjectId</span>
+        <span class="nv">index: </span><span class="kc">true</span>
+        <span class="nv">ref: </span><span class="s">&#39;SeuronSchema&#39;</span> 
+      <span class="nv">twitterId : </span><span class="nb">Number</span>
+    <span class="nv">seuronB : </span>
+      <span class="nv">__id :</span>
+        <span class="nv">type: </span><span class="nx">ObjectId</span>
+        <span class="nv">index: </span><span class="kc">true</span>
+        <span class="nv">ref: </span><span class="s">&#39;SeuronSchema&#39;</span> 
+      <span class="nv">twitterId : </span><span class="nb">Number</span>
+    <span class="nv">level: </span><span class="nb">Number</span> 
+    <span class="nv">service: </span><span class="nb">String</span> 
+
+
+<span class="nv">Synapse = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s">&#39;Synapse&#39;</span><span class="p">,</span> <span class="nx">SynapseSchema</span><span class="p">)</span>
+
+<span class="nv">module.exports = </span><span class="p">{</span>
+  <span class="nx">Synapse</span><span class="o">:</span><span class="nx">Synapse</span>
+<span class="p">}</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Oct 08 2012 16:39:42 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>

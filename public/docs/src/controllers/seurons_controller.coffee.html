@@ -1,0 +1,53 @@
+<!DOCTYPE html><html><head><title>seurons_controller.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/controllers/messages_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">messages_controller.coffee</span></a><a href="../../src/controllers/seurons_controller.coffee.html" class="source selected"><span class="base_path">src / controllers / </span><span class="file_name">seurons_controller.coffee</span></a><a href="../../src/lib/redis_queue.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">redis_queue.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/lib/twitterTimeline.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterTimeline.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Interaction.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Interaction.coffee</span></a><a href="../../src/models/Message.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Message.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/Synapse.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Synapse.coffee</span></a><a href="../../src/models/Thread.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Thread.coffee</span></a><a href="../../src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>seurons_controller.coffee</h1><div class="filepath">src/controllers/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><p>queue = require "../lib/redis_queue"</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">Seuron = </span><span class="nx">require</span> <span class="p">(</span><span class="s">&#39;../models/Seuron&#39;</span><span class="p">).</span><span class="nx">Seuron</span>
+
+<span class="nv">findOrCreateSeuronWithTwitterId = </span><span class="nf">(twitterId, callback) -&gt;</span>
+  
+  <span class="nx">Seuron</span><span class="p">.</span><span class="nx">findOne</span> <span class="p">{</span><span class="s">&quot;sns.twitter.id&quot;</span><span class="o">:</span> <span class="nx">twitterId</span><span class="p">},</span> <span class="nf">(err, seuron) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="k">if</span> <span class="o">!</span><span class="nx">seuron</span>
+      <span class="nv">s = </span><span class="k">new</span> <span class="nx">Seuron</span>
+      <span class="nv">s.sns.twitter.id= </span><span class="nx">twitterId</span>
+      <span class="nx">s</span><span class="p">.</span><span class="nx">save</span> <span class="nf">(d) -&gt;</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="nx">seuron</span><span class="p">)</span>
+
+<span class="nv">getFollowersFromTwitter = </span><span class="nf">(ntwit,seuron, callback) -&gt;</span>
+    <span class="nx">ntwit</span><span class="p">.</span><span class="nx">getFollowersIds</span> <span class="nx">seuron</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nf">(err, data) -&gt;</span>
+        <span class="k">if</span> <span class="nx">err</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span>
+        <span class="k">else</span>
+          <span class="nv">seuron.sns.twitter.followers = </span><span class="nx">data</span>
+          <span class="nv">seuron.sns.twitter.hasFollowers.check = </span><span class="kc">true</span>
+          <span class="nv">seuron.sns.twitter.hasFollowers.last_updated = </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span>
+          <span class="nx">seuron</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+          <span class="nx">callback</span><span class="p">(</span>  <span class="nx">err</span><span class="p">,</span><span class="nx">data</span> <span class="p">)</span>
+            
+<span class="nv">getFriendsFromTwitter = </span><span class="nf">(ntwit,seuron, callback) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;get firends from twitter account &#39;</span><span class="o">+</span> <span class="nx">seuron</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">id</span>
+    <span class="nx">ntwit</span><span class="p">.</span><span class="nx">getFriendsIds</span> <span class="nx">seuron</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nf">(err,data) -&gt;</span>
+          <span class="k">if</span> <span class="nx">err</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> 
+          <span class="k">else</span> </pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><p>add data to seuron </p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">seuron.sns.twitter.friends = </span><span class="nx">data</span>
+            <span class="nv">seuron.sns.twitter.hasFriends.check = </span><span class="kc">true</span>
+            <span class="nv">seuron.sns.twitter.hasFriends.last_updated = </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span>
+            <span class="nx">seuron</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+            <span class="nx">callback</span> <span class="nx">err</span><span class="p">,</span><span class="nx">data</span>  </pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>Now let's get timeline and mentions</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">getTimelineFromTwitter = </span><span class="nf">(ntwit, callback)-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;(get twitter timeline)&quot;</span>
+    <span class="nx">ntwit</span><span class="p">.</span><span class="nx">getUserTimeline</span> <span class="p">{</span><span class="s">&quot;include_rts&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span><span class="s">&quot;include_entities&quot;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="s">&quot;count&quot;</span><span class="o">:</span><span class="mi">200</span> <span class="p">},</span> <span class="nf">(err,data) -&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>console.log data</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">callback</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">data</span> <span class="p">)</span>
+
+
+
+<span class="nv">module.exports = </span><span class="p">{</span>
+      <span class="nv">getFollowersFromTwitter : </span><span class="nx">getFollowersFromTwitter</span><span class="p">,</span>
+      <span class="nv">getFriendsFromTwitter : </span><span class="nx">getFriendsFromTwitter</span><span class="p">,</span>
+      <span class="nv">getTimelineFromTwitter : </span><span class="nx">getTimelineFromTwitter</span><span class="p">,</span>
+      <span class="nv">findOrCreateSeuronWithTwitterId: </span><span class="nx">findOrCreateSeuronWithTwitterId</span>
+    <span class="p">}</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Oct 08 2012 16:39:41 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>

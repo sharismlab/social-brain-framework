@@ -1,24 +1,29 @@
-# API
-# All routing about API
-# Now only JSON implemented
+# ## API for Social Brain Framework.
+    
+# Now only JSON is supported
 
 module.exports = (app) ->
     
+    # Home page 
     app.get '/api', (req, res) ->
         res.header 'Cache-Control', 'no-cache'
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
         res.send 'The api is currently under development, please stay tuned'
 
+    # Search API, yet to be implemented
     app.get '/api/search', (req, res) ->
         res.header 'Cache-Control', 'no-cache'
         res.header 'Expires', 'Fri, 31 Dec 1998 12:00:00 GMT'
         res.send 'search'
 
     
-    #MESSAGE API 
+    # ## MESSAGE API
+
     # Import Message model
     Message = require('../models/Message').Message
 
+    # GET All messages
+    # > /api/messages.json
     # Will get all messages in the db
     app.get '/api/messages.:format', (req, res) ->
 
@@ -29,6 +34,8 @@ module.exports = (app) ->
                 # default
                 else res.send "you need to specify a format"
 
+    # GET Single message
+    # > /api/message/5072c44f3d3ffb911a000de2.json
     # Get Only specific fields from Seurons in DB
     app.get '/api/messages/:id.:format', (req, res) ->
 
@@ -43,18 +50,18 @@ module.exports = (app) ->
 
 
 
-    # Seurons API
+    # ## Seurons API
 
     # Import Seuron model
     Seuron = require('../models/Seuron').Seuron
 
     # GET all seurons
-
+    # > /api/seurons.json
     # Prevent error by redirection
     app.get '/api/seurons', (req, res) ->
         res.redirect '/api/seurons.'
 
-    # Will get all seurons in the db
+    # Will return all seurons in the db
     app.get '/api/seurons.:format', (req, res) ->
 
         Seuron.find {}, (err, seurons) ->
@@ -64,7 +71,8 @@ module.exports = (app) ->
                 # default
                 else res.send "you need to specify a format"
 
-    # Get Only specific fields from Seurons in DB
+    # GET Only specific fields from Seurons in DB
+    # > /api/seurons/5072c44f3d3ffb911a000de2.json/friends,followers
     app.get '/api/seurons/:id.:format/:fields?', (req, res) ->
 
         Seuron.findById req.params.id, req.params.fields, (err, seuron) ->
@@ -74,35 +82,3 @@ module.exports = (app) ->
                 when 'json' then res.send seuron
                 # default
                 else res.send "you need to specify a extension format (.json or .xml)"
-
-
-    # Here goes some sample data for local development
-    friends = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_friends.json"
-
-    followers  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_followers.json"
-
-    app.get '/api/fake/timeline', (req, res) ->
-        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
-        
-        res.json data
-
-    app.get '/api/fake/friends', (req, res) ->
-        # res.header 'Content-Type': 'application/json'
-        console.log friends
-        res.jsonp friends
-
-    app.get '/api/fake/followers', (req, res) ->
-        
-        # res.header 'Content-Type': 'application/json'
-        res.jsonp followers
-
-    app.get '/api/fake/mentions', (req, res) ->
-        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
-        res.header 'Content-Type': 'application/json'
-        res.json data
-
-    app.get '/api/fake/profile', (req, res) ->
-        data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_profile.json"
-        res.header 'Content-Type': 'application/json'
-        res.json data
-   
