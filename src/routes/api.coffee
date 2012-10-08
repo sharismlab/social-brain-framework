@@ -56,7 +56,7 @@ module.exports = (app) ->
     app.get '/api/fake/timeline', (req, res) ->
         data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
         
-        res.json JSON.stringify(data)
+        res.json data
 
     app.get '/api/fake/friends', (req, res) ->
         # res.header 'Content-Type': 'application/json'
@@ -71,10 +71,10 @@ module.exports = (app) ->
     app.get '/api/fake/mentions', (req, res) ->
         data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
         res.header 'Content-Type': 'application/json'
-        res.json JSON.stringify(data)
+        res.json data
 
     app.get '/api/fake/profile', (req, res) ->
         data = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_profile.json"
         res.header 'Content-Type': 'application/json'
-        res.json JSON.stringify(data)
+        res.json data
    

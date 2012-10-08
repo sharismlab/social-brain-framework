@@ -15,9 +15,8 @@ clemsos_mentions  = require "../../public/viz/seuron_viz/examples/petridish/data
 
 module.exports = (app, mongoose, io) ->
 
-
     # mongoose.set('debug', true)
-    
+
     # Import Seuron model
     Seuron = require('../models/Seuron').Seuron
     
@@ -148,6 +147,8 @@ module.exports = (app, mongoose, io) ->
 
                 # console.log "timeline loaded !"
                 twitterFunctions.analyzeTimeline clemsos_mentions
+                # console.log "timeline completed!"
+
                 twitterFunctions.analyzeTimeline clemsos_timeline
 
 

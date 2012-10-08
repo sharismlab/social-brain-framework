@@ -81,7 +81,7 @@ UserSchema.plugin mongooseAuth,
         myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: '/demo'
+        redirectPath: '/fake/you'
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
 
