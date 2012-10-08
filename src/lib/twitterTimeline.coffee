@@ -42,6 +42,7 @@ ANALYSE EACH TWEET OF THE TIMELINE
         - We should populate a global Array with all messages
 ###
 
+
 currentThreadIndex = null
 
 # import classes
@@ -82,7 +83,7 @@ analyzeTweet = (tweet) ->
   m.id = tweet.id
   m.data = tweet
   m.save (d) ->
-    console.log "message created"
+    # console.log "message created"
 
     # check if our seuron already exists inside the DB
     Seuron.findOne {"sns.twitter.id":tweet.user.id}, (err, seuron) ->
@@ -90,7 +91,7 @@ analyzeTweet = (tweet) ->
       if(!seuron) 
         from = new Seuron({"sns.twitter.id":tweet.user.id })
         from.save (d)->
-          console.log 'new seuron created'
+          # console.log 'new seuron created'
           checkTweetType from, tweet
       else
         # console.log 'seuron exists'
@@ -103,25 +104,25 @@ checkTweetType = (from, tweet ) ->
     
     # console.log("reply");
     analyzeReply from, tweet
-    analyzeThread tweet, tweet.in_reply_to_status_id
+    # analyzeThread tweet, tweet.in_reply_to_status_id
   
   # our tweet is a RT
   else if tweet.retweeted_status
     analyzeRT from, tweet
-    analyzeThread tweet, tweet.retweeted_status.id
+    # analyzeThread tweet, tweet.retweeted_status.id
   
   # our tweet is just a post
   else    
     # console.log("mentions");
     # Analyze if there is mentions in this tweet
-    analyzeThread tweet, null
+    # analyzeThread tweet, null
     analyzeMentions from, tweet.entities.user_mentions, from.sns.twitter.id, tweet  if tweet.entities.user_mentions.length > 0
 
 analyzeRT = ( from, tweet ) ->
   
   # we analyze first RT
   # then analyze retweeted_status as a new post
-  console.log "RT"
+  # console.log "RT"
 
   # get our guy that has post in the first place
   findOrCreateSeuronWithTwitterId tweet.retweeted_status.user.id, (rtFromSeuron) ->
@@ -132,41 +133,153 @@ analyzeRT = ( from, tweet ) ->
     # console.log from 
     # create or get existing synapse from reply_guy   
     from.findOrCreateSynapse rtFromSeuron, (synapse) ->
-      console.log synapse
+      # console.log synapse
       # Now create our new interaction and add it to our message
       RT = new Interaction {"synapse":synapse, "action":2}
       RT.save (d) ->
-        console.log "alalalala"
         # add interactions to the message
         findMessageByTwitterId tweet.id, (message) ->
-          console.log 'interaction added'
+          
           message.interactions.push RT
-          #add message to seuron
-          from.messages.push tweet.id
+          message.save (d) ->
+            #add message to seuron
+            from.messages.push tweet.id
+            from.update()
 
-###
+
     # deal with other users that has been quoted in the message
     if tweet.entities.user_mentions.length > 0
+
       tempMentions = []
-      i = 0
 
-      while i < tweet.entities.user_mentions.length
-        tempMentions.push tweet.entities.user_mentions[i]
-        i++
-      mentionExist = undefined
-      j = 0
+      # add all mentions into an array
+      tempMentions.push mention for mention in tweet.entities.user_mentions
 
-      while j < tweet.retweeted_status.entities.user_mentions.length
-        mentionExist = false
-        i = 0
+      # loop to add other mentions coming form RT status
+      
+      for rtmention in tweet.retweeted_status.entities.user_mentions 
+        for mention in tempMentions
+          if rtmention != mention
+            tempMentions.push rtmention
+      
 
-        while i < tweet.entities.user_mentions.length
-          mentionExist = true  if tweet.retweeted_status.entities.user_mentions[j] is tweet.entities.user_mentions[i].id
-          i++
-        tempMentions.push tweet.retweeted_status.entities.user_mentions[j]  unless mentionExist
-        j++
-      analyzeMentions _from, tempMentions, tweet.retweeted_status.user.id, tweet
-###
+      analyzeMentions from, tempMentions, tweet.retweeted_status.user.id, tweet
+
+analyzeReply = (from, tweet) ->
+  
+  # is the message a reply to himself?
+  # if tweet.in_reply_to_user_id == from.sns.twitter.id
+  #   console.log("this is a reply to myself ! "); --> silly
+  
+  # get or create the guy from the reply
+  findOrCreateSeuronWithTwitterId tweet.in_reply_to_user_id, (replySeuron) ->
+    # get or create existing synapse between from and reply guys
+    from.findOrCreateSynapse replySeuron, (synapse) ->
+      # now get the message and add interactions
+      reply = new Interaction {"synapse":synapse, "action":3}
+      reply.save (d) ->    
+        # add interactions to the message
+
+        findMessageByTwitterId tweet.id, (message) ->
+          
+          message.interactions.push reply
+          message.save (d) ->
+            #add message to seuron
+            from.messages.push tweet.id
+            from.update()
+  
+  # create other relations with guys quoted in the message 
+  analyzeMentions from, tweet.entities.user_mentions, tweet.in_reply_to_user_id, tweet if tweet.entities.user_mentions.length > 0
+
+analyzeMentions = (from, mentions, exclude_id, tweet) ->
+  # console.log tweet.id
+  # add message to seuron from
+  findMessageByTwitterId tweet.id, (message) ->
+    from.messages.push message
+  
+  #loop into mentions
+  i = 0
+  while i < mentions.length
+
+    # exclude id that has been passed 
+    if mentions[i].id isnt exclude_id and mentions[i].id isnt from.id
+      
+      findOrCreateSeuronWithTwitterId mentions[i].id, (replySeuron) ->    
+        # console.log replySeuron.sns.twitter.id
+        # get existing Friendship 
+        from.findOrCreateSynapse replySeuron, (synapse) ->
+
+          at = new Interaction {"synapse":synapse, "action":3}
+          at.save (d) ->
+            
+            # console.log at
+            # console.log tweet.id
+            # add interactions to the message
+            findMessageByTwitterId tweet.id, (message) ->
+              # console.log("---mentions")
+              # console.log message.interactions
+                
+              message.interactions.push at
+              message.save (d) ->
+
+    i++
+
+analyzeThread = (tweet, prevId) -> 
+   
+  if prevId !=null
+    # console.log prevId
+    addMessageOrCreateThread prevId
+   
+  addMessageOrCreateThread tweet.id
+
+  # if the tweet is a RT, then analyze the original message
+  if tweet.retweeted_status
+    # analyze original message
+    analyzeTweet tweet.retweeted_status
+    
+  # analyze the previous message / reply 
+  else if tweet.in_reply_to_status_id?
+    findMessageByTwitterId tweet.in_reply_to_status_id, (reply) ->
+      # console.log tweet.in_reply_to_status_id
+
+      if(!reply)
+        console.log 'should fire twitter API request to get message'
+      else
+        # console.log reply
+        analyzeTweet reply
+
+# check if the message already exists in one message thread
+# if not, then create a new thread
+addMessageOrCreateThread = (previousMessageId) ->
+  # console.log "addMessageOrCreateThread fired!"
+  Message.find { "thread": previousMessageId }, (err, messagesWithThread) ->
+
+    console.log err if err
+
+    # the thread doesn't already exist in any messages
+    if(messagesWithThread.length == 0 ) 
+
+      # get our message
+      findMessageByTwitterId previousMessageId, (message) ->
+        if(!message)
+          console.log 'should create the message'
+        else
+          # console.log "thread"
+          # console.log message
+          # console.log message.thread
+          # add thread element to our message
+          message.thread.push previousMessageId
+          # console.log message.thread
+          message.save (d) ->
+            console.log "thread created"
+
+    else # this thread already exist in one or several messages
+       # add our message to thread
+       for message in messagesWithThread
+        # console.log "message   -"+message
+        message.thread.push previousMessageId
+        message.save (d) ->
+          console.log "added to thread"
 
 findOrCreateSeuronWithTwitterId = (twitterId, callback) ->
   
@@ -177,30 +290,22 @@ findOrCreateSeuronWithTwitterId = (twitterId, callback) ->
       s.sns.twitter.id= twitterId
       s.save (d) ->
         callback(s)
-        console.log "seuron created!"
+        # console.log "seuron created!"
     else
+      # console.log "seuron found!"
       callback(seuron)
 
-
 findMessageByTwitterId = (messageId, callback) ->
-  console.log "---"+messageId
+  # console.log "---"+messageId
 
   Message.findOne {"id" : messageId}, (err, message) ->
       console.log err if err
-      callback( message )
-
-
-analyzeReply = ( _from, tweet ) ->
-    # console.log "reply"
-
-analyzeMentions = ( _from, mentions, exclude_id, data  ) ->
-    # console.log "mentions"
-
-analyzeThread = ( tweet, prevId ) ->
-    # console.log "thread"
-
-
-
+      if(message)
+        callback( message )
+      else
+        # if the message doesn't exist, we should 
+        # 1. create it from timeline mentions
+        # 2. get it from twitter timeline !
 
 
 # Exports functions to the outside world

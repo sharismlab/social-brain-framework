@@ -11,8 +11,13 @@ clemsos_followers  = require "../../public/viz/seuron_viz/examples/petridish/dat
 
 clemsos_timeline  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
 
+clemsos_mentions  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
+
 module.exports = (app, mongoose, io) ->
 
+
+    # mongoose.set('debug', true)
+    
     # Import Seuron model
     Seuron = require('../models/Seuron').Seuron
     
@@ -107,36 +112,43 @@ module.exports = (app, mongoose, io) ->
         user_id = 136861797
 
 
-        Seuron.findOne { "sns.twitter.profile.id" : String(user_id) } , (err, seuron) ->
+        Seuron.findOne { "sns.twitter.id" : String(user_id) } , (err, seuron) ->
             
-            console.log "------------------------ seuron founded !" 
-            console.log seuron 
+            # check first id the seuron already exists
+            if (! seuron)
+                #if not redirect to login 
+                console.log "user not found!"
+            else 
+                # go for processing data  
+                console.log "------------------------ seuron founded !" 
+                console.log seuron 
 
-            
-            if( seuron.sns.twitter.hasFollowers.check == false || seuron.sns.twitter.hasFollowers.last_updated < Date.now+30000)
-                # seurons_controller.getFollowersFromTwitter
-                console.log "get followers !"
+                
+                if( seuron.sns.twitter.hasFollowers.check == false || seuron.sns.twitter.hasFollowers.last_updated < Date.now+30000)
+                    # seurons_controller.getFollowersFromTwitter
+                    console.log "get followers !"
 
-                seuron.sns.twitter.followers = clemsos_followers.ids
-                seuron.sns.twitter.hasFollowers.check = true
-                seuron.sns.twitter.hasFollowers.last_updated = new Date
-                seuron.save (d) ->
-                    console.log 'followers added to seuron'
-                    console.log d
-                    
-            if( seuron.sns.twitter.hasFriends.check == false || seuron.sns.twitter.hasFriends.last_updated < Date.now+30000)
-                # seurons_controller.getFollowersFromTwitter
-                console.log "get friends !"
+                    seuron.sns.twitter.followers = clemsos_followers.ids
+                    seuron.sns.twitter.hasFollowers.check = true
+                    seuron.sns.twitter.hasFollowers.last_updated = new Date
+                    seuron.save (d) ->
+                        console.log 'followers added to seuron'
+                        console.log d
+                        
+                if( seuron.sns.twitter.hasFriends.check == false || seuron.sns.twitter.hasFriends.last_updated < Date.now+30000)
+                    # seurons_controller.getFollowersFromTwitter
+                    console.log "get friends !"
 
-                seuron.sns.twitter.friends = clemsos_friends.ids
-                seuron.sns.twitter.hasFriends.check = true
-                seuron.sns.twitter.hasFriends.last_updated = new Date
-                seuron.save (d) ->
-                    console.log 'friends added to seuron'
-                    console.log d
+                    seuron.sns.twitter.friends = clemsos_friends.ids
+                    seuron.sns.twitter.hasFriends.check = true
+                    seuron.sns.twitter.hasFriends.last_updated = new Date
+                    seuron.save (d) ->
+                        console.log 'friends added to seuron'
+                        console.log d
 
-            console.log "timeline loaded !"
-            twitterFunctions.analyzeTimeline clemsos_timeline
+                # console.log "timeline loaded !"
+                twitterFunctions.analyzeTimeline clemsos_mentions
+                twitterFunctions.analyzeTimeline clemsos_timeline
 
 
 

@@ -30,14 +30,18 @@ Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
 
 SynapseSchema = new Schema
-    seuronA : 
-      type: ObjectId
-      index: true
-      ref: 'SeuronSchema' 
+    seuronA :
+      __id :
+        type: ObjectId
+        index: true
+        ref: 'SeuronSchema' 
+      twitterId : Number
     seuronB : 
-      type: ObjectId
-      index: true
-      ref: 'SeuronSchema' 
+      __id :
+        type: ObjectId
+        index: true
+        ref: 'SeuronSchema' 
+      twitterId : Number
     level: Number 
     service: String 
 

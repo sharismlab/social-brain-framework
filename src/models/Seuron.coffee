@@ -30,7 +30,7 @@ seuronSchema = new Schema
     sns: 
       # Let's start with twitter
       twitter:
-        id : Number
+        id : { type: Number, required: true, index: { unique: true } }
         profile : Object # straight from Twitter
         # store all ids from twitter API
         followers: Array
@@ -62,45 +62,61 @@ Synapse = require('../models/Synapse').Synapse
 # adding to friendship level
 seuronSchema.methods.createSynapse = ( seuron, callback ) ->
 
-  console.log @isFollower seuron.sns.twitter.profile.id
-  dis=@
+  # console.log @isFollower seuron.sns.twitter.profile.id
+  daddy=this
 
   level = 0
-  if @isFriend seuron.sns.twitter.profile.id && @isFollower seuron.sns.twitter.profile.id
+
+  if @isFriend seuron.sns.twitter.id && @isFollower seuron.sns.twitter.id
     level = 1
-  else if @isFriend seuron.sns.twitter.profile.id
+  else if @isFriend seuron.sns.twitter.id
     level = 2
-  else if @isFollower seuron.sns.twitter.profile.id
+  else if @isFollower seuron.sns.twitter.id
     level = 3
   else
     level = 4
   
-  # console.log level
+  # console.log "ids---------"
+  # console.log @sns.twitter.id
+  # console.log seuron.sns.twitter.id
+  # console.log "ids---------"
+
 
   # Create our synapse
   syn = new Synapse {
-    "seuronA" : @,
-    "seuronB" : seuron,
+    "seuronA.__id" : @,
+    "seuronB.__id" : seuron,
+    "seuronA.twitterId" : @sns.twitter.id,
+    "seuronB.twitterId" : seuron.sns.twitter.id,
     "level" : level,
-    "service" : 'Twitter'
+    "service" : "Twitter"
   }
-  syn.save (d) ->
-    console.log 'synapse created'
+
+  # console.log syn
+  syn.save (err) ->
+    
+    # console.log err
+    # console.log 'synapse created'
+
     # store synapses inside our seurons
-    dis.synapses.push syn
-    callback (syn)
+    daddy.synapses.push syn
+    
+    daddy.save (d) ->
+      callback (syn)
 
 # return existing relationship (Synapse) based on another Seuron id
 seuronSchema.methods.findOrCreateSynapse = ( seuron, callback ) ->
+  
+  # console.log seuron
   i = 0
   while @synapses[i]
-    if synapses[i].seuronB.sns.twitter.id is seuron.sns.twitter.id
-      console.log synapses[i]
-      callback synapses[i]
+    # console.log "synapse-- "+seuron.sns.twitter.id
+    if seuron != @
+      if @synapses[i].seuronB.twitterId is seuron.sns.twitter.id
+        callback @synapses[i]
     i++
 
   @createSynapse seuron, callback
-
 
 # check if a seuron is a friend of mine
 # return boolean 

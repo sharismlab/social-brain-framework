@@ -14,6 +14,7 @@ MessageSchema = new Schema
     interactions: Array
     hashtags: Array
     links: Array
+    thread: Array # This is an array containing all related messages twitter Ids
 
 MessageSchema.methods.splitDataFromTwitter = (data) ->
 
