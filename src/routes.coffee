@@ -21,11 +21,12 @@ module.exports = (app, io, mongoose) ->
     app.get '/docs/:path', (req, res) ->
         console.log req.params
         res.render "public/docs/"+req.params.path, {layout:false}
-
-
     
     # Add routes for API
     require('./routes/api') app
+
+    # Add routes for dashboard
+    require('./routes/admin') app
    
     # Add routes for demo
     require('./routes/seurons') app, mongoose, io

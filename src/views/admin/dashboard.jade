@@ -1,0 +1,118 @@
+extends admin-layout
+
+block append content
+    div.row-fluid
+        div.span2#sidebar
+            ul.nav.nav-list
+                li.active
+                    a(href="#") My seuron
+                li.nav-header My projects
+                li 
+                    a(href="#") My crawls
+                li
+                    a(href="#") My memes
+                li
+                    a(href="#") My network
+
+                li.divider
+                li.nav-header My Apps
+                    li
+                        a(href="#") Meme Tracker
+                    li
+                        a(href="#") Petri Dish
+                    li
+                        a(href="#") Installed Apps
+                    li
+                        a(href="#") Get more apps
+                    li
+                        a(href="#") API docs
+               
+                li.divider
+                li.nav-header Settings                
+                li 
+                    a(href="http://twitter.com/sharismlab")
+                        img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                        em  @yourself
+                li 
+                    a(href="http://twitter.com/sharismlab")
+                        img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                        em  @organization
+                    
+                li 
+                    a(href="http://github.com/sharismlab")
+                        img(src="/img/icons/color/github.png", alt="Github", target="_blank", width="20", height="20")
+                        em  Your Code
+                        
+                li 
+                    a(href="http://weibo.com/sharismlab")
+                        img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
+                        em  @自己
+                      
+                        
+                li 
+                    a(href="http://facebook.com/sharismlab")
+                        img(src="/img/icons/color/facebook.png", alt="Facebook", target="_blank", width="20", height="20")
+                        em  Your Fanpage
+                        
+                li 
+                    a(href="http://sharismlab.com")
+                        img(src="/img/icons/color/rss.png", alt="Blog", target="_blank", width="20", height="20")
+                        em Your Blog
+                li
+                    a(href="http://sharismlab.com").disable
+                        i.icon-plus-sign.icon-large
+                        em  Add a service
+        div#main.span10.row(style='background-color:#4b4b4b')
+            div.span10
+                iframe( src="http://sbf.sharismlab.com/viz/seuron_viz/examples/petridish/",width=920,height=650)
+                //- img(src="/img/tmp/seuronok.png", alt="Your social neuron",width=960,height=650)
+            div.span2
+                ul.nav.nav-pills.nav-stacked
+                    li.active
+                        a(href="#") You
+                    li 
+                        a(href="http://twitter.com/sharismlab")
+                            img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                            em  @yourself
+                    li 
+                        a(href="http://twitter.com/sharismlab")
+                            img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                            em  @organization
+                        
+                    li 
+                        a(href="http://github.com/sharismlab")
+                            img(src="/img/icons/color/github.png", alt="Github", target="_blank", width="20", height="20")
+                            em  Your Code
+                            
+                    li 
+                        a(href="http://weibo.com/sharismlab")
+                            img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
+                            em  @自己
+                    li 
+                        a(href="http://facebook.com/sharismlab")
+                            img(src="/img/icons/color/facebook.png", alt="Facebook", target="_blank", width="20", height="20")
+                            em  Your Fanpage
+                            
+                    li 
+                        a(href="http://sharismlab.com")
+                            img(src="/img/icons/color/rss.png", alt="Blog", target="_blank", width="20", height="20")
+                            em Your Blog
+                    li.nav-header Views
+                    li
+                        a(href="#") Timeline
+                    li
+                      a(href="#") Spread
+                    
+                    li.divider
+                    li.nav-header Actions
+                    li
+                        a(href="#") Add a hashtag
+                    li
+                        a(href="#") Add a seuron
+                    li
+                        a(href="#") Lookup a meme
+                    li
+                        a(href="#") Post a tweet
+
+
+

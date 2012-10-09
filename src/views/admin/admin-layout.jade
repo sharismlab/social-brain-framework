@@ -1,0 +1,68 @@
+!!! 5
+html
+    | <meta charset="utf-8"/>
+    | <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    | <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    block head
+        
+        link(rel='stylesheet', href='/css/admin.css')
+        link(rel='stylesheet', href='/css/bootstrap.css')
+        link(rel='stylesheet', href='/css/font-awesome.css')
+        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+        script(type='text/javascript', src='/js/bootstrap.js')
+        script(type='text/javascript', src='/js/admin.js')
+
+        | <!--[if lt IE 9]>
+        |    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        | <![endif]-->
+
+
+    block menu
+        .navbar.navbar-fixed-top
+               .navbar-inner
+                    .container-fluid
+                      a.btn.btn-navbar(data-toggle="collapse", data-target="nav-collapse")
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+
+                      a.brand(href="/", title="Back to home") Social Brain
+                      div.nav-collapse
+                            ul.nav 
+                                li 
+                                   a(href='/admin', title='Back to dashboard') Dashboard
+                                li.disabled
+                                    a Your social pipeline
+    div.container-fluid
+        block content
+        br
+        br
+        footer.row.well
+            block footer
+                div.span8
+                    h4 Social Brain Framework
+                    p Sharism Lab * 2012
+                    small There is currently 23,765 seurons with 521,210 synapses in Social Brain DB
+                div.span2
+                    ul.nav.nav-list
+                        li.nav-header Browse
+                            li
+                                a(href="#") Social neurons
+                            li
+                                a(href="#") Memes
+                            li
+                                a(href="#") 
+                div.span2
+                    ul.nav.nav-list
+                        li.nav-header Get in touch
+                            li
+                                a(href="#") Contact us
+                            li
+                                a(href="#") Report a bug
+                            li
+                                a(href="#") More info
+                                
+
+
+    block scripts
