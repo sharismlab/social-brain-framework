@@ -42,7 +42,6 @@ ANALYSE EACH TWEET OF THE TIMELINE
         - We should populate a global Array with all messages
 ###
 
-
 # import classes
 Seuron = require('../models/Seuron').Seuron
 Interaction = require('../models/Interaction').Interaction
@@ -54,22 +53,73 @@ events = require 'events'
 # Add an event emitter
 eventEmitter = new events.EventEmitter()
 
+#Event is emitted when a tweet analysis is starting
 eventEmitter.on 'analyzetweet', (tweet) ->
-  console.log "start analyze tweet"
+  # console.log "start analyze tweet"
+
+#Event is emitted when a tweet analysis is ending
+
+totalTweets = 0 #total number of tweets timeline+mentions
+tweetsCount = 0 # counter for tweet that have been analyzed already
+timelineCount =0 # There is 2 timelines (timeline+mentions)
+timelineReady = false # check if analysis has ended or not
+
+eventEmitter.on 'endAnalyzetweet', (tweet) ->
+  console.log 'tweet number'+tweetsCount+'has been analyzed!'
+  tweetsCount++
+
+  if(timelineCount==2&&tweetsCount==totalTweets)
+    eventEmitter.emit 'endAnalyzeTimeline'
+
+
+eventEmitter.on 'lookup', () ->
+  
+  console.log "lookup number "+ lookupCount
+  console.log "total lookup needed"+ totalLookup.length
+  lookupCount++
+  
+  if (timelineReady == true && totalLookup.length-lookupCount*100 < 100)
+      eventEmitter.emit 'finalLookup'
+
+eventEmitter.on 'endAnalyzeTimeline', () ->
+    console.log "-- timeline ok!"
+    timelineReady = true
+
+eventEmitter.on 'finalLookup', () ->
+    console.log "still "+ toLookup.length +"users without a proifle :("
+  # , { users:toLookup }
+
+#Some semantics
+languageAPI = require './languageAPI' 
+alchemyAPI = require './alchemyAPI' 
+
+preAnalyzeTweet = (text, messageId) ->
+  # console.log "text : "+text
+  console.log "messageId : "+messageId
+
+  Message.findById messageId, (message) ->
+    languageAPI.detectLanguage text, (language) ->
+      console.log "language is : "+language
+      message.language = language
+
+    alchemyAPI.analyzeSentiment text, (sentiment) ->
+      message.sentiment = sentiment if sentiment != null
+      console.log sentiment
+      message.save, () ->
+        console.log 'message analyzed semanticly and saved !'
+
+    # console.log tweet
 
 analyzeTimeline = (timeline) ->
-  
-  # init value for each timelines
+  # increment total of tweets for each timelines
+  totalTweets += timeline.length
+  timelineCount++
+
   
   for tweet in timeline
     # tweetIds.push[tweet.id]
     analyzeTweet tweet
     eventEmitter.emit 'analyzetweet'
-
-
-    
-  eventEmitter.on 'endAnalyzeTimeline', () ->
-    console.log "timeline ok!"
       
   # API twitter lookup users for toLookup<100
   # lookupUsers toLookup  if toLookup.length > 0
@@ -78,25 +128,25 @@ analyzeTweet = (tweet) ->
   
   # check what actions can be founded within our tweet
   # 0:unknown, 1:post, 2:RT, 3:reply, 4:@
-  
+
   # create our message
-  m = new Message
-  m.id = tweet.id
-  m.data = tweet
-  m.save()
-    # console.log "message created"
+  findMessageByTwitterId tweet.id, (message) ->
+    # console.log (message)
+    preAnalyzeTweet tweet.text,message._id
+    if(message == null)
+      m = new Message
+      preAnalyzeTweet tweet.text,message._id
+      m.id = tweet.id
+      m.data = tweet
+      m.save()
 
   # check if our seuron already exists inside the DB
-  Seuron.findOne {"sns.twitter.id":tweet.user.id}, (err, seuron) ->
-    console.log err if err 
-    if(!seuron) 
-      from = new Seuron({"sns.twitter.id":tweet.user.id })
-      from.save (err)->
-        # console.log 'new seuron created'
-        checkTweetType from, tweet
-    else
-      # console.log 'seuron exists'
-      checkTweetType seuron, tweet
+  findOrCreateSeuronWithTwitterId tweet.user.id, false, (seuron) ->
+    # console.log err if err 
+    checkTweetType seuron, tweet
+
+    # else 
+      # console.log "message already exists"
 
 checkTweetType = (from, tweet) ->
 
@@ -113,18 +163,21 @@ checkTweetType = (from, tweet) ->
     analyzeRT from, tweet
     # analyzeThread tweet, tweet.retweeted_status.id
   
-  # our tweet is just a post
-  else 
-    # Analyze if there is mentions in this tweet
-    # analyzeThread tweet, null
-
-    if tweet.entities.user_mentions.length > 0
+  # our tweet is just a post, but has mentions
+  else if tweet.entities.user_mentions.length > 0
 
       # add message to seuron from
       # findMessageByTwitterId tweet.id, (message) ->
-
       # from.messages.push message
+
       analyzeMentions from, tweet.entities.user_mentions, from.sns.twitter.id, tweet
+
+  else 
+    # Maybe our tweet belongs to a thread or a conversation
+    # analyzeThread tweet, null
+
+    # else there is no interactions, so just do nothing...
+    eventEmitter.emit 'endAnalyzetweet'
 
 analyzeRT = ( from, tweet ) ->
   
@@ -133,7 +186,7 @@ analyzeRT = ( from, tweet ) ->
   # console.log "RT"
 
   # get our guy that has post in the first place
-  findOrCreateSeuronWithTwitterId tweet.retweeted_status.user.id, (rtFromSeuron) ->
+  findOrCreateSeuronWithTwitterId tweet.retweeted_status.user.id, false, (rtFromSeuron) ->
     
     # update seuron with profile info
     rtFromSeuron.sns.twitter.profile = tweet.retweeted_status.user
@@ -173,6 +226,9 @@ analyzeRT = ( from, tweet ) ->
     
 
     analyzeMentions from, tempMentions, tweet.retweeted_status.user.id, tweet
+  else
+    # notify the world that the analyze of the message has ended
+    eventEmitter.emit 'endAnalyzetweet'
 
 analyzeReply = (from, tweet) ->
   
@@ -181,7 +237,7 @@ analyzeReply = (from, tweet) ->
   #   console.log("this is a reply to myself ! "); --> silly
   
   # get or create the guy from the reply
-  findOrCreateSeuronWithTwitterId tweet.in_reply_to_user_id, (replySeuron) ->
+  findOrCreateSeuronWithTwitterId tweet.in_reply_to_user_id, true, (replySeuron) ->
     # get or create existing synapse between from and reply guys
     from.findOrCreateSynapse replySeuron, (synapse) ->
       # now get the message and add interactions
@@ -201,6 +257,9 @@ analyzeReply = (from, tweet) ->
   # create other relations with guys quoted in the message 
   if tweet.entities.user_mentions.length > 0
     analyzeMentions from, tweet.entities.user_mentions, tweet.in_reply_to_user_id, tweet
+  else
+    # notify the world that the analyze of the message has ended
+    eventEmitter.emit 'endAnalyzetweet'
 
 analyzeMentions = (from, mentions, exclude_id, tweet) ->
   # console.log tweet.id
@@ -215,7 +274,7 @@ analyzeMentions = (from, mentions, exclude_id, tweet) ->
     # exclude id that has been passed 
     if mentions[i].id isnt exclude_id and mentions[i].id isnt from.id
       
-      findOrCreateSeuronWithTwitterId mentions[i].id, (replySeuron) ->    
+      findOrCreateSeuronWithTwitterId mentions[i].id, false, (replySeuron) ->    
         # console.log replySeuron.sns.twitter.id
         # get existing Friendship 
         from.findOrCreateSynapse replySeuron, (synapse) ->
@@ -236,6 +295,9 @@ analyzeMentions = (from, mentions, exclude_id, tweet) ->
                 
 
     i++
+
+  # notify the world that the analyze of the message has ended
+  eventEmitter.emit 'endAnalyzetweet'
 
 analyzeThread = (tweet, prevId) -> 
    
@@ -301,7 +363,7 @@ addMessageOrCreateThread = (previousMessageId) ->
         message.save (d) ->
           console.log "added to thread"
 
-findOrCreateSeuronWithTwitterId = (twitterId, callback) ->
+findOrCreateSeuronWithTwitterId = (twitterId, lookedUp, callback) ->
   
   Seuron.findOne {"sns.twitter.id": twitterId}, (err, seuron) ->
     console.log err if err
@@ -309,10 +371,13 @@ findOrCreateSeuronWithTwitterId = (twitterId, callback) ->
       s = new Seuron
       s.sns.twitter.id= twitterId
       s.save (d) ->
+        queueOrLookupTwitterUser(twitterId) if(lookedUp == false)
         callback(s)
+
         # console.log "seuron created!"
     else
       # console.log "seuron found!"
+      queueOrLookupTwitterUser(twitterId) if(lookedUp == false)
       callback(seuron)
 
 findMessageByTwitterId = (messageId, callback) ->
@@ -323,14 +388,33 @@ findMessageByTwitterId = (messageId, callback) ->
       if(message)
         callback( message )
       else
-        console.log "findMessageByTwitterId : missing functions should be fixed !!!"
+        # console.log "findMessageByTwitterId : missing functions should be fixed !!!"
         callback( null )
         # if the message doesn't exist, we should 
         # 1. create it from timeline mentions
         # 2. get it from twitter timeline !
 
+# an array to lookup users profile on Twitter
+toLookup = []
+totalLookup = [] # to be sure to not look up twice a user in a same timeline
+lookupCount = 0
+
+queueOrLookupTwitterUser = (userId) ->
+    if (totalLookup.indexOf(userId) == -1)
+      totalLookup.push(userId)
+
+      if toLookup.length == 100
+        # lookupUsersInTwitter(toLookup)
+        console.log "toLookup.length : "+toLookup.length
+        eventEmitter.emit 'lookup', { users:toLookup }
+        toLookup = []
+      else
+        toLookup.push userId
 
 # Exports functions to the outside world
 module.exports =
   analyzeTimeline:analyzeTimeline
   analyzeTweet:analyzeTweet
+  usersToLookup:toLookup
+  timelineEvents : eventEmitter
+  analyzeSemantic : analyzeSemantic

@@ -23,6 +23,7 @@ Synapse class is intended to store relationships between seurons.
 ### 
 
 mongoose = require("mongoose")
+troop = require 'mongoose-troop'
 
 collection = "synapses"
 
@@ -45,6 +46,7 @@ SynapseSchema = new Schema
     level: Number 
     service: String 
 
+SynapseSchema.plugin(troop.timestamp)
 
 Synapse = mongoose.model('Synapse', SynapseSchema)
 

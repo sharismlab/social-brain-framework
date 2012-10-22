@@ -1,0 +1,37 @@
+extends ../layout
+
+block append content
+
+    div.row
+        p Total messages : 
+            em= count 
+        p Current page :
+            em= parseFloat(current)
+        div.pagination
+            ul
+                - for p in pages
+                    li
+                        a(href="/messages/"+p)= p
+
+
+        table.table.table-striped
+            thead 
+                tr
+                    th From
+                    th Text
+                    th ID
+            tbody
+                - for m in messages
+                    tr  
+                        td= m.data.user.screen_name
+                        td= m.data.text
+                        td= m.data.id
+    //- div.pagination
+    //-     ul
+    //-         - for p in pages
+    //-             - if p == current
+    //-                 li.active
+    //-                     a(href="/messages/"+p)= p
+    //-             - else 
+    //-                 li
+    //-                     a(href="/messages/"+p)= p

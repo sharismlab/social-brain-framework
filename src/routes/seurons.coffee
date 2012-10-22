@@ -23,8 +23,8 @@ module.exports = (app, mongoose, io) ->
     # GET 
     app.get '/seurons', (req, res) ->
 
-        Seuron.find {}, (err, seurons) ->
-            console.log seurons
+        Seuron.find({}).sort("sns.twitter.id").execFind (err, seurons) ->
+            # console.log seurons
             res.render '../views/seurons/index.jade', { seurons: seurons }
         
     # GET one seuron and display it
@@ -34,15 +34,17 @@ module.exports = (app, mongoose, io) ->
         
         if(req.params.id == 'you')
             res.redirect('/you')
+
         else 
             Seuron.findById req.params.id, (err, seuron) ->
+                # console.log seuron
 
-            # Prevent null or errors
-            res.send 'Document not found' if !seuron 
-            res.send err if err
+                # Prevent null or errors
+                res.send 'Document not found' if !seuron 
+                res.send err if err
 
-            # Render the template...
-            res.render '../views/seurons/single.jade', { seuron: seuron }
+                # Render the template...
+                res.render '../views/seurons/single.jade', { seuron: seuron }
    
     # YOU, The page where we will display all visualization of the demo
     # This is a persolnalized page where people can browse their own seuron
@@ -75,7 +77,7 @@ module.exports = (app, mongoose, io) ->
             Seuron.findOne { "sns.twitter.profile.id" : String(req.session.auth.twitter.user.id) } , (err, seuron) -> 
                     console.log err if err
                     console.log("seuron loaded")
-                    console.log seuron
+                    # console.log seuron
                     
                     # get Friends and Followers from Twitter API
                     # we check before if seurons isn't already populated with Friends or Followers
@@ -101,60 +103,61 @@ module.exports = (app, mongoose, io) ->
     # this is a test to implement functions without annoying oauth
     app.get '/fake/you', (req, res) ->
 
-        request = require 'request'
-
         # import libs 
         queue = require '../lib/redis_queue'
-        twitterFunctions = require '../lib/twitterTimeline'
+        twitterTimeline = require '../lib/twitterTimeline'
+        twitterAPI = require '../lib/twitterAPI'
         
-        # faking user id
+        # faking user info to prevent annoying login
         user_id = 136861797
+        accessToken = "136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi" 
+        accessTokenSecret=  "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
 
+        twitterAPI.loginToTwitter(accessToken,accessTokenSecret)
+        # twitlib.verifyCredentials()
 
         Seuron.findOne { "sns.twitter.id" : String(user_id) } , (err, seuron) ->
             
-            # check first id the seuron already exists
-            if (! seuron)
-                #if not redirect to login 
-                console.log "user not found!"
-            else 
-                # go for processing data  
-                console.log "------------------------ seuron founded !" 
-                console.log seuron 
+            
+            if (seuron) # check first id the seuron already exists
 
+                # get/update data from twitter for processing data  
+                twitterAPI.getFollowers seuron, () ->
+                    console.log 'ok followers! '
                 
-                if( seuron.sns.twitter.hasFollowers.check == false || seuron.sns.twitter.hasFollowers.last_updated < Date.now+30000)
-                    # seurons_controller.getFollowersFromTwitter
-                    console.log "get followers !"
+                twitterAPI.getFriends seuron, () ->
+                    console.log 'ok followers! '
 
-                    seuron.sns.twitter.followers = clemsos_followers.ids
-                    seuron.sns.twitter.hasFollowers.check = true
-                    seuron.sns.twitter.hasFollowers.last_updated = new Date
-                    seuron.save (d) ->
-                        console.log 'followers added to seuron'
-                        console.log d
-                        
-                if( seuron.sns.twitter.hasFriends.check == false || seuron.sns.twitter.hasFriends.last_updated < Date.now+30000)
-                    # seurons_controller.getFollowersFromTwitter
-                    console.log "get friends !"
+                twitterAPI.getTimeline (timeline)  ->
+                    console.log "timeline loaded !"
+                    twitterTimeline.analyzeTimeline timeline
+                    # console.log "timeline completed!"
 
-                    seuron.sns.twitter.friends = clemsos_friends.ids
-                    seuron.sns.twitter.hasFriends.check = true
-                    seuron.sns.twitter.hasFriends.last_updated = new Date
-                    seuron.save (d) ->
-                        console.log 'friends added to seuron'
-                        console.log d
+                twitterAPI.getMentions (mentions)  ->
+                    console.log "mentions loaded !"
+                    twitterTimeline.analyzeTimeline mentions
+            
+            else 
+                #if seuron not found redirect to login 
+                console.log "user not found!"
+        
+        twitterTimeline.timelineEvents.on 'lookup', (data) ->
+            console.log "let's look up " + data.users.length + " users from twitter !"
+            console.log data
 
-                # console.log "timeline loaded !"
-                twitterFunctions.analyzeTimeline clemsos_mentions
-                # console.log "timeline completed!"
-
-                twitterFunctions.analyzeTimeline clemsos_timeline
-
-
-
+            twitterAPI.lookupUsers data.users, (profiles)  ->
+                for profile in profiles
+                    Seuron.findOne {"sns.twitter.id": profile .id}, (err, seuron) ->
+                        console.log err if err
+                        populateWithTwitter profile , () ->
+                            console.log "Seuron has now a name : " +seuron.sns.twitter.profile.name
 
 
         #render the template...
         res.render '../views/seurons/you.jade'
+
+    app.get '/timeline', (req, res) ->
+        twitterTimeline = require '../lib/twitterTimeline'
+        twitterTimeline.analyzeSemantic clemsos_timeline
+
 

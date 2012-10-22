@@ -3,6 +3,7 @@
 # Instead we just have a var in Message storing the ref
 
 mongoose = require("mongoose")
+troop = require 'mongoose-troop'
 
 collection = "Threads"
     
@@ -13,6 +14,7 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 ThreadSchema = new Schema
     messages: Array
 
+ThreadSchema.plugin(troop.timestamp)
 
 Thread = mongoose.model('Thread', ThreadSchema)
 

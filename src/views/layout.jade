@@ -9,9 +9,9 @@ html
         link(rel='stylesheet', href='/css/style.css')
         link(rel='stylesheet', href='/css/bootstrap.css')
         link(rel='stylesheet', href='/css/font-awesome.css')
-        link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css')
-        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-        script(type='text/javascript', src='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js')
+        //- link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css')
+        script(type='text/javascript', src='/js/jquery-1.8.2.js')
+        //- script(type='text/javascript', src='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js')
 
         script(type='text/javascript', src='/js/bootstrap.js')
         script(type='text/javascript', src='/js/app.js')
@@ -69,6 +69,8 @@ html
                                 - if (!everyauth.loggedIn)
                                   li 
                                     a(href="/auth/twitter") Sign in with Twitter
+                                  li 
+                                    a(href="/auth/weibo") Sign in Weibo
                                 - else
                                   li
                                     a(href='/logout') Logout
@@ -92,8 +94,4 @@ html
               a(href="http://sharismlab.com")
                 img(src="/img/icons/color/rss.png", alt="Blog", target="_blank", width="35", height="35")
         block footer
-        
-    - if ( everyauth.twitter )
-        h3 Twitter User Data
-        pre.prettyprint.linenums
-          code.languague-js= JSON.stringify( everyauth.twitter.user )
+        block scripts

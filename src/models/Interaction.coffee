@@ -10,6 +10,7 @@ Interaction class
 ###
 
 mongoose = require("mongoose")
+troop = require 'mongoose-troop'
 
 collection = "Interactions"
 
@@ -22,6 +23,8 @@ InteractionSchema = new Schema
         type: ObjectId
         index : true
         ref: 'SynapseSchema'
+
+InteractionSchema.plugin(troop.timestamp)
 
 Interaction = mongoose.model('Interaction', InteractionSchema)
 

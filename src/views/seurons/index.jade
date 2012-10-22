@@ -1,9 +1,45 @@
 extends ../layout
 
 block append content
-
+    
     h1 Seurons index
-    ul
-      - for s in seurons
-        li
-            a(href="/seurons/"+s._id, class="seuron") seuron
+    
+    div.row
+        table.table-bordered.span8
+            thead
+                tr
+                    th Data
+                    th Show
+                    th Synapses
+                    th Messages
+                    th Friends
+                    th Followers
+            tbody
+              - for s in seurons
+                tr
+                    td 
+                        a(href="/api/seurons/"+s._id+".json", class="seuron") 
+                            i.icon-hdd.icon-large
+                    td 
+                        a(href="/seurons/"+s._id, class="seuron") 
+                            - if( s.sns.twitter.profile != undefined) 
+                                p=s.sns.twitter.profile.screen_name
+                            - else 
+                                p Seuron
+
+                    td= s.synapses.length
+                    td= s.messages.length
+                    td= s.sns.twitter.friends.length
+                    td= s.sns.twitter.followers.length
+
+
+
+block append scripts
+    script(type='text/javascript', src='/js/tablesorter/jquery.tablesorter.js')
+    link(rel='stylesheet', href='/js/tablesorter/themes/blue/style.css')
+    script
+        $(document).ready(function() 
+            { 
+                $('table').tablesorter(); 
+            } 
+        ); 

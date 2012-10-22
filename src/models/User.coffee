@@ -1,6 +1,8 @@
-mongoose = require("mongoose")
-mongooseAuth = require('mongoose-auth');
-everyauth = require('everyauth');
+mongoose = require "mongoose"
+mongooseAuth = require 'mongoose-auth'
+everyauth = require 'everyauth'
+troop = require 'mongoose-troop' #plugins
+
 
 Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
@@ -8,6 +10,7 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 # Import API keys from config files
 apikeys =  require '../../config/apikeys'
 
+everyauth.debug = true
 
 collection = "users"
 
@@ -17,10 +20,13 @@ UserSchema = new Schema (
       index: true
       ref: 'SeuronSchema' 
     date: Date
-    twit: Object
+    twitter: Object
+    weibo: Object
 )
 
-UserSchema.methods.createWithTwitter = ( twitUserMeta, accessToken, accessTokenSecret, callback ) ->
+UserSchema.plugin(troop.timestamp)
+
+UserSchema.methods.populateWithTwitter = ( twitUserMeta, accessToken, accessTokenSecret, callback ) ->
 
     twitterProfile =
         accessToken: accessToken
@@ -32,33 +38,34 @@ UserSchema.methods.createWithTwitter = ( twitUserMeta, accessToken, accessTokenS
         description: twitUserMeta.description
         profileImageUrl: twitUserMeta.profile_image_url
         url: twitUserMeta.url
-        protected: twitUserMeta.protected
-        followersCount: twitUserMeta.followers_count
-        profileBackgroundColor: twitUserMeta.profile_background_color
-        profileTextColor: twitUserMeta.profile_text_color
-        profileLinkColor: twitUserMeta.profile_link_color
-        profileSidebarFillColor: twitUserMeta.profile_sidebar_fill_color
-        profileSiderbarBorderColor: twitUserMeta.profile_sidebar_border_color
-        friendsCount: twitUserMeta.friends_count
-        createdAt: twitUserMeta.created_at
-        favouritesCount: twitUserMeta.favourites_count
-        utcOffset: twitUserMeta.utc_offset
-        timeZone: twitUserMeta.time_zone
-        profileBackgroundImageUrl: twitUserMeta.profile_background_image_url
-        profileBackgroundTile: twitUserMeta.profile_background_tile
-        profileUseBackgroundImage: twitUserMeta.profile_use_background_image
-        geoEnabled: twitUserMeta.geo_enabled
-        verified: twitUserMeta.verified
-        statusesCount: twitUserMeta.statuses_count
-        lang: twitUserMeta.lang
-        contributorsEnabled: twitUserMeta.contributors_enabled
 
     # info to store inside new User
     # params ={}
-    @twit = twitterProfile
+    @twitter = twitterProfile
 
     # console.log params
     @save callback
+
+UserSchema.methods.populateWithWeibo = (weiboMeta, callback) ->
+  # console.log "createWithWeibo"
+  weiboProfile = 
+    id: String(weiboMeta.id)
+    name: weiboMeta.name
+    screenName: weiboMeta.screen_name
+    location: weiboMeta.location
+    description: weiboMeta.description
+    profileImageUrl: weiboMeta.profile_image_url
+    url: weiboMeta.url
+    
+
+  @weibo = weiboProfile
+  @save callback
+
+UserSchema.methods.matchUser = (screenName, callback) ->
+  User.findOne {"twit.screenName":screenName} , (err, foundUser) ->
+    callback (foundUser)
+
+
 
 ###
 This part contains all logic related to everyauth module.
@@ -66,8 +73,60 @@ People can log using twitter, then it retrieves the data
 and populate the user profile and the attached seuron
 ###
 
-Promise = everyauth.Promise
+# createAndLinkToSeuron (service, data, callback)
+# This function is called when one login or register using an sns account
+# * Service is the name of the service lowercase without space (twitter,weibo, etc.)
+# * Data is the complete profile from sns API
+# * Callback returns a new User linked to a seuron
 
+# Import Seuron model so we can create a new Seuron with the new User
+Seuron = require('../models/Seuron').Seuron
+UserSchema.statics.createAndLinkToSeuron = (service, data, callback) ->
+  console.log data
+
+  createdUser = new User
+  Seuron.findOne service+'.id': data.id, (err, foundSeuron) ->
+    console.log err if err # handle error
+    console.log "seuronExists = ", foundSeuron
+    # If seuron doesn't already exists, then create it
+    if( foundSeuron == null)
+      s = new Seuron  
+      s.user_id = createdUser._id # Link user to our seuron
+      
+      if service == "twitter" 
+        s.populateWithTwitter data, () ->
+          console.log 'added twitter data'
+      else if service == "weibo" 
+        s.populateWithWeibo data, () ->
+          console.log 'added weibo data'
+
+      s.save (err) ->
+        console.log(err) if err
+        console.log s
+        createdUser.seuron_id = s._id # Link new seuron to our user
+        createdUser.save (err) ->
+          console.log(err) if err
+          callback(createdUser)
+    else
+      foundSeuron.user_id = createdUser._id # Link user to our seuron
+
+      if service == "twitter" 
+        foundSeuron.populateWithTwitter data, () ->
+          console.log 'added twitter data'
+      else if service == "weibo" 
+        foundSeuron.populateWithWeibo data, () ->
+          console.log 'added weibo data'
+
+      foundSeuron.save () ->
+        # Add our new seuron ID to user
+        createdUser.seuron_id = foundSeuron._id
+        # Save our new user into DB
+        createdUser.save (err) ->
+          console.log(err) if err
+          callback(createdUser)
+
+
+Promise = everyauth.Promise
 # mongoose.set('debug', true)
 
 UserSchema.plugin mongooseAuth,
@@ -81,102 +140,45 @@ UserSchema.plugin mongooseAuth,
         myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: '/fake/you'
+        redirectPath: '/'
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
 
           promise = @Promise()
           User = @User()() # Fetch our User class back
           
-          console.log  "------ we are looking for user with twitter id : " + twitterUser.id
-
           # Let's lookup our user using its twitter id
-          User.findOne { "twit.id": Number twitterUser.id }, (err, foundUser) ->
-              
-              console.log err if err 
+          User.findOne { "twitter.id": Number twitterUser.id }, (err, foundUser) ->
+              return err if err
+              return promise.fail err if err
+              if foundUser
+                promise.fulfill foundUser 
+              else
+                User.createAndLinkToSeuron "twitter", twitterUser, (createdUser)->
+                  createdUser.populateWithTwitter twitterUser, accessTok, accessTokSecret, () ->
+                    promise.fulfill createdUser
 
-              console.log "---------------------- foundUser  = ", foundUser
-              
-              if foundUser 
-                # A user has been founded into our db !
-                # Let's see if its Twitter profile is up-to-date
-                
-                console.log "---------------------- existing user", foundUser.id
-                
-                # updateSeuronWithTwitter
+    weibo:
+      everyauth:
+        appId: apikeys.weibo.appKey
+        appSecret: apikeys.weibo.appSecret
+        redirectPath : "/"
 
-                return promise.fail err if err
-                promise.fulfill foundUser #login our user
-              else 
+        findOrCreateUser: (session, appId, appSecret, weiboUser) ->
+          console.log weiboUser
+          promise = @Promise()
+          User = @User()()
 
-                # Our user hasn't been founded so it is NOT a returning user
-                # Let's create our user from its twitter credentials
-                
-                return promise.fail(err) if err # handle error
+          User.findOne {'weibo.id': weiboUser.id}, (err, foundUser) ->
+              return promise.fail err if err
+              if foundUser
+                promise.fulfill foundUser 
+              else
+                User.createAndLinkToSeuron "weibo", weiboUser, (createdUser)->
+                  createdUser.populateWithWeibo weiboUser, () ->
+                    promise.fulfill createdUser
 
-                console.log "---------------------- create a new user"
 
-                # Import Seuron model so we can create a new Seuron with the new User
-                Seuron = require('../models/Seuron').Seuron
-
-                # Let's create our new user inside DB
-                createdUser = new User
-
-                # console.log createdUser
-                # Call a method to populate data with Twitter
-                createdUser.createWithTwitter twitterUser, accessTok, accessTokSecret, (err) ->
-                  
-                  console.log(err) if err
-
-                  # Check if a Seuron already exists with the same user id
-                  Seuron.findOne
-                    "user_id" : createdUser._id, (err, foundSeuron) ->
-                      console.log "seuronExists = ", foundSeuron
-
-                      # If seuron doesn't already exists, then create it
-                      if( foundSeuron == null)
-                        #Create our new Seuron
-
-                        s = new Seuron()  
-                        # Add Twitter profile to our seuron
-                        s.sns.twitter.id = createdUser.twit.id
-                        s.sns.twitter.profile = createdUser.twit
-                        # Attach a new Seuron to our user
-                        s.user_id = createdUser._id
-
-                        s.save ( d ) ->
-                          console.log "new seuron created"
-                          # Add our new seuron ID to user
-                          createdUser.seuron_id = s._id
-
-                          # Save our new user into DB
-                          createdUser.save (err) ->
-                            console.log(err) if err
-                            console.log "user updated with seuron id"
-                            #We can create our user session
-                            return promise.fail(err) if err
-                            promise.fulfill createdUser 
-
-                      else 
-                        # Our seuron already exists in the db
-                        
-                        # Update our seuron Twitter profile 
-                        s.sns.twitter.profile = createdUser.twit
-                        # Attach a new Seuron to our user
-                        s.user_id = createdUser._id
-
-                        # Save our seuron
-                        s.save ( d ) ->
-                          # Add our new seuron ID to user
-                          createdUser.seuron_id = s._id
-
-                          # Save our new user into DB
-                          createdUser.save (err) ->
-                            console.log(err) if err
-                            console.log "New user updated with seuron id"
-                            #We can now create our user session
-                            return promise.fail(err) if err
-                            promise.fulfill createdUser 
 
 User = mongoose.model('User', UserSchema) 
 

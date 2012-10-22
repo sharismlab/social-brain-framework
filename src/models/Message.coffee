@@ -1,4 +1,5 @@
 mongoose = require("mongoose")
+troop = require 'mongoose-troop'
 
 collection = "messages"
 
@@ -15,6 +16,11 @@ MessageSchema = new Schema
     hashtags: Array
     links: Array
     thread: Array # This is an array containing all related messages twitter Ids
+    emotions: Object
+    language : String
+
+MessageSchema.plugin(troop.timestamp)
+MessageSchema.plugin(troop.pagination)
 
 MessageSchema.methods.splitDataFromTwitter = (data) ->
 

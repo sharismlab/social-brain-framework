@@ -8,14 +8,11 @@ helpers = require "./locals"
 httpProxy = require('http-proxy')
 
 # every auth + mongoose
-everyauth = require('everyauth')
+everyauth = require 'everyauth'
 mongooseAuth = require 'mongoose-auth'
 
 #Let's configure everyauth
 everyauth.debug = true
-
-# require './lib/auth'
-# require('./models/User').User
 
 
 # Fix for broken expressHelpers
