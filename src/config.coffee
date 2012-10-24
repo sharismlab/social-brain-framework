@@ -6,6 +6,7 @@ dbs =  require '../config/db'
 less = require "less"
 helpers = require "./locals"
 httpProxy = require('http-proxy')
+flash = require 'connect-flash'
 
 # every auth + mongoose
 everyauth = require 'everyauth'
@@ -69,6 +70,8 @@ module.exports = (app, express, mongoose) ->
     app.use preEveryAuthMiddlewareHack()
     app.use mongooseAuth.middleware(app)
     app.use postEveryAuthMiddlewareHack()
+
+    app.use flash()
 
     app.use express.bodyParser()
     app.use express.methodOverride()

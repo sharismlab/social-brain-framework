@@ -137,7 +137,7 @@ UserSchema.plugin mongooseAuth,
           
     twitter:
       everyauth:
-        myHostname: apikeys.twitter.url
+        # myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
         redirectPath: '/'
@@ -148,24 +148,25 @@ UserSchema.plugin mongooseAuth,
           User = @User()() # Fetch our User class back
           
           # Let's lookup our user using its twitter id
-          User.findOne { "twitter.id": Number twitterUser.id }, (err, foundUser) ->
-              return err if err
+          User.findOne { "twitter.id": twitterUser.id }, (err, foundUser) ->
               return promise.fail err if err
               if foundUser
                 promise.fulfill foundUser 
               else
                 User.createAndLinkToSeuron "twitter", twitterUser, (createdUser)->
+                  console.log "created !"
                   createdUser.populateWithTwitter twitterUser, accessTok, accessTokSecret, () ->
+                    console.log "populated !"
                     promise.fulfill createdUser
 
     weibo:
       everyauth:
         appId: apikeys.weibo.appKey
         appSecret: apikeys.weibo.appSecret
-        redirectPath : "/"
+        redirectPath : "/weibo"
 
         findOrCreateUser: (session, appId, appSecret, weiboUser) ->
-          console.log weiboUser
+          # console.log weiboUser
           promise = @Promise()
           User = @User()()
 

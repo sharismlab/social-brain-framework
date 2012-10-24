@@ -57,6 +57,7 @@ SeuronSchema = new Schema
         profile : Object
 
 SeuronSchema.plugin(troop.timestamp)
+SeuronSchema.plugin(troop.pagination)
 
 # SeuronSchema.pre('save', callback)
 

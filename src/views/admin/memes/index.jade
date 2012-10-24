@@ -1,0 +1,32 @@
+extends ../admin-layout
+
+block append content
+    h1 Your memes
+    div.row
+        p Total memes : 
+            em= count 
+        p Current page :
+            em= parseFloat(current)
+        div.pagination
+            ul
+                - for p in pages
+                    li
+                        a(href="/messages/"+p)= p
+
+        div
+            a.btn.btn-large(href="/admin/memes/new") Add new meme
+        table.table.table-striped
+            thead 
+                tr
+                    th ID
+                    th From
+                    th Title
+            tbody
+                - for m in memes
+                    tr  
+                        td= m._id
+                        //- td= m.user.screen_name
+                        td= m.title
+                        td 
+                            a(href="/admin/memes/edit/"+m.id) Edit      
+                            a(href="/admin/memes/delete/"+m.id) Delete

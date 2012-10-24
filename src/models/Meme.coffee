@@ -10,9 +10,12 @@ Schema = mongoose.Schema
 ObjectId = mongoose.SchemaTypes.ObjectId
 
 MemeSchema = new Schema
+    title: String
     messages: Array
 
+
 MemeSchema.plugin(troop.timestamp)
+MemeSchema.plugin(troop.pagination)
 
 Meme = mongoose.model('Meme', MemeSchema)
 

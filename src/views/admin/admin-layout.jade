@@ -18,7 +18,7 @@ html
         | <![endif]-->
 
 
-    block menu
+    block top-menu
         .navbar.navbar-fixed-top
                .navbar-inner
                     .container-fluid
@@ -34,8 +34,72 @@ html
                                    a(href='/admin', title='Back to dashboard') Dashboard
                                 li.disabled
                                     a Your social pipeline
-    div.container-fluid
-        block content
+        div.container-fluid
+            div.row-fluid
+                div#sidebar.span2
+                    ul.nav.nav-list
+                        li
+                            a(href="#") My seuron
+                        li.nav-header My projects
+                        li
+                            a(href="#", data-toggle="collapse", data-target="#memelist") Memes
+                            div#memelist.collapse
+                                ul
+                                    li 
+                                       a(href="/admin/memes/1") All Memes
+                                    li 
+                                       a(href="/admin/memes/new") Add new
+                        li 
+                            a(href="#") My crawls
+                        li
+                            a(href="#") My network
+
+                        li.divider
+                        li.nav-header My Apps
+                            li
+                                a(href="#") Installed Apps
+                            li
+                                a(href="#") Get more apps
+                            li
+                                a(href="#") API docs
+                       
+                        li.divider
+                        li.nav-header Settings                
+                        li 
+                            a(href="http://twitter.com/sharismlab")
+                                img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                                em  @yourself
+                        li 
+                            a(href="http://twitter.com/sharismlab")
+                                img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                                em  @organization
+                            
+                        li 
+                            a(href="http://github.com/sharismlab")
+                                img(src="/img/icons/color/github.png", alt="Github", target="_blank", width="20", height="20")
+                                em  Your Code
+                                
+                        li 
+                            a(href="http://weibo.com/sharismlab")
+                                img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
+                                em  @自己
+                              
+                                
+                        li 
+                            a(href="http://facebook.com/sharismlab")
+                                img(src="/img/icons/color/facebook.png", alt="Facebook", target="_blank", width="20", height="20")
+                                em  Your Fanpage
+                                
+                        li 
+                            a(href="http://sharismlab.com")
+                                img(src="/img/icons/color/rss.png", alt="Blog", target="_blank", width="20", height="20")
+                                em Your Blog
+                        li
+                            a(href="http://sharismlab.com").disable
+                                i.icon-plus-sign.icon-large
+                                em  Add a service
+                div#main.span10.row
+                    block content
         br
         br
         footer.row.well
