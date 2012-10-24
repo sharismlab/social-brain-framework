@@ -14,14 +14,14 @@ module.exports = (app) ->
     # GET a single meme
     app.get '/memes/:id', (req, res) ->
         Meme.findById req.params.id, (err, meme) ->
-                # console.log meme
+            # console.log meme
 
-                # Prevent null or errors
-                res.send 'Document not found' if !meme 
-                res.send err if err
+            # Prevent null or errors
+            res.send 'Document not found' if !meme 
+            res.send err if err
 
-                # Render the template...
-                res.render '../views/memes/single.jade', { meme: meme }
+            # Render the template...
+            res.render '../views/memes/single.jade', { meme: meme }
 
 
 

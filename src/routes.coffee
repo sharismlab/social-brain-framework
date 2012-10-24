@@ -33,6 +33,7 @@ module.exports = (app, io, mongoose) ->
 
     # Routes for memes
     require('./routes/memes') app 
+    require('./routes/things') app 
 
     # Routes for messages
 

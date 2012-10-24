@@ -5,10 +5,7 @@ module.exports = (app) ->
     app.get '/admin', (req, res) ->
         # res.render "../views/admin/dashboard"
         res.redirect '/admin/memes/all/1'
-
-        
-
-
+    
     # ##Memes routes
 
     # Import Meme model
@@ -21,9 +18,12 @@ module.exports = (app) ->
         title: forms.fields.string
             required: true
             widget: forms.widgets.text
-                placeholder: 'Title'
-                classes: ['span5']
-
+                placeholder: 'Meme Title'
+                classes: ['span6']
+        description: forms.fields.string
+            widget: forms.widgets.text
+                placeholder: 'Add a description'
+                classes: ['span6']
 
     # New
     app.get '/admin/memes/new', (req, res) ->
@@ -37,8 +37,9 @@ module.exports = (app) ->
             success: (form) ->
                 meme = new Meme({
                     title : req.body.title
+                    description : req.body.description
                     })
-                meme.content = req.body.content
+                # meme.content = req.body.content
                 meme.save (err) ->
                     console.log err if err
                     console.log "created"
@@ -61,6 +62,7 @@ module.exports = (app) ->
             console.log "UPDATE " 
             console.log req.body
             meme.title = req.body.title
+            meme.description = req.body.description
             meme.save (err) ->
                 console.log err if err
                 console.log "Meme updated!"

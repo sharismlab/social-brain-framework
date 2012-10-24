@@ -1,0 +1,9 @@
+div.modal-header
+    button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+    h3 add an URL
+form(method="POST", action="/admin/things/urls/new")
+    div.modal-body
+        != URLform
+    div.modal-footer
+        button#urlSubmit.btn(type="submit") Save
+        a.btn(href="/admin/things/urls/delete/") Delete

@@ -1,7 +1,156 @@
 extends ../admin-layout
 
 block append content
-    h1 New meme
-    form(method='POST')
-        include _form
+    div.navbar.navbar-inverse
+        div.navbar-inner
+            ul.nav
+                li
+                    a(href="#edit")  Overview
+                li
+                    a(href="#data")  Data
+                li
+                    a(href="#viz") Viz
+            
+            ul.nav.pull-right
+                li.divider-vertical
+                li.dropdown
+                    a.dropdown-toggle(href="#", data-toggle="dropdown") Publish & Share
+                        b.caret
+                    ul.dropdown-menu
+                        li
+                            a(href="") Publish data
+                        li  
+                            a(href="") Share with friends
+                        li
+                            a(href="") Invite collaborators
 
+    div.row-fluid
+        form(method="POST")
+            div.span8
+                != memeform
+            div.span4
+                div.form-actions
+                    button.btn(type="submit") Save
+                    a.btn Delete
+
+    div#edit.row-fluid
+        .span8
+            .row-fluid.pagination
+                .span4
+                    h4 Add a thing
+                    ul
+                        li 
+                            a#addUrl(href="#addUrlModal", title="add an URL",role="button",data-toggle="modal",data-target="#addUrlModal") 
+                                i.icon-link.icon-large
+                        li.disabled
+                            a(href="", title="add a Hashtag")
+                                i.icon-large #
+                        li.disabled
+                            a(href="", title="add an Image  ")
+                                i.icon-picture.icon-large
+                .span4
+                    h4 Add a filter
+                    ul
+                        li.disabled
+                            a(href="", title="add a Map") 
+                                i.icon-map-marker.icon-large
+                        li.disabled 
+                            a(href="", title="add a Timeframe")
+                                i.icon-time.icon-large
+                .span4
+                    h4 Add a source
+                    ul
+                       li 
+                            a(href="")
+                                img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="30", height="30") 
+
+                        li 
+                            a(href="")
+                                img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="30", height="30")
+                        li 
+                            a(href="").disabled
+                                img(src="/img/icons/gray/rss.png", alt="Blog", target="_blank", width="30", height="30")
+                        //- li 
+                        //-     a(href="")
+                        //-         img(src="/img/icons/color/facebook.png", alt="Facebook", target="_blank", width="30", height="30")
+                        //- li 
+                        //-     a(href="")
+                        //-         img(src="/img/icons/color/github.png", alt="Github", target="_blank", width="30", height="30")
+            - if (typeof(meme) != 'undefined')
+                include _things 
+                                
+
+        .span4
+
+    #addUrlModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+        .new
+        .existing
+
+
+
+
+block append scripts
+    
+    script
+        var options = { 
+        target: '#addUrlModal',   // target element(s) to be updated with server response 
+        //- beforeSubmit:  showRequest,  // pre-submit callback 
+        success: showResponse  // post-submit callback 
+        };  
+
+        $("#addUrl").click( function() {
+            console.log('cliked');
+
+            //- box for new options
+            $.ajax({
+                url: '/admin/things/urls/new',
+                success: function(data) {
+
+                    $("#addUrlModal .new").html(data);
+
+                    $("#addUrlModal form").submit( function(e) {
+                        $(this).ajaxSubmit(options); 
+                        return false; // prevent default
+                    })
+                }
+            })
+
+            //- update list of things
+            $.ajax({
+                url: '/admin/things/urls/list/1',
+                success: function(data) {
+                    $("#addUrlModal .existing").html(data);
+
+                    $("#addUrlModal .existing a").click( function(e) {
+                        console.log(e);
+                        var url = e.currentTarget.baseURI+'/URL/'+e.currentTarget.rel ;
+                        console.log(url);
+                        $.ajax({
+                            url: url,
+                            success: function(data) {
+                                console.log (data);
+                                url = e.currentTarget.baseURI+"/things";
+                                $.ajax({
+                                    url : url,
+                                    success: function(things) {
+                                        $('#things').html(things);
+                                        $('#addUrlModal').modal('toggle')
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    
+                }
+            })
+
+        });
+
+        function showResponse(responseText, statusText, xhr, $form)  {
+            console.log(responseText);
+            $("#addUrlModal .new").html(responseText);
+            return false;
+        }
+
+
+        

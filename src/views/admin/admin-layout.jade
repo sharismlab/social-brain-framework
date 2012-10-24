@@ -11,6 +11,7 @@ html
         link(rel='stylesheet', href='/css/font-awesome.css')
         script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
         script(type='text/javascript', src='/js/bootstrap.js')
+        script(type='text/javascript', src='/js/jquery.form.js')
         script(type='text/javascript', src='/js/admin.js')
 
         | <!--[if lt IE 9]>
@@ -35,6 +36,11 @@ html
                                 li.disabled
                                     a Your social pipeline
         div.container-fluid
+            - if(messages)
+                ul
+                - for message in messages
+                      li= message
+
             div.row-fluid
                 div#sidebar.span2
                     ul.nav.nav-list
@@ -49,10 +55,18 @@ html
                                        a(href="/admin/memes/all/1") All Memes
                                     li 
                                        a(href="/admin/memes/new") Add new
+                        li
+                            a(href="#", data-toggle="collapse", data-target="#thinglist") Things
+                            div#thinglist.collapse
+                                ul
+                                    li 
+                                       a(href="/admin/things/urls/all/1") URLs
+                                    li 
+                                       a(href="/admin/things/urls/new") Add URL
+
                         li 
                             a(href="#") My crawls
-                        li
-                            a(href="#") My network
+
 
                         li.divider
                         li.nav-header My Apps

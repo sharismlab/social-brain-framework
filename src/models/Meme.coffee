@@ -11,7 +11,9 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 
 MemeSchema = new Schema
     title: String
+    description: String
     messages: Array
+    things: Array
 
 
 MemeSchema.plugin(troop.timestamp)

@@ -17,6 +17,7 @@
         "express-helpers": "latest",
         "ejs": "latest",
         "everyauth": "git://github.com/clemsos/everyauth.git",
+        "express-messages-bootstrap" : "latest",
         "forever": "latest",
         "forms-bootstrap": "latest",
         "http-proxy": "latest",

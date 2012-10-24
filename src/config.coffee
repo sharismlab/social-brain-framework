@@ -72,6 +72,14 @@ module.exports = (app, express, mongoose) ->
     app.use postEveryAuthMiddlewareHack()
 
     app.use flash()
+    
+    # helper for flahs messages
+    app.use (req, res, next) ->
+        messages = require('express-messages-bootstrap')(req,res)
+        res.locals = {
+            messages:      messages
+        }
+        next()
 
     app.use express.bodyParser()
     app.use express.methodOverride()

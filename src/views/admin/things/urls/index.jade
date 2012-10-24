@@ -1,0 +1,33 @@
+extends ../../admin-layout
+
+block append content
+    h1 Your urls
+    div.row
+        p Total urls : 
+            em= count 
+        p Current page :
+            em= parseFloat(current)
+        div.pagination
+            ul
+                - for p in pages
+                    li
+                        a(href="/messages/"+p)= p
+
+        div
+            a.btn.btn-large(href="/admin/things/urls/new") Add new url
+
+        table.table.table-striped
+            thead 
+                tr
+                    th ID
+                    th URL
+                    th Description
+            tbody
+                - for m in urls
+                    tr  
+                        td= m._id
+                        td= m.url
+                        td= m.description
+                        td 
+                            a(href="/admin/things/urls/"+m.id) Edit      
+                            a(href="/admin/things/urls/delete/"+m.id) Delete
