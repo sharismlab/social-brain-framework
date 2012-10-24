@@ -4,7 +4,7 @@ module.exports = (app) ->
 
     app.get '/admin', (req, res) ->
         # res.render "../views/admin/dashboard"
-        res.redirect '/admin/memes/1'
+        res.redirect '/admin/memes/all/1'
 
         
 
@@ -29,10 +29,9 @@ module.exports = (app) ->
     app.get '/admin/memes/new', (req, res) ->
         res.render "../views/admin/memes/new", memeform: memeform.toHTML()
 
-    
     # Create
     app.post '/admin/memes/new', (req, res) ->
-        console.log "post meme : " 
+        console.log "POST : " 
         console.log req.body
         memeform.handle req.body,
             success: (form) ->
@@ -44,32 +43,32 @@ module.exports = (app) ->
                     console.log err if err
                     console.log "created"
                     req.flash 'info','Meme added'
-                    res.redirect '/admin/memes/edit/'+meme.id
+                    res.redirect '/admin/memes/'+meme.id
             error: (form) ->
                 # handle the error, by re-rendering the form again
                 res.render '../views/admin/memes/new', memeform: memeform.toHTML()
 
-    # Edit a record
-    app.get '/admin/memes/edit/:id', (req, res) ->
+    # Read/Edit a record
+    app.get '/admin/memes/:id', (req, res) ->
         Meme.findById req.params.id, (err, meme) ->
             console.log err if err
-            res.render '../views/admin/memes/edit.jade', { meme : meme, memeform: memeform.bind(meme).toHTML()  }
-            console.log "Editing " + meme.id
+            res.render '../views/admin/memes/new.jade', { meme : meme, memeform: memeform.bind(meme).toHTML()  }
 
     # Update
-    app.put '/memes/edit/:id', (req, res) ->
-        Post.findById req.params.id, (err, meme) ->
+    app.post '/admin/memes/:id', (req, res) ->
+        Meme.findById req.params.id, (err, meme) ->
             console.log err if err
-            console.log "Update " + post.id + req.body
+            console.log "UPDATE " 
+            console.log req.body
             meme.title = req.body.title
             meme.save (err) ->
                 console.log err if err
-                console.log err "Meme updated!"
+                console.log "Meme updated!"
                 req.flash 'info','Meme updated'
-                res.send meme { message : 'Success!'}
+                res.render '../views/admin/memes/new.jade', { meme : meme, memeform: memeform.bind(meme).toHTML(), message: "Edited successfully"  }
 
     # Index (paginated)
-    app.get '/admin/memes/:page', (req, res) ->
+    app.get '/admin/memes/all/:page', (req, res) ->
       Meme.paginate { page: req.params.page,limit: 50 },  (err, docs, count, pages, current) ->
         p =[]
         i = 1

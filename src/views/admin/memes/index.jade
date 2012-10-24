@@ -15,6 +15,7 @@ block append content
 
         div
             a.btn.btn-large(href="/admin/memes/new") Add new meme
+
         table.table.table-striped
             thead 
                 tr
@@ -28,5 +29,5 @@ block append content
                         //- td= m.user.screen_name
                         td= m.title
                         td 
-                            a(href="/admin/memes/edit/"+m.id) Edit      
+                            a(href="/admin/memes/"+m.id) Edit      
                             a(href="/admin/memes/delete/"+m.id) Delete

@@ -1,7 +1,38 @@
-//- legend Title
-//- input(type="text", placeholder="Type something…", name="title")
-//- div
-!= memeform
-div.form-actions
-    button.btn(type="submit") Save
-    a.btn Delete
+div.navbar.navbar-inverse
+    div.navbar-inner
+        ul.nav
+            li
+                a(href="#edit")  Overview
+            li
+                a(href="#data")  Data
+            li
+                a(href="#viz") Viz
+        
+        ul.nav.pull-right
+            li.divider-vertical
+            li.dropdown
+                a.dropdown-toggle(href="#", data-toggle="dropdown") Publish & Share
+                    b.caret
+                ul.dropdown-menu
+                    li
+                        a(href="") Publish data
+                    li  
+                        a(href="") Share with friends
+                    li
+                        a(href="") Invite collaborators
+
+div.row-fluid
+    div.span8
+        != memeform
+    div.span4
+        div.form-actions
+            button.btn(type="submit") Save
+            a.btn Delete
+
+div#edit.row-fluid
+    .span8
+        p 
+
+        
+    .span4
+
