@@ -118,11 +118,13 @@ module.exports = (app) ->
             else
                 res.send "thing already added"
 
+    # display all things for a given meme
     app.get '/admin/memes/:memeId/things', (req,res) ->
         Meme.findById req.params.memeId, (err, meme) ->
             console.log err if err
             res.render '../views/admin/memes/_things', {meme:meme}
 
+    # remove a thing from a meme
     app.get '/admin/memes/:memeId/:thing/:thingId/remove', (req,res) ->
         Meme.findById req.params.memeId, (err, meme) ->
             i =0
@@ -130,7 +132,7 @@ module.exports = (app) ->
                 console.log meme.things[i].class
                 if meme.things[i].class ==  req.params.thing && meme.things[i].id == req.params.thingId 
                     console.log 'ok'
-                    meme.things.splice(i, 1)
+                    console.log meme.things.splice(i, 1)
                     res.send "thing was removed from meme"
                 i++ 
 

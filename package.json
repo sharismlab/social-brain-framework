@@ -29,6 +29,7 @@
         "mongoose": "3.2.0",
         "mongoose-troop": "latest",
         "mongoose-auth": "git://github.com/clemsos/mongoose-auth.git",
+        "node.io": "latest",
         "nib": "0.4.1",
         "jquery": "latest",
         "ntwitter": "latest",

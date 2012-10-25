@@ -3,12 +3,14 @@ table#things.table.table-striped
                     tr
                         th Type
                         th Description
+                        th Status
                         th Tools
                 tbody
                     - for thing in meme.things
                         tr
                             td= thing.class
                             td= thing.id
+                            td Pending
                             td
                                 a(href='#') Edit
                                 a(href='/admin/memes/'+meme.id+'/'+thing.class+'/'+thing.id+'/remove')  Remove

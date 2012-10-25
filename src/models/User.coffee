@@ -82,12 +82,12 @@ and populate the user profile and the attached seuron
 # Import Seuron model so we can create a new Seuron with the new User
 Seuron = require('../models/Seuron').Seuron
 UserSchema.statics.createAndLinkToSeuron = (service, data, callback) ->
-  console.log data
+  # console.log data
 
   createdUser = new User
   Seuron.findOne service+'.id': data.id, (err, foundSeuron) ->
     console.log err if err # handle error
-    console.log "seuronExists = ", foundSeuron
+    # console.log "seuronExists = ", foundSeuron
     # If seuron doesn't already exists, then create it
     if( foundSeuron == null)
       s = new Seuron  
@@ -102,7 +102,7 @@ UserSchema.statics.createAndLinkToSeuron = (service, data, callback) ->
 
       s.save (err) ->
         console.log(err) if err
-        console.log s
+        # console.log s
         createdUser.seuron_id = s._id # Link new seuron to our user
         createdUser.save (err) ->
           console.log(err) if err

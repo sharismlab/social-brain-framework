@@ -76,10 +76,19 @@ module.exports = (app, io, mongoose) ->
 
     app.get '/weibo', (req, res) ->
       
-      console.log req.session.auth.weibo
-      weibo = require './lib/weiboAPI'
-      weibo.getMentions req.session.auth.weibo.user.id, (data) ->
-        res.send data
+      if req.session.auth.weibo
+        # console.log req.session.auth.weibo
+        weiboAPI = require './lib/weiboAPI'
+        console.log weiboAPI
+        weiboAPI.init req.session.auth.weibo.accessToken, req.session.auth.weibo.user.id
+
+        weiboAPI.getTimeline (data) ->
+          res.send data
+
+       
+
+
+
 
 
 

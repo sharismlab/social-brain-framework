@@ -1,21 +1,21 @@
 {
     "twitter":{
-          "appKey":"PASTE_HERE",
-        , "appSecret":"PASTE_HERE"
+          "consumerKey":""
+        , "consumerSecret":""
         , "tokenKey": ""
         , "tokenSecret" : ""
         , "url" : ""
     },
     "weibo" : {
-        "appKey" : "PASTE_HERE",
-        "appSecret" : "PASTE_HERE"
+          "appKey" : ""
+        , "appSecret" : ""
+        , "oauth_callback_url" : ""
     },
     "google" : {
-        "appKey" : "PASTE_HERE",
-        "appSecret" : "PASTE_HERE"
+        "appKey" : "",
+        "appSecret" : ""
     },
-    "facebook" : {
-        "appKey" : "PASTE_HERE",
-        "appSecret" : "PASTE_HERE"
+    "alchemy" : {
+        "key" : ""
     }
 }
