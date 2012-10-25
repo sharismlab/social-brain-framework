@@ -1,14 +1,15 @@
-<!DOCTYPE html><html><head><title>Seuron.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/controllers/messages_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">messages_controller.coffee</span></a><a href="../../src/controllers/seurons_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">seurons_controller.coffee</span></a><a href="../../src/lib/redis_queue.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">redis_queue.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/lib/twitterTimeline.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterTimeline.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Interaction.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Interaction.coffee</span></a><a href="../../src/models/Message.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Message.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source selected"><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/Synapse.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Synapse.coffee</span></a><a href="../../src/models/Thread.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Thread.coffee</span></a><a href="../../src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>Seuron.coffee</h1><div class="filepath">src/models/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><p>This is the seuron class
+<!DOCTYPE html><html><head><title>Seuron.coffee</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/app.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">app.coffee</span></a><a href="../../src/config.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">config.coffee</span></a><a href="../../src/controllers/messages_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">messages_controller.coffee</span></a><a href="../../src/controllers/seurons_controller.coffee.html" class="source "><span class="base_path">src / controllers / </span><span class="file_name">seurons_controller.coffee</span></a><a href="../../src/lib/alchemyAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">alchemyAPI.coffee</span></a><a href="../../src/lib/languageAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">languageAPI.coffee</span></a><a href="../../src/lib/redis_queue.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">redis_queue.coffee</span></a><a href="../../src/lib/twitterAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterAPI.coffee</span></a><a href="../../src/lib/twitterTimeline.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">twitterTimeline.coffee</span></a><a href="../../src/lib/weiboAPI.coffee.html" class="source "><span class="base_path">src / lib / </span><span class="file_name">weiboAPI.coffee</span></a><a href="../../src/locals.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">locals.coffee</span></a><a href="../../src/models/Interaction.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Interaction.coffee</span></a><a href="../../src/models/Meme.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Meme.coffee</span></a><a href="../../src/models/Message.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Message.coffee</span></a><a href="../../src/models/Seuron.coffee.html" class="source selected"><span class="base_path">src / models / </span><span class="file_name">Seuron.coffee</span></a><a href="../../src/models/Synapse.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Synapse.coffee</span></a><a href="../../src/models/Things/URL.coffee.html" class="source "><span class="base_path">src / models / Things / </span><span class="file_name">URL.coffee</span></a><a href="../../src/models/Thread.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">Thread.coffee</span></a><a href="../../src/models/User.coffee.html" class="source "><span class="base_path">src / models / </span><span class="file_name">User.coffee</span></a><a href="../../src/routes/admin.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">admin.coffee</span></a><a href="../../src/routes/api.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">api.coffee</span></a><a href="../../src/routes/memes.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">memes.coffee</span></a><a href="../../src/routes/seurons.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">seurons.coffee</span></a><a href="../../src/routes/things.coffee.html" class="source "><span class="base_path">src / routes / </span><span class="file_name">things.coffee</span></a><a href="../../src/routes.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">routes.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>Seuron.coffee</h1><div class="filepath">src/models/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><p>This is the seuron class
 A Seuron intends to store info about a specific user from different social networks.
 All relationships are stored in an Array of Synapses that connects it to other seurons.</p>
-</td><td class="code"><div class="highlight"><pre><span class="nv">mongoose = </span><span class="nx">require</span><span class="p">(</span><span class="s">&quot;mongoose&quot;</span><span class="p">)</span>
+</td><td class="code"><div class="highlight"><pre><span class="nv">mongoose = </span><span class="nx">require</span> <span class="s">&quot;mongoose&quot;</span>
+<span class="nv">troop = </span><span class="nx">require</span> <span class="s">&#39;mongoose-troop&#39;</span>
 
 <span class="nv">collection = </span><span class="s">&quot;Seurons&quot;</span>
 
 <span class="nv">Schema = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span>
 <span class="nv">ObjectId = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">SchemaTypes</span><span class="p">.</span><span class="nx">ObjectId</span>
 
-<span class="nv">seuronSchema = </span><span class="k">new</span> <span class="nx">Schema</span>
+<span class="nv">SeuronSchema = </span><span class="k">new</span> <span class="nx">Schema</span>
     <span class="nv">created_at: </span><span class="nb">Date</span>
     <span class="nv">updated_at: </span><span class="nb">Date</span>
     <span class="nv">username: </span><span class="nb">String</span>
@@ -22,7 +23,7 @@ All relationships are stored in an Array of Synapses that connects it to other s
 </td><td class="code"><div class="highlight"><pre>    <span class="nv">messages: </span><span class="nb">Array</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>Here are stored all infos extracted from social networks</p>
 </td><td class="code"><div class="highlight"><pre>    <span class="nv">sns: </span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>Let's start with twitter</p>
 </td><td class="code"><div class="highlight"><pre>      <span class="nv">twitter:</span>
-        <span class="nv">id : </span><span class="p">{</span> <span class="nv">type: </span><span class="nb">Number</span><span class="p">,</span> <span class="nv">required: </span><span class="kc">true</span><span class="p">,</span> <span class="nv">index: </span><span class="p">{</span> <span class="nv">unique: </span><span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="nv">id : </span><span class="p">{</span> <span class="nv">type: </span><span class="nb">Number</span><span class="p">,</span> <span class="nv">index: </span><span class="p">{</span> <span class="nv">unique: </span><span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
         <span class="nv">profile : </span><span class="nb">Object</span> <span class="c1"># straight from Twitter</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><p>store all ids from twitter API</p>
 </td><td class="code"><div class="highlight"><pre>        <span class="nv">followers: </span><span class="nb">Array</span>
         <span class="nv">friends: </span><span class="nb">Array</span>
@@ -41,11 +42,17 @@ All relationships are stored in an Array of Synapses that connects it to other s
             <span class="nv">default: </span><span class="kc">false</span>
           <span class="nv">last_updated: </span>
             <span class="nv">type : </span><span class="nb">Date</span>
-            <span class="nv">default: </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>seuronSchema.pre('save', callback)</p>
+            <span class="nv">default: </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span>
+      <span class="nv">weibo: </span>
+        <span class="nv">id : </span><span class="p">{</span> <span class="nv">type: </span><span class="nb">Number</span><span class="p">,</span> <span class="nv">index: </span><span class="p">{</span> <span class="nv">unique: </span><span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="nv">profile : </span><span class="nb">Object</span>
+
+<span class="nx">SeuronSchema</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="nx">troop</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">)</span>
+<span class="nx">SeuronSchema</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="nx">troop</span><span class="p">.</span><span class="nx">pagination</span><span class="p">)</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>SeuronSchema.pre('save', callback)</p>
 </td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><p>Import Synpase model</p>
 </td><td class="code"><div class="highlight"><pre><span class="nv">Synapse = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;../models/Synapse&#39;</span><span class="p">).</span><span class="nx">Synapse</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>create a synapse between this seuron and the Seuron passed
 adding to friendship level</p>
-</td><td class="code"><div class="highlight"><pre><span class="nv">seuronSchema.methods.createSynapse = </span><span class="nf">( seuron, callback ) -&gt;</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>console.log @isFollower seuron.sns.twitter.profile.id</p>
+</td><td class="code"><div class="highlight"><pre><span class="nv">SeuronSchema.methods.createSynapse = </span><span class="nf">( seuron, callback ) -&gt;</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>console.log @isFollower seuron.sns.twitter.profile.id</p>
 </td><td class="code"><div class="highlight"><pre>  <span class="nx">daddy</span><span class="o">=</span><span class="k">this</span>
 
   <span class="nv">level = </span><span class="mi">0</span>
@@ -79,7 +86,7 @@ console.log 'synapse created'</p>
     
     <span class="nx">daddy</span><span class="p">.</span><span class="nx">save</span> <span class="nf">(d) -&gt;</span>
       <span class="nx">callback</span> <span class="p">(</span><span class="nx">syn</span><span class="p">)</span></pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a href="#section-16" class="pilcrow">&#182;</a></div><p>return existing relationship (Synapse) based on another Seuron id</p>
-</td><td class="code"><div class="highlight"><pre><span class="nv">seuronSchema.methods.findOrCreateSynapse = </span><span class="nf">( seuron, callback ) -&gt;</span>
+</td><td class="code"><div class="highlight"><pre><span class="nv">SeuronSchema.methods.findOrCreateSynapse = </span><span class="nf">( seuron, callback ) -&gt;</span>
   </pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a href="#section-17" class="pilcrow">&#182;</a></div><p>console.log seuron</p>
 </td><td class="code"><div class="highlight"><pre>  <span class="nv">i = </span><span class="mi">0</span>
   <span class="k">while</span> <span class="nx">@synapses</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span></pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a href="#section-18" class="pilcrow">&#182;</a></div><p>console.log "synapse-- "+seuron.sns.twitter.id</p>
@@ -90,45 +97,114 @@ console.log 'synapse created'</p>
 
   <span class="nx">@createSynapse</span> <span class="nx">seuron</span><span class="p">,</span> <span class="nx">callback</span></pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a href="#section-19" class="pilcrow">&#182;</a></div><p>check if a seuron is a friend of mine
 return boolean </p>
-</td><td class="code"><div class="highlight"><pre><span class="nv">seuronSchema.methods.isFriend = </span><span class="nf">( twitter_id ) -&gt;</span>
+</td><td class="code"><div class="highlight"><pre><span class="nv">SeuronSchema.methods.isFriend = </span><span class="nf">( twitter_id ) -&gt;</span>
   <span class="nv">i = </span><span class="mi">0</span></pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a href="#section-20" class="pilcrow">&#182;</a></div><p>console.log @sns.twitter.friends</p>
 </td><td class="code"><div class="highlight"><pre>  <span class="k">while</span> <span class="nx">@sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">friends</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">@sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">friends</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">is</span> <span class="nx">twitter_id</span>
     <span class="nx">i</span><span class="o">++</span>
   <span class="kc">false</span></pre></div></td></tr><tr id="section-21"><td class="docs"><div class="pilwrap"><a href="#section-21" class="pilcrow">&#182;</a></div><p>check if a seuron is one of my followers
 return boolean </p>
-</td><td class="code"><div class="highlight"><pre><span class="nv">seuronSchema.methods.isFollower = </span><span class="nf">( twitter_id) -&gt;</span>
+</td><td class="code"><div class="highlight"><pre><span class="nv">SeuronSchema.methods.isFollower = </span><span class="nf">( twitter_id) -&gt;</span>
   <span class="nv">i = </span><span class="mi">0</span>
   <span class="k">while</span> <span class="nx">@sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">followers</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">@sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">followers</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">is</span> <span class="nx">twitter_id</span>
     <span class="nx">i</span><span class="o">++</span>
   <span class="kc">false</span></pre></div></td></tr><tr id="section-22"><td class="docs"><div class="pilwrap"><a href="#section-22" class="pilcrow">&#182;</a></div><h1>Data Functions</h1>
-</td><td class="code"><div class="highlight"><pre><span class="nv">seuronSchema.methods.hasProfile = </span><span class="o">-&gt;</span>
+</td><td class="code"><div class="highlight"><pre><span class="nv">SeuronSchema.methods.hasProfile = </span><span class="o">-&gt;</span>
     <span class="nv">ret = </span><span class="kc">false</span>
     <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">profile</span><span class="p">)</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;has already a profile&quot;</span>
       <span class="nx">ret</span><span class="o">=</span><span class="kc">true</span>
     <span class="nx">ret</span>
 
-<span class="nv">seuronSchema.methods.hasFriends = </span><span class="o">-&gt;</span>
+<span class="nv">SeuronSchema.methods.hasFriends = </span><span class="o">-&gt;</span>
     <span class="nv">ret = </span><span class="kc">false</span></pre></div></td></tr><tr id="section-23"><td class="docs"><div class="pilwrap"><a href="#section-23" class="pilcrow">&#182;</a></div><p>console.log(this.sns.twitter.friends)</p>
 </td><td class="code"><div class="highlight"><pre>    <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">friends</span><span class="p">.</span><span class="nx">length</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;has already a friends&quot;</span>
       <span class="nx">ret</span><span class="o">=</span><span class="kc">true</span>
     <span class="nx">ret</span>
 
-<span class="nv">seuronSchema.methods.hasFollowers = </span><span class="o">-&gt;</span>
+<span class="nv">SeuronSchema.methods.hasFollowers = </span><span class="o">-&gt;</span>
     <span class="nx">ret</span> <span class="o">=</span><span class="kc">false</span>
     <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sns</span><span class="p">.</span><span class="nx">twitter</span><span class="p">.</span><span class="nx">followers</span><span class="p">.</span><span class="nx">length</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;has already followers&quot;</span>
       <span class="nx">ret</span><span class="o">=</span><span class="kc">true</span>
     <span class="nx">ret</span>
 
+<span class="nv">SeuronSchema.methods.populateWithTwitter = </span><span class="nf">( twitUserMeta, callback ) -&gt;</span>
 
-<span class="nv">Seuron = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s">&#39;Seuron&#39;</span><span class="p">,</span> <span class="nx">seuronSchema</span><span class="p">)</span>
+    <span class="nv">twitterProfile =</span>
+        <span class="nv">accessToken: </span><span class="nx">accessToken</span>
+        <span class="nv">accessTokenSecret: </span><span class="nx">accessTokenSecret</span>
+        <span class="nv">id: </span><span class="nb">String</span><span class="p">(</span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+        <span class="nv">name: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">name</span>
+        <span class="nv">screenName: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">screen_name</span>
+        <span class="nv">location: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">location</span>
+        <span class="nv">description: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">description</span>
+        <span class="nv">profileImageUrl: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_image_url</span>
+        <span class="nv">url: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">url</span>
+        <span class="nv">protected: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">protected</span>
+        <span class="nv">followersCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">followers_count</span>
+        <span class="nv">profileBackgroundColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_color</span>
+        <span class="nv">profileTextColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_text_color</span>
+        <span class="nv">profileLinkColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_link_color</span>
+        <span class="nv">profileSidebarFillColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_fill_color</span>
+        <span class="nv">profileSiderbarBorderColor: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_border_color</span>
+        <span class="nv">friendsCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">friends_count</span>
+        <span class="nv">createdAt: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">created_at</span>
+        <span class="nv">favouritesCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">favourites_count</span>
+        <span class="nv">utcOffset: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">utc_offset</span>
+        <span class="nv">timeZone: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">time_zone</span>
+        <span class="nv">profileBackgroundImageUrl: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_image_url</span>
+        <span class="nv">profileBackgroundTile: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_background_tile</span>
+        <span class="nv">profileUseBackgroundImage: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">profile_use_background_image</span>
+        <span class="nv">geoEnabled: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">geo_enabled</span>
+        <span class="nv">verified: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">verified</span>
+        <span class="nv">statusesCount: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">statuses_count</span>
+        <span class="nv">lang: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">lang</span>
+        <span class="nv">contributorsEnabled: </span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">contributors_enabled</span></pre></div></td></tr><tr id="section-24"><td class="docs"><div class="pilwrap"><a href="#section-24" class="pilcrow">&#182;</a></div><p>store info inside Seuron</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="vi">@sns.twitter.profile = </span><span class="nx">twitterProfile</span>
+    <span class="vi">@sns.twitter.id = </span><span class="nb">String</span><span class="p">(</span><span class="nx">twitUserMeta</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="nx">@save</span> <span class="nx">callback</span>
+
+<span class="nv">SeuronSchema.methods.populateWithWeibo = </span><span class="nf">( weiboUserMeta, callback ) -&gt;</span>
+
+    <span class="nv">weiboProfile =</span>
+        <span class="nv">id: </span><span class="nb">String</span><span class="p">(</span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+        <span class="nv">name: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">name</span>
+        <span class="nv">screenName: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">screen_name</span>
+        <span class="nv">location: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">location</span>
+        <span class="nv">description: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">description</span>
+        <span class="nv">profileImageUrl: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_image_url</span>
+        <span class="nv">url: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">url</span>
+        <span class="nv">protected: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">protected</span>
+        <span class="nv">followersCount: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">followers_count</span>
+        <span class="nv">profileBackgroundColor: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_background_color</span>
+        <span class="nv">profileTextColor: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_text_color</span>
+        <span class="nv">profileLinkColor: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_link_color</span>
+        <span class="nv">profileSidebarFillColor: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_fill_color</span>
+        <span class="nv">profileSiderbarBorderColor: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_sidebar_border_color</span>
+        <span class="nv">friendsCount: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">friends_count</span>
+        <span class="nv">createdAt: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">created_at</span>
+        <span class="nv">favouritesCount: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">favourites_count</span>
+        <span class="nv">utcOffset: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">utc_offset</span>
+        <span class="nv">timeZone: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">time_zone</span>
+        <span class="nv">profileBackgroundImageUrl: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_background_image_url</span>
+        <span class="nv">profileBackgroundTile: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_background_tile</span>
+        <span class="nv">profileUseBackgroundImage: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">profile_use_background_image</span>
+        <span class="nv">geoEnabled: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">geo_enabled</span>
+        <span class="nv">verified: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">verified</span>
+        <span class="nv">statusesCount: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">statuses_count</span>
+        <span class="nv">lang: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">lang</span>
+        <span class="nv">contributorsEnabled: </span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">contributors_enabled</span></pre></div></td></tr><tr id="section-25"><td class="docs"><div class="pilwrap"><a href="#section-25" class="pilcrow">&#182;</a></div><p>store info inside Seuron</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="vi">@sns.weibo.profile = </span><span class="nx">weiboProfile</span>
+    <span class="vi">@sns.weibo.id = </span><span class="nb">String</span><span class="p">(</span><span class="nx">weiboUserMeta</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="nx">@save</span> <span class="nx">callback</span>
+
+<span class="nv">Seuron = </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s">&#39;Seuron&#39;</span><span class="p">,</span> <span class="nx">SeuronSchema</span><span class="p">)</span>
 
 <span class="nv">module.exports = </span><span class="p">{</span>
   <span class="nx">Seuron</span><span class="o">:</span><span class="nx">Seuron</span>
 <span class="p">}</span>
 
-</pre></div></td></tr></tbody></table><div id="generated">generated Mon Oct 08 2012 16:39:42 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>
+</pre></div></td></tr></tbody></table><div id="generated">generated Fri Oct 26 2012 01:45:24 GMT+0800 (CST)  </div><div id="projectname"><a href="../../index.html">Social Brain Framework</a></div></div></body></html>

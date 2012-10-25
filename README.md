@@ -15,6 +15,12 @@ SBF is mainly written in Coffeescript > Javascript
 * Docs : https://docs.google.com/folder/d/0B7NEXxu0b66PVExpOFZWSldlMWs/edit
 * Questions : https://groups.google.com/forum/#!forum/social-brain-framework
 
+You can generate the code documentation by typing
+
+    cake docs
+
+or read the Docs here : http://sbf.sharismlab.com/docs/
+
 ## Lauch the framework
 
 To run SBF, you will need MongoDB & Redis installed
@@ -22,10 +28,11 @@ To run SBF, you will need MongoDB & Redis installed
     git clone https://github.com/sharismlab/social-brain-framework.git
     cd social-brain-framework
     npm install
-    redis-server conf/locals/redis.conf
     ./sbf
 
-You will need Python2.7 to be installed (to compile some node dependencies)
+You will need Python2.7 to be installed (to compile some node dependencies) also mongoDB
+You can setup your API keys by copying config/apikeys.sample.json to config/apikeys.json
+
 
 ## Run the tests
 
@@ -33,13 +40,6 @@ Tests for the app are written with Mocha and Chai.
 
     cake test
 
-## Building apps
-
-This framework has been developed for people their own build apps. In the **apps** folder, you can run test application.
-
-    cd apps/hello_world
-    npm install
-    coffee index.coffee
 
 # Thanks
 
