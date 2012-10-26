@@ -73,12 +73,12 @@ module.exports = (app, express, mongoose) ->
 
     app.use flash()
     
-    # helper for flahs messages
     app.use (req, res, next) ->
         messages = require('express-messages-bootstrap')(req,res)
-        res.locals = {
-            messages:      messages
-        }
+        res.locals = 
+            everyauth :
+              user : req.user # helper for everyauth
+            messages:      messages # helper for flahs messages
         next()
 
     app.use express.bodyParser()
