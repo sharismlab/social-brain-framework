@@ -184,10 +184,7 @@ UserSchema.plugin mongooseAuth,
                   createdUser.populateWithWeibo weiboUser, () ->
                     promise.fulfill createdUser
 
-
-
 User = mongoose.model('User', UserSchema) 
 
-module.exports = {
+module.exports = 
   User:User
-}
