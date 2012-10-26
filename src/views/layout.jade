@@ -53,27 +53,33 @@ html
                               a(href='/join', title='Join our team') Contribute
 
                           ul.nav.pull-right
-                            li
-                              a(href="#", class="counter") x
-                            li
-                              a(href='http://sharismlab.com', title='Sharism Lab') Sharism Lab
                             li.divider-vertical
+                            - if (everyauth.user)
+                            li 
+                              - if (everyauth.user.twitter)
+                                b Hi #{everyauth.twitter.user.name}
+                              - else if (everyauth.user.weibo)
+                                b Hi #{everyauth.weibo.user.name}
+                            li
+                              a(href='/logout') Logout
+
+                            - else 
+
+                            li
+                               a(href='/register', title='Register') Register
+
                             li.dropdown
-                              a.dropdown-toggle(href="#", data-toggle='dropdown') 
-                                - if (everyauth.twitter)
-                                  b Hi #{everyauth.twitter.user.name}
-                                - else
-                                  b Login
+                              a.dropdown-toggle(href="#", data-toggle='dropdown') Login
                                 b.caret
                               ul.dropdown-menu
-                                - if (!everyauth.loggedIn)
-                                  li 
-                                    a(href="/auth/twitter") Sign in with Twitter
-                                  li 
-                                    a(href="/auth/weibo") Sign in Weibo
-                                - else
+                                - if 
                                   li
-                                    a(href='/logout') Logout
+                                    a(href='/auth/twitter', title='Login with Twitter') using Twitter
+                                      img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20")
+                                  li
+                                    a(href='/auth/weibo', title='Login with Weibo') using Weibo
+                                       img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
+
     div.container
         block content
 

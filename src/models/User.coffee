@@ -1,6 +1,9 @@
 mongoose = require "mongoose"
 mongooseAuth = require 'mongoose-auth'
+#Let's configure everyauth
 everyauth = require 'everyauth'
+everyauth.debug = true
+
 troop = require 'mongoose-troop' #plugins
 
 
@@ -10,7 +13,7 @@ ObjectId = mongoose.SchemaTypes.ObjectId
 # Import API keys from config files
 apikeys =  require '../../config/apikeys'
 
-everyauth.debug = true
+# mongoose.set('debug', true)
 
 collection = "users"
 
@@ -137,10 +140,11 @@ UserSchema.plugin mongooseAuth,
           
     twitter:
       everyauth:
-        # myHostname: apikeys.twitter.url
+        myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: apikeys.twitter.callback_url
+        # callbackPath: apikeys.twitter.callbackPath
+        redirectPath: apikeys.twitter.redirectUrl
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
 
@@ -151,6 +155,7 @@ UserSchema.plugin mongooseAuth,
           User.findOne { "twitter.id": twitterUser.id }, (err, foundUser) ->
               return promise.fail err if err
               if foundUser
+                console.log "found twitter user !"
                 promise.fulfill foundUser 
               else
                 User.createAndLinkToSeuron "twitter", twitterUser, (createdUser)->
@@ -163,7 +168,7 @@ UserSchema.plugin mongooseAuth,
       everyauth:
         appId: apikeys.weibo.appKey
         appSecret: apikeys.weibo.appSecret
-        redirectPath : apikeys.weibo.callback_url
+        redirectPath : apikeys.weibo.redirectUrl
 
         findOrCreateUser: (session, appId, appSecret, weiboUser) ->
           # console.log weiboUser

@@ -1,5 +1,5 @@
 express = require 'express'
-helpers = require "./locals"
+helpers = require "./helpers"
 http = require 'http'
 mongoose = require 'mongoose'
 

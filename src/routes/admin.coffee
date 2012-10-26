@@ -6,6 +6,12 @@ module.exports = (app) ->
         # res.render "../views/admin/dashboard"
         res.redirect '/admin/memes/all/1'
     
+    app.get '/admin*', (req, res) ->
+        if(!req.session.auth)
+            res.render '_login'
+        else
+            # res.render "../views/admin/dashboard"
+            do next
 
     # ## Seurons
     

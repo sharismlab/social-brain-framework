@@ -4,19 +4,14 @@ config file for SBF app
 
 dbs =  require '../config/db'
 less = require "less"
-helpers = require "./locals"
-httpProxy = require('http-proxy')
+httpProxy = require 'http-proxy'
 flash = require 'connect-flash'
 
 # every auth + mongoose
 everyauth = require 'everyauth'
 mongooseAuth = require 'mongoose-auth'
 
-#Let's configure everyauth
-everyauth.debug = true
-
-
-# Fix for broken expressHelpers
+# Fix for broken everyauth helpers in express 3.0
 # https://github.com/bnoguchi/everyauth/issues/303
 preEveryAuthMiddlewareHack = ->
   (req, res, next) ->

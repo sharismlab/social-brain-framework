@@ -16,7 +16,7 @@
         "express": "latest",
         "express-helpers": "latest",
         "ejs": "latest",
-        "everyauth": "git://github.com/clemsos/everyauth.git",
+        "everyauth": "git://github.com/bnoguchi/everyauth.git#express3",
         "express-messages-bootstrap" : "latest",
         "forever": "latest",
         "forms-bootstrap": "latest",
