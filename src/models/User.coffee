@@ -64,7 +64,7 @@ UserSchema.methods.populateWithWeibo = (weiboMeta, callback) ->
   @weibo = weiboProfile
   @save callback
 
-UserSchema.methods.matchUser = (screenName, callback) ->
+UserSchema.methods.mergeUser = (screenName, callback) ->
   User.findOne {"twit.screenName":screenName} , (err, foundUser) ->
     callback (foundUser)
 
@@ -77,7 +77,9 @@ and populate the user profile and the attached seuron
 ###
 
 # createAndLinkToSeuron (service, data, callback)
+#
 # This function is called when one login or register using an sns account
+#
 # * Service is the name of the service lowercase without space (twitter,weibo, etc.)
 # * Data is the complete profile from sns API
 # * Callback returns a new User linked to a seuron

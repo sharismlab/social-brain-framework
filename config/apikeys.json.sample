@@ -2,12 +2,12 @@
     "twitter":{
           "consumerKey":""
         , "consumerSecret":""
-        , "callback_url" : ""
+        , "redirectUrl" : ""
     },
     "weibo" : {
           "appKey" : ""
         , "appSecret" : ""
-        , "callback_url" : ""
+        , "redirectUrl" : ""
     },
     "google" : {
         "appKey" : "",
