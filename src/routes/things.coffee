@@ -23,7 +23,6 @@ module.exports = (app) ->
 
     # New
     app.get '/admin/things/urls/new', (req, res) ->
-
         res.render "../views/admin/things/urls/new", URLform: URLform.toHTML()
 
     # Create
@@ -136,3 +135,9 @@ module.exports = (app) ->
                     console.log meme.things.splice(i, 1)
                     res.send "thing was removed from meme"
                 i++ 
+
+
+
+
+
+

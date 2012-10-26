@@ -243,6 +243,6 @@ SeuronSchema.methods.populateWithWeibo = ( weiboUserMeta, callback ) ->
 
 Seuron = mongoose.model('Seuron', SeuronSchema)
 
-module.exports = 
+module.exports = {
   Seuron:Seuron
-  SeuronSchema:SeuronSchema
+}
