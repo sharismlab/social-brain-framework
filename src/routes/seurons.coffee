@@ -4,18 +4,7 @@
 ntwitter = require 'ntwitter'
 apikeys = require '../../config/apikeys'
 
-# Here goes some sample data for local development
-clemsos_friends = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_friends.json"
-
-clemsos_followers  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_followers.json"
-
-clemsos_timeline  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
-
-clemsos_mentions  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
-
 module.exports = (app, mongoose, io) ->
-
-    # mongoose.set('debug', true)
 
     # Import Seuron model
     Seuron = require('../models/Seuron').Seuron
@@ -29,22 +18,17 @@ module.exports = (app, mongoose, io) ->
         
     # GET one seuron and display it
     app.get '/seurons/:id', (req, res) ->
+    
+        Seuron.findById req.params.id, (err, seuron) ->
+            # console.log seuron
 
-        # Prevent accesing /seurons/you by redirecting to you
-        if(req.params.id == 'you')
-            res.redirect('/you')
+            # Prevent null or errors
+            res.send 'Document not found' if !seuron 
+            res.send err if err
 
-        else 
-            Seuron.findById req.params.id, (err, seuron) ->
-                # console.log seuron
+            # Render the template...
+            res.render '../views/seurons/single.jade', { seuron: seuron }
 
-                # Prevent null or errors
-                res.send 'Document not found' if !seuron 
-                res.send err if err
-
-                # Render the template...
-                res.render '../views/seurons/single.jade', { seuron: seuron }
-   
     # YOU, The page where we will display all visualization of the demo
     # This is a persolnalized page where people can browse their own seuron
     app.get '/you', (req,res) ->
@@ -96,62 +80,6 @@ module.exports = (app, mongoose, io) ->
                         queueMessageInRedis message for message in timeline
 
     
-        #render the template...
-        res.render '../views/seurons/you.jade'
-
-    # this is a test to implement functions without annoying oauth
-    app.get '/fake/you', (req, res) ->
-
-        # import libs 
-        queue = require '../lib/redis_queue'
-        twitterTimeline = require '../lib/twitterTimeline'
-        twitterAPI = require '../lib/twitterAPI'
-        
-        # faking user info to prevent annoying login
-        user_id = 136861797
-        accessToken = "136861797-3GmHLyD80c6SsoY6CNz04lWEgUe4fkSQWO9YwLwi" 
-        accessTokenSecret=  "FJUTmsmlRCPONjNHd53MVaglGmRtIKt4TyDdWyMuPE"
-
-        twitterAPI.loginToTwitter(accessToken,accessTokenSecret)
-        # twitlib.verifyCredentials()
-
-        Seuron.findOne { "sns.twitter.id" : String(user_id) } , (err, seuron) ->
-            
-            
-            if (seuron) # check first id the seuron already exists
-
-                # get/update data from twitter for processing data  
-                twitterAPI.getFollowers seuron, () ->
-                    console.log 'ok followers! '
-                
-                twitterAPI.getFriends seuron, () ->
-                    console.log 'ok followers! '
-
-                twitterAPI.getTimeline (timeline)  ->
-                    console.log "timeline loaded !"
-                    twitterTimeline.analyzeTimeline timeline
-                    # console.log "timeline completed!"
-
-                twitterAPI.getMentions (mentions)  ->
-                    console.log "mentions loaded !"
-                    twitterTimeline.analyzeTimeline mentions
-            
-            else 
-                #if seuron not found redirect to login 
-                console.log "user not found!"
-        
-        twitterTimeline.timelineEvents.on 'lookup', (data) ->
-            console.log "let's look up " + data.users.length + " users from twitter !"
-            console.log data
-
-            twitterAPI.lookupUsers data.users, (profiles)  ->
-                for profile in profiles
-                    Seuron.findOne {"sns.twitter.id": profile .id}, (err, seuron) ->
-                        console.log err if err
-                        populateWithTwitter profile , () ->
-                            console.log "Seuron has now a name : " +seuron.sns.twitter.profile.name
-
-
         #render the template...
         res.render '../views/seurons/you.jade'
 
