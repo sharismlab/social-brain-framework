@@ -1,12 +1,13 @@
-table.table.table-striped
+table.table.table-striped(style="table-layout: fixed; width: 100%")
     thead 
         tr
             th URL
             th Description
+            th tools
     tbody
         - for m in urls
             tr  
-                td= m.url
+                td(style="word-wrap: break-word")= m.url
                 td= m.description
                 td 
                     a(href="#", rel=m.id) Add to meme

@@ -140,7 +140,7 @@ UserSchema.plugin mongooseAuth,
         # myHostname: apikeys.twitter.url
         consumerKey: apikeys.twitter.consumerKey
         consumerSecret: apikeys.twitter.consumerSecret
-        redirectPath: '/'
+        redirectPath: apikeys.twitter.callback_url
 
         findOrCreateUser: (session, accessTok, accessTokSecret, twitterUser) ->
 
@@ -163,7 +163,7 @@ UserSchema.plugin mongooseAuth,
       everyauth:
         appId: apikeys.weibo.appKey
         appSecret: apikeys.weibo.appSecret
-        redirectPath : "/weibo"
+        redirectPath : apikeys.weibo.callback_url
 
         findOrCreateUser: (session, appId, appSecret, weiboUser) ->
           # console.log weiboUser

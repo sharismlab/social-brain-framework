@@ -1,0 +1,9 @@
+div.modal-header
+    button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+    h3 Add a source
+    p Please login first : 
+div.modal-body
+    a.btn(href="/auth/"+service)= service
+div.modal-footer
+    button.btn(type="button", data-dismiss="modal", aria-hidden="true") Cancel
+    

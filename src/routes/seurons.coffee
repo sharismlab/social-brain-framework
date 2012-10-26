@@ -31,7 +31,6 @@ module.exports = (app, mongoose, io) ->
     app.get '/seurons/:id', (req, res) ->
 
         # Prevent accesing /seurons/you by redirecting to you
-        
         if(req.params.id == 'you')
             res.redirect('/you')
 

@@ -40,7 +40,7 @@ block append content
                     h4 Add a thing
                     ul
                         li 
-                            a#addUrl(href="#addUrlModal", title="add an URL",role="button",data-toggle="modal",data-target="#addUrlModal") 
+                            a#addUrl(href="#modal", title="add an URL",role="button",data-toggle="modal", data-target="#modal") 
                                 i.icon-link.icon-large
                         li.disabled
                             a(href="", title="add a Hashtag")
@@ -61,11 +61,11 @@ block append content
                     h4 Add a source
                     ul
                        li 
-                            a(href="")
+                            a(href="", rel="twitter", href="#modal", title="add an URL",role="button",data-toggle="modal",data-target="#modal").sourceTrigger
                                 img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="30", height="30") 
 
                         li 
-                            a(href="")
+                            a(href="", rel="weibo", href="#modal", title="add an URL",role="button",data-toggle="modal",data-target="#modal").sourceTrigger
                                 img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="30", height="30")
                         li 
                             a(href="").disabled
@@ -81,10 +81,10 @@ block append content
                                 
 
         .span4
-            a.btn.btn-large LAUCH CRAWL NOW
+            a.btn.btn-large Get Data
 
 
-    #addUrlModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+    #modal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
         .new
         .existing
 
@@ -95,11 +95,12 @@ block append scripts
     
     script
         var options = { 
-        target: '#addUrlModal',   // target element(s) to be updated with server response 
+        target: '#modal',   // target element(s) to be updated with server response 
         //- beforeSubmit:  showRequest,  // pre-submit callback 
         success: showResponse  // post-submit callback 
         };  
 
+        // URL popup
         $("#addUrl").click( function() {
             console.log('cliked');
 
@@ -108,9 +109,9 @@ block append scripts
                 url: '/admin/things/urls/new',
                 success: function(data) {
 
-                    $("#addUrlModal .new").html(data);
+                    $("#modal .new").html(data);
 
-                    $("#addUrlModal form").submit( function(e) {
+                    $("#modal form").submit( function(e) {
                         $(this).ajaxSubmit(options); 
                         return false; // prevent default
                     })
@@ -121,9 +122,9 @@ block append scripts
             $.ajax({
                 url: '/admin/things/urls/list/1',
                 success: function(data) {
-                    $("#addUrlModal .existing").html(data);
+                    $("#modal .existing").html(data);
 
-                    $("#addUrlModal .existing a").click( function(e) {
+                    $("#modal .existing a").click( function(e) {
                         console.log(e);
                         var url = e.currentTarget.baseURI+'/URL/'+e.currentTarget.rel ;
                         console.log(url);
@@ -136,7 +137,7 @@ block append scripts
                                     url : url,
                                     success: function(things) {
                                         $('#things').html(things);
-                                        $('#addUrlModal').modal('toggle')
+                                        $('#modal').modal('toggle')
                                     }
                                 })
                             }
@@ -150,9 +151,19 @@ block append scripts
 
         function showResponse(responseText, statusText, xhr, $form)  {
             console.log(responseText);
-            $("#addUrlModal .new").html(responseText);
+            $("#modal .new").html(responseText);
             return false;
         }
 
-
+        // Sources
+        $(".sourceTrigger").click( function() {
+            source = $(this).attr('rel');
+            url = '/admin/source/'+source
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    $("#modal").html(data);
+                }
+            });
+        })
         

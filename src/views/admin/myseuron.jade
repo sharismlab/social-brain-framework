@@ -1,0 +1,31 @@
+extends admin-layout
+
+block append content
+    h1 My seuron
+    .span7
+        canvas#seuron( data-processing-sources="/viz/seuron_viz/NeuronGen/NeuronGen.pde /viz/seuron_viz/NeuronGen/Neuron.pde",tabindex="0",style="image-rendering: -webkit-optimize-contrast !important; outline: 0; overflow:hidden")   
+            p Please upgrade your browser to something newer, like 
+                a( href="http://chrome.google.com", target="_blank") Google Chrome
+    .span3
+        p= seuron
+        h5 Connected accounts
+        ul 
+            li 
+                a(href="#")
+                    img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
+                    em  @organization
+                        
+            li 
+                a(href="#")
+                    img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
+                    em  @自己
+
+            li.disabled
+                a(href="#").disabled
+                    img(src="/img/icons/gray/github.png", alt="Github", target="_blank", width="20", height="20")
+                    em  Your Code
+
+
+
+block append footer
+    script( type="text/javascript", src="/js/processing.js")

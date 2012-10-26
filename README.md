@@ -15,11 +15,9 @@ SBF is mainly written in Coffeescript > Javascript
 * Docs : https://docs.google.com/folder/d/0B7NEXxu0b66PVExpOFZWSldlMWs/edit
 * Questions : https://groups.google.com/forum/#!forum/social-brain-framework
 
-You can generate the code documentation by typing
+You can generate the code documentation by typing or read the docs at : http://yourinstall/docs/
 
     cake docs
-
-or read the Docs here : http://sbf.sharismlab.com/docs/
 
 ## Lauch the framework
 
