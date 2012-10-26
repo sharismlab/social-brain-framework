@@ -29,8 +29,8 @@ public/viz/seuron_viz
 
 config/apikeys.json
 config/db.json
-config/deploy.rb
 config/local/
+config/deploy/production.rb
 
 .oldies/
 

@@ -38,6 +38,14 @@ Tests for the app are written with Mocha and Chai.
 
     cake test
 
+## Deploy
+
+Deployment use ruby gem Capistrano, so you will need to have Ruby installed (check RVM for that). 
+You can setup multiples servers for deployment using files in ./config/deploy
+
+    cap production deploy
+    cap staging deploy
+
 
 # Thanks
 
