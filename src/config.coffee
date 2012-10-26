@@ -13,6 +13,7 @@ mongooseAuth = require 'mongoose-auth'
 
 # Fix for broken everyauth helpers in express 3.0
 # https://github.com/bnoguchi/everyauth/issues/303
+myuser = {}
 preEveryAuthMiddlewareHack = ->
   (req, res, next) ->
     sess = req.session
@@ -27,7 +28,10 @@ preEveryAuthMiddlewareHack = ->
       ea.password.loginFormFieldName = everyauth.password.loginFormFieldName()
       ea.password.passwordFormFieldName = everyauth.password.passwordFormFieldName()
 
+    
     res.locals.everyauth = ea
+    # myuser =ea
+    # console.log res.locals.everyauth
 
     do next
 
@@ -56,11 +60,10 @@ module.exports = (app, express, mongoose) ->
 
     app.use express.favicon()
 
-    app.use express.session( {
-    secret: "topsecret",
-    maxAge: new Date(Date.now() + 3600000)
-    })
-
+    app.use express.session( 
+      secret: "topsecret",
+      maxAge: new Date(Date.now() + 3600000)
+    )
 
     app.use preEveryAuthMiddlewareHack()
     app.use mongooseAuth.middleware(app)
@@ -69,10 +72,11 @@ module.exports = (app, express, mongoose) ->
     app.use flash()
     
     app.use (req, res, next) ->
-        messages = require('express-messages-bootstrap')(req,res)
+        messages = require('express-messages-bootstrap') req,res
+        # console.log req.session
         res.locals = 
             everyauth :
-              user : req.user # helper for everyauth
+               user : req.session.user # helper for everyauth
             messages:      messages # helper for flahs messages
         next()
 

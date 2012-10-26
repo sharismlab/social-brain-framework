@@ -105,8 +105,8 @@ preAnalyzeTweet = (text, messageId) ->
     alchemyAPI.analyzeSentiment text, (sentiment) ->
       message.sentiment = sentiment if sentiment != null
       console.log sentiment
-      message.save, () ->
-        console.log 'message analyzed semanticly and saved !'
+      message.save () ->
+        console.log 'message analyzed semanticaly and saved !'
 
     # console.log tweet
 
@@ -417,4 +417,3 @@ module.exports =
   analyzeTweet:analyzeTweet
   usersToLookup:toLookup
   timelineEvents : eventEmitter
-  analyzeSemantic : analyzeSemantic

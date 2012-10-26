@@ -3,7 +3,7 @@
 module.exports = (app) ->
 
     # Import Meme model
-    Meme = require('../models/Meme').Meme
+    Meme = require('../../models/Meme').Meme
 
     # Create
     # POST

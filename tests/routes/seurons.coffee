@@ -1,12 +1,15 @@
+#add helpers for http testing 
+request = require "supertest"
+
 # Twitter data to fake auth
-twitter = require './support/twitter'
+twitter = require '../support/twitter'
 twitterTimeline = require '../../src/lib/twitterTimeline'
 twitterAPI = require '../../src/lib/twitterAPI'
 
 module.exports = (db) ->
 
     # import model
-    SeuronSchema = require("../src/models/Seuron").SeuronSchema
+    SeuronSchema = require("../../src/models/Seuron").SeuronSchema
 
     # Hook up model on active Mongoose connection
     Seuron = db.model('Seuron', SeuronSchema)
@@ -16,25 +19,14 @@ module.exports = (db) ->
 
         s1 = s2 = user = null
 
-        beforeEach (done) ->
+        # beforeEach (done) ->
             # add some test data
-            
             # user = User.createWithTwitter( twitterUser, 'accessTok', 'accessTokSecret')
-            done()
+            # done()
 
         describe "Seuron Timeline Analysis", (done) ->
-            
-            twitterAPI.loginToTwitter(twitter.accessToken,twitter.accessTokenSecret)
-
-
-
-
-
-
-
-
-
-            done()
+            # twitterAPI.loginToTwitter(twitter.accessToken,twitter.accessTokenSecret)
+            done
 
 
 

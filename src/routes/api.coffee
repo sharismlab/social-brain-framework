@@ -2,7 +2,7 @@
     
 # Now only JSON is supported
 
-module.exports = () ->
+module.exports = (app) ->
     
     # Home page 
     app.get '/api', (req, res) ->
@@ -18,10 +18,10 @@ module.exports = () ->
 
     # ## Add routes for API
 
-    require('./routes/api/memes') app
-    require('./routes/api/messages') app
-    require('./routes/api/things') app
-    require('./routes/api/seurons') app
+    require('./api/memes') app
+    require('./api/messages') app
+    require('./api/things') app
+    require('./api/seurons') app
 
 
 

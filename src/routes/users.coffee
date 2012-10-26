@@ -18,19 +18,30 @@ module.exports = (app) ->
                 classes: ['span6']
 
     # User can register only using their social networks accounts
-    app.get '/register', (req, res) ->
 
-        res.render "users/new", userform: {}
+    # People should first login using a sns account
+    # GET
+    app.get '/register', (req, res) ->
+        res.render "register"
     
     # Once registered, they can add a username, some other infos and other sns accounts
     app.get '/users/new', (req, res) ->
+        if !req.session.auth
+            res.render "register"
+        else
+            req.session
+            res.render "users/new", userform: userform.toHTML(), 
 
-        res.render "users/new", userform: userform.toHTML()
-
-    app.get '/users/new', (req, res) ->
-
-        res.render
-
+    # POST
+    app.post '/users/new', (req, res) ->
+        userform.handle req.body,
+            success: (form) ->
+                console.log "created"
+                req.flash 'info','Meme added'
+                res.redirect '/admin/memes/'+meme.id
+            error: (form) ->
+                # handle the error, by re-rendering the form again
+                res.render "users/new", userform: {}
 
 
 

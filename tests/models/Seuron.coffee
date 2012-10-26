@@ -1,17 +1,15 @@
 # Here goes some sample data
-clemsos_friends = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_friends.json"
-
-clemsos_followers  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_followers.json"
-
-clemsos_timeline  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
-
-clemsos_mentions  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
+twitterUser = require('../support/twitterUser')
+friends = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_friends.json"
+followers  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_followers.json"
+timeline  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_timeline.json"
+mentions  = require "../../public/viz/seuron_viz/examples/petridish/datasamples/clemsos_mentions.json"
 
 
 module.exports = (db) ->
 
     # import models 
-    seuronSchema = require("../src/models/Seuron").SeuronSchema
+    seuronSchema = require("../../src/models/Seuron").SeuronSchema
 
     #hook up model on active Mongoose connection
     Seuron = db.model('Seuron', seuronSchema)
@@ -49,3 +47,4 @@ module.exports = (db) ->
 
         it "should has a property hasTimeline", (done) ->
             s1.hasTimeline().should.be.true
+            done()

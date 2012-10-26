@@ -1,5 +1,3 @@
-require './app'
-
 # Check files
 describe "Config files", ->
     describe 'apikeys.json', ->

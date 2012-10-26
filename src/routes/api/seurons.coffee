@@ -1,7 +1,7 @@
 # ## Seurons API
 
 # Import Seuron model
-Seuron = require('../models/Seuron').Seuron
+Seuron = require('../../models/Seuron').Seuron
 
 module.exports = (app) ->
 

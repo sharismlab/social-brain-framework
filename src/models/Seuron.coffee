@@ -170,8 +170,8 @@ SeuronSchema.methods.hasFollowers = ->
 SeuronSchema.methods.populateWithTwitter = ( twitUserMeta, callback ) ->
 
     twitterProfile =
-        accessToken: accessToken
-        accessTokenSecret: accessTokenSecret
+        # accessToken: accessToken
+        # accessTokenSecret: accessTokenSecret
         id: String(twitUserMeta.id)
         name: twitUserMeta.name
         screenName: twitUserMeta.screen_name

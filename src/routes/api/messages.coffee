@@ -3,7 +3,7 @@
 module.exports = (app) ->
 
     # Import Message model
-    Message = require('../models/Message').Message
+    Message = require('../../models/Message').Message
 
     # All messages
     # GET

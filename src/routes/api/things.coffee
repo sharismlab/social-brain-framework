@@ -5,7 +5,7 @@ module.exports = (app) ->
     # ##urls routes
 
     # Import URL model
-    URL = require('../models/Things/URL').URL
+    URL = require('../../models/Things/URL').URL
 
     # Create
     # POST 
@@ -68,7 +68,7 @@ module.exports = (app) ->
     # ## Interaction with meme
     
     # Import Meme model
-    Meme = require('../models/Meme').Meme
+    Meme = require('../../models/Meme').Meme
 
     # Connect an existing thing to an existing meme
     # GET

@@ -5,7 +5,7 @@ module.exports = (app) ->
     # ##urls routes
 
     # Import URL model
-    URL = require('../models/Things/URL').URL
+    URL = require('../../models/Things/URL').URL
 
     # Semantic forms with bootstrap 
     forms = require 'forms-bootstrap'
@@ -99,7 +99,7 @@ module.exports = (app) ->
     # ## Interaction with meme
     
     # Import Meme model
-    Meme = require('../models/Meme').Meme
+    Meme = require('../../models/Meme').Meme
 
     # add thing to meme
     app.get '/admin/memes/:memeId/:thing/:thingId', (req,res) ->

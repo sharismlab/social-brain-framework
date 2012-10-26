@@ -18,22 +18,41 @@ apikeys =  require '../../config/apikeys'
 collection = "users"
 
 UserSchema = new Schema (
+
     seuron_id : 
       type: ObjectId
       index: true
       ref: 'SeuronSchema' 
-    date: Date
-    twitter: Object
-    weibo: Object
-)
+    
+    twitter: 
+      # accessToken:String
+      # accessTokenSecret:String
+      id: String
+      name: String
+      screenName: String
+      location: String
+      description:String
+      profileImageUrl: String
+      url:String
+    
+    weibo: 
+      # accessToken: String
+      id: String
+      name: String
+      screenName: String
+      location: String
+      description: String
+      profileImageUrl: String
+      url: String
+  )
 
 UserSchema.plugin(troop.timestamp)
 
-UserSchema.methods.populateWithTwitter = ( twitUserMeta, accessToken, accessTokenSecret, callback ) ->
+UserSchema.methods.populateWithTwitter = ( twitUserMeta, callback ) ->
 
     twitterProfile =
-        accessToken: accessToken
-        accessTokenSecret: accessTokenSecret
+        # accessToken: accessToken
+        # accessTokenSecret: accessTokenSecret
         id: String(twitUserMeta.id)
         name: twitUserMeta.name
         screenName: twitUserMeta.screen_name
@@ -49,9 +68,10 @@ UserSchema.methods.populateWithTwitter = ( twitUserMeta, accessToken, accessToke
     # console.log params
     @save callback
 
-UserSchema.methods.populateWithWeibo = (weiboMeta, callback) ->
+UserSchema.methods.populateWithWeibo = ( weiboMeta, callback) ->
   # console.log "createWithWeibo"
   weiboProfile = 
+    # accessToken: accessToken
     id: String(weiboMeta.id)
     name: weiboMeta.name
     screenName: weiboMeta.screen_name
@@ -64,11 +84,15 @@ UserSchema.methods.populateWithWeibo = (weiboMeta, callback) ->
   @weibo = weiboProfile
   @save callback
 
-UserSchema.methods.mergeUser = (screenName, callback) ->
-  User.findOne {"twit.screenName":screenName} , (err, foundUser) ->
+lookForExistingTwitterUsername = (username, callback) ->
+    User.findOne {"twit.screenName":username} , (err, foundUser) ->
     callback (foundUser)
 
+lookForExistingWeiboUsername = (username, callback) ->
+    User.findOne {"weibo.screenName":username} , (err, foundUser) ->
+    callback (foundUser)
 
+UserSchema.methods.mergeUser = (user2, callback) ->
 
 ###
 This part contains all logic related to everyauth module.
@@ -86,6 +110,7 @@ and populate the user profile and the attached seuron
 
 # Import Seuron model so we can create a new Seuron with the new User
 Seuron = require('../models/Seuron').Seuron
+
 UserSchema.statics.createAndLinkToSeuron = (service, data, callback) ->
   # console.log data
 
@@ -162,7 +187,7 @@ UserSchema.plugin mongooseAuth,
               else
                 User.createAndLinkToSeuron "twitter", twitterUser, (createdUser)->
                   console.log "created !"
-                  createdUser.populateWithTwitter twitterUser, accessTok, accessTokSecret, () ->
+                  createdUser.populateWithTwitter twitterUser, () ->
                     console.log "populated !"
                     promise.fulfill createdUser
 
@@ -172,8 +197,9 @@ UserSchema.plugin mongooseAuth,
         appSecret: apikeys.weibo.appSecret
         redirectPath : apikeys.weibo.redirectUrl
 
-        findOrCreateUser: (session, appId, appSecret, weiboUser) ->
+        findOrCreateUser: (session, accessToken, appSecret, weiboUser) ->
           # console.log weiboUser
+
           promise = @Promise()
           User = @User()()
 

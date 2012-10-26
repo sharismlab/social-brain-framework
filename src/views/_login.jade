@@ -1,9 +1,27 @@
-extends admin-layout
-
-block append content
-    h1 login
-    a.btn(href="/auth/weibo") Login with weibo
-        img(src="/img/icons/color/weibo.png", alt="Twitter", target="_blank", width="40", height="40") 
+!!! 5
+html
+    | <meta charset="utf-8"/>
+    | <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    | <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    block head
         
-    a.btn(href="/auth/twitter") Login with twitter
-        img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="40", height="40") 
+        link(rel='stylesheet', href='/css/bootstrap.css')
+        link(rel='stylesheet', href='/css/font-awesome.css')
+
+        | <!--[if lt IE 9]>
+        |    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        | <![endif]-->
+    
+    body
+        .hero-unit
+            a(href='/') << Back to website
+            h1 login
+        .row
+            .span4
+            .span2
+                a.btn(href="/auth/weibo") Login with weibo
+                    img(src="/img/icons/color/weibo.png", alt="Twitter", target="_blank", width="40", height="40") 
+            .span2  
+                a.btn(href="/auth/twitter") Login with twitter
+                    img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="40", height="40") 

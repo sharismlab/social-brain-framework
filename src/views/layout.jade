@@ -49,13 +49,13 @@ html
                           ul.nav.pull-right
                             li.divider-vertical
                             - if (everyauth.user)
-                            li 
-                              - if (everyauth.user.twitter)
-                                b Hi #{everyauth.twitter.user.name}
-                              - else if (everyauth.user.weibo)
-                                b Hi #{everyauth.weibo.user.name}
-                            li
-                              a(href='/logout') Logout
+                              li 
+                                - if (everyauth.user.twitter)
+                                  b Hi #{everyauth.twitter.user.name}
+                                - else (everyauth.user.weibo)
+                                  b Hi #{everyauth.weibo.user.name}
+                              li
+                                a(href='/logout') Logout
 
                             - else 
 
@@ -65,8 +65,7 @@ html
                             li.dropdown
                               a.dropdown-toggle(href="#", data-toggle='dropdown') Login
                                 b.caret
-                              ul.dropdown-menu
-                                - if 
+                              ul.dropdown-menu 
                                   li
                                     a(href='/auth/twitter', title='Login with Twitter') using Twitter
                                       img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20")

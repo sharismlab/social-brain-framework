@@ -7,25 +7,38 @@ block append content
             p Please upgrade your browser to something newer, like 
                 a( href="http://chrome.google.com", target="_blank") Google Chrome
     .span3
-        p= seuron
+        //- p= seuron
         h5 Connected accounts
         ul 
-            li 
-                a(href="#")
-                    img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20") 
-                    em  @organization
+            - if (seuron.sns.twitter)
+                li 
+                    img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20")  
+                    a(href="#")    @
+                        !=seuron.sns.twitter.id
+
                         
-            li 
-                a(href="#")
+            - if (seuron.sns.weibo)
+                li 
+                    img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")  
+                    a(href="#")    @
+                        !=seuron.sns.weibo.id
+
+
+            - if (seuron.sns.github)
+                li
+                    a(href="#")
+                        img(src="/img/icons/gray/github.png", alt="Github", target="_blank", width="20", height="20")
+                        em  Your Code
+
+        h5 Add an account
+            ul
+                li 
+                    img(src="/img/icons/color/twitter.png", alt="Twitter", target="_blank", width="20", height="20")
+                    a(href="/auth/weibo")  Twitter
+
+                li 
                     img(src="/img/icons/color/weibo.png", alt="Weibo", target="_blank", width="20", height="20")
-                    em  @自己
-
-            li.disabled
-                a(href="#").disabled
-                    img(src="/img/icons/gray/github.png", alt="Github", target="_blank", width="20", height="20")
-                    em  Your Code
-
-
+                    a(href="/auth/weibo")    Weibo
 
 block append footer
     script( type="text/javascript", src="/js/processing.js")

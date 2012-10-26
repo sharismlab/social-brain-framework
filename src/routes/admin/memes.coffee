@@ -3,7 +3,7 @@
 module.exports = (app) ->
 
     # Import Meme model
-    Meme = require('../models/Meme').Meme
+    Meme = require('../../models/Meme').Meme
 
     # Semantic forms with bootstrap 
     forms = require 'forms-bootstrap'
@@ -62,6 +62,10 @@ module.exports = (app) ->
                 console.log "Meme updated!"
                 req.flash 'info','Meme updated'
                 res.render '../views/admin/memes/new.jade', { meme : meme, memeform: memeform.bind(meme).toHTML(), message: "Edited successfully"  }
+
+    
+    app.get '/admin/memes', (req, res) ->
+        res.redirect '/admin/memes/all/1'
 
     # Index (paginated)
     app.get '/admin/memes/all/:page', (req, res) ->
